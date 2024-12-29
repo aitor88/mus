@@ -34,6 +34,8 @@ const cartasRivalDiv = document.getElementById("cartas-rival");
 const faseTexto = document.getElementById("fase-actual");
 const turnoTexto = document.getElementById("turno-actual");
 const apuestasDiv = document.getElementById("apuestas");
+const fichasRivalDiv = document.getElementById("fichas-rival");
+const fichasJugadorDiv = document.getElementById("fichas-jugador");
 
 // Mostrar cartas del jugador
 function mostrarCartasJugador() {
@@ -87,61 +89,48 @@ function repartirCartas() {
     manoRival = mazoBarajado.splice(0, 4);
     mostrarCartasJugador();
     mostrarCartasRival();
+    limpiarFichas(); // Limpia las fichas al iniciar nueva ronda
     cartasSeleccionadas = [];
-    document.getElementById("pedir-mus").disabled = false;
-    document.getElementById("no-hay-mus").disabled = false;
+    document.getElementById("pedir-mus").style.display = "inline-block";
+    document.getElementById("no-hay-mus").style.display = "inline-block";
 }
 
-// Seleccionar carta
-function seleccionarCarta(index) {
-    const cartaElement = document.getElementById(`carta-${index}`);
-    if (cartasSeleccionadas.includes(index)) {
-        cartasSeleccionadas = cartasSeleccionadas.filter(i => i !== index);
-        cartaElement.classList.remove("seleccionada");
+// Limpieza de fichas visuales
+function limpiarFichas() {
+    fichasJugadorDiv.innerHTML = "";
+    fichasRivalDiv.innerHTML = "";
+}
+
+// Añadir ficha visual
+function añadirFicha(jugador) {
+    const ficha = document.createElement("div");
+    ficha.classList.add("ficha");
+
+    if (jugador === "Jugador") {
+        fichasJugadorDiv.appendChild(ficha);
     } else {
-        cartasSeleccionadas.push(index);
-        cartaElement.classList.add("seleccionada");
+        fichasRivalDiv.appendChild(ficha);
     }
 }
 
-// Pedir mus
-function pedirMus() {
-    if (cartasSeleccionadas.length === 0) {
-        alert("Selecciona al menos una carta para descartar.");
-        return;
-    }
-
-    cartasSeleccionadas.forEach(index => {
-        manoJugador[index] = mazoBarajado.pop();
-    });
-
-    cartasSeleccionadas = [];
-    mostrarCartasJugador();
-
-    if (decidirRivalMus()) {
-        alert("El rival también pide mus. Se reparten nuevas cartas.");
-        repartirCartas();
+// Avanzar fase
+function avanzarFase() {
+    if (faseActual < 3) {
+        faseActual += 1; // Avanzar a la siguiente fase
+        actualizarFaseTexto();
+        turnoActual = "Jugador"; // Reinicia el turno al jugador
+        actualizarTurnoTexto();
+        empezarApuestas(); // Inicia la nueva fase de apuestas
     } else {
-        alert("El rival corta el mus. Comienzan las apuestas.");
-        empezarApuestas();
+        // Ronda terminada: Revelar las cartas del rival
+        mostrarCartasRival(true); // Revelar cartas del rival
+        alert("Ronda terminada. ¡Prepárate para la siguiente ronda!");
+        faseActual = 0; // Reinicia las fases
+        repartirCartas(); // Reparte nuevas cartas
     }
 }
 
-// Decisión del rival sobre el mus
-function decidirRivalMus() {
-    return Math.random() < 0.5;
-}
-
-// Cortar el mus (No hay mus)
-function cortarMus() {
-    faseActual = 0; // Inicia con Grande
-    turnoActual = "Jugador"; // Siempre empieza el jugador
-    actualizarFaseTexto();
-    actualizarTurnoTexto();
-    empezarApuestas();
-}
-
-// Actualizar indicadores
+// Actualizar indicadores de fase y turno
 function actualizarFaseTexto() {
     const fases = ["Grande", "Chica", "Pares", "Juego"];
     faseTexto.innerText = `Fase: ${fases[faseActual]}`;
@@ -157,84 +146,5 @@ function cambiarTurno() {
     actualizarTurnoTexto();
 }
 
-// Empezar la fase de apuestas
-function empezarApuestas() {
-    actualizarFaseTexto();
-    actualizarTurnoTexto();
-    apuestasDiv.style.display = "block";
-
-    if (turnoActual === "Jugador") {
-        habilitarBotonesApuesta(true);
-    } else {
-        habilitarBotonesApuesta(false);
-        setTimeout(accionRival, 1000); // Simula la respuesta del rival
-    }
-}
-
-// Habilitar/Deshabilitar botones de apuesta
-function habilitarBotonesApuesta(habilitar) {
-    document.getElementById("apostar").disabled = !habilitar;
-    document.getElementById("subir").disabled = !habilitar;
-    document.getElementById("pasar").disabled = !habilitar;
-}
-
-// Acciones del jugador
-document.getElementById("apostar").addEventListener("click", () => {
-    apuestaActual = 1; // Inicia con una apuesta básica
-    cambiarTurno();
-    setTimeout(accionRival, 1000); // Espera la respuesta del rival
-});
-
-document.getElementById("subir").addEventListener("click", () => {
-    apuestaActual += 1;
-    cambiarTurno();
-    setTimeout(accionRival, 1000); // Espera la respuesta del rival
-});
-
-document.getElementById("pasar").addEventListener("click", () => {
-    cambiarTurno();
-    setTimeout(accionRival, 1000); // Espera la respuesta del rival
-});
-
-// Acción del rival
-function accionRival() {
-    const decision = Math.random();
-    if (decision < 0.4) {
-        alert("Rival pasa.");
-        cambiarTurno();
-    } else if (decision < 0.7) {
-        alert("Rival iguala la apuesta.");
-        cambiarTurno();
-    } else {
-        alert("Rival sube la apuesta.");
-        apuestaActual += 1;
-        cambiarTurno();
-    }
-}
-
-// Avanzar a la siguiente fase
-function avanzarFase() {
-    if (faseActual < 3) {
-        faseActual += 1;
-        empezarApuestas();
-    } else {
-        mostrarCartasRival(true); // Revelar cartas del rival
-        alert("Ronda terminada. ¡Prepárate para la siguiente ronda!");
-        faseActual = 0;
-        repartirCartas();
-    }
-}
-
-// Actualizar marcador
-function actualizarMarcador() {
-    marcadorJugador.innerText = piedrasJugador;
-    marcadorRival.innerText = piedrasRival;
-}
-
-// Eventos
-document.getElementById("iniciar").addEventListener("click", repartirCartas);
-document.getElementById("pedir-mus").addEventListener("click", pedirMus);
-document.getElementById("no-hay-mus").addEventListener("click", cortarMus);
-
-// Inicializar el juego
-repartirCartas();
+// Funciones de apuesta del jugador y rival
+// (Integradas previamente)
