@@ -234,4 +234,7 @@ function actualizarMarcador() {
 // Eventos
 document.getElementById("iniciar").addEventListener("click", repartirCartas);
 document.getElementById("pedir-mus").addEventListener("click", pedirMus);
-document.getElementById("no-hay-mus").addEventLis
+document.getElementById("no-hay-mus").addEventListener("click", cortarMus);
+
+// Inicializar el juego
+repartirCartas();
