@@ -20,6 +20,7 @@ let manoJugador = [];
 let manoRival = [];
 let piedrasJugador = 0;
 let piedrasRival = 0;
+let cartasSeleccionadas = []; // Índices de cartas seleccionadas
 
 // Referencias del DOM
 const marcadorJugador = document.getElementById("piedras-jugador");
@@ -27,19 +28,26 @@ const marcadorRival = document.getElementById("piedras-rival");
 const cartasJugadorDiv = document.getElementById("cartas-jugador");
 const cartasRivalDiv = document.getElementById("cartas-rival");
 
-// Función para mostrar cartas
+// Función para mostrar cartas del jugador
 function mostrarCartasJugador() {
     cartasJugadorDiv.innerHTML = "";
-    manoJugador.forEach(carta => {
-        const cartaHTML = `<img src="assets/cartas/${carta.valor}_de_${carta.palo}.png" alt="${carta.valor} de ${carta.palo}" class="carta">`;
+    manoJugador.forEach((carta, index) => {
+        const cartaHTML = `
+            <div id="carta-${index}" class="carta" onclick="seleccionarCarta(${index})">
+                ${carta.valor} de ${carta.palo}
+            </div>`;
         cartasJugadorDiv.innerHTML += cartaHTML;
     });
 }
 
+// Función para mostrar cartas del rival
 function mostrarCartasRival() {
     cartasRivalDiv.innerHTML = "";
     manoRival.forEach(carta => {
-        const cartaHTML = `<img src="assets/cartas/${carta.valor}_de_${carta.palo}.png" alt="${carta.valor} de ${carta.palo}" class="carta carta-revelada">`;
+        const cartaHTML = `
+            <div class="carta">
+                ${carta.valor} de ${carta.palo}
+            </div>`;
         cartasRivalDiv.innerHTML += cartaHTML;
     });
 }
@@ -53,22 +61,47 @@ function repartirCartas() {
     cartasRivalDiv.innerHTML = "Cartas del Rival: [Ocultas]";
 }
 
-// Evaluaciones y lógica del juego
-function jugarRonda() {
-    repartirCartas();
-    alert("Resolviendo Grande, Chica, Pares y Juego...");
-    mostrarCartasRival();
-    actualizarMarcador();
+// Seleccionar una carta
+function seleccionarCarta(index) {
+    const cartaElement = document.getElementById(`carta-${index}`);
+    if (cartasSeleccionadas.includes(index)) {
+        // Desmarcar carta
+        cartasSeleccionadas = cartasSeleccionadas.filter(i => i !== index);
+        cartaElement.classList.remove("seleccionada");
+    } else {
+        // Marcar carta
+        cartasSeleccionadas.push(index);
+        cartaElement.classList.add("seleccionada");
+    }
 }
 
+// Pedir Mus
+function pedirMus() {
+    if (cartasSeleccionadas.length === 0) {
+        alert("Selecciona al menos una carta para descartar.");
+        return;
+    }
+
+    // Reemplazar cartas seleccionadas
+    const mazoBarajado = barajarMazo();
+    cartasSeleccionadas.forEach(index => {
+        manoJugador[index] = mazoBarajado.pop();
+    });
+
+    // Limpiar selección
+    cartasSeleccionadas = [];
+    mostrarCartasJugador();
+}
+
+// Actualizar marcador
 function actualizarMarcador() {
     marcadorJugador.innerText = piedrasJugador;
     marcadorRival.innerText = piedrasRival;
 }
 
 // Eventos
-document.getElementById("iniciar").addEventListener("click", jugarRonda);
-document.getElementById("mus").addEventListener("click", repartirCartas);
+document.getElementById("iniciar").addEventListener("click", repartirCartas);
+document.getElementById("mus").addEventListener("click", pedirMus);
 
 // Inicializar el juego
 repartirCartas();
