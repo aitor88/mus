@@ -47,8 +47,14 @@ h1 {
     margin: 5px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-    animation: repartir 0.5s ease-out;
 }
 
 .carta:hover {
@@ -56,29 +62,10 @@ h1 {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* Animaciones */
-@keyframes repartir {
-    from {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.carta-revelada {
-    animation: flip 0.6s ease-out forwards;
-}
-
-@keyframes flip {
-    from {
-        transform: rotateY(90deg);
-    }
-    to {
-        transform: rotateY(0deg);
-    }
+/* Carta seleccionada */
+.carta.seleccionada {
+    border: 3px solid #e74c3c;
+    transform: scale(1.1);
 }
 
 /* Controles */
@@ -120,27 +107,4 @@ h1 {
     width: 45%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    #mesa {
-        width: 100%;
-        padding: 10px;
-    }
-
-    .carta {
-        width: 60px;
-        height: 90px;
-    }
-
-    #acciones button {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    #marcador p {
-        font-size: 14px;
-        padding: 8px;
-    }
 }
