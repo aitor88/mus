@@ -33,7 +33,7 @@ h1 {
     max-width: 800px;
 }
 
-/* Cartas */
+/* Contenedor de cartas */
 #cartas-jugador, #cartas-rival {
     display: flex;
     justify-content: center;
@@ -41,25 +41,15 @@ h1 {
     margin: 15px 0;
 }
 
+/* Cartas */
 .carta {
     width: 80px;
     height: 120px;
     margin: 5px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    background-color: white;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.carta:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Carta seleccionada */
@@ -68,11 +58,18 @@ h1 {
     transform: scale(1.1);
 }
 
+/* Hover en cartas */
+.carta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
 /* Controles */
 #acciones {
     margin: 20px;
 }
 
+/* Botones */
 #acciones button {
     padding: 10px 20px;
     margin: 5px;
@@ -85,6 +82,7 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
+/* Hover en botones */
 #acciones button:hover {
     background: #c0392b;
 }
@@ -107,4 +105,27 @@ h1 {
     width: 45%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #mesa {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .carta {
+        width: 60px;
+        height: 90px;
+    }
+
+    #acciones button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    #marcador p {
+        font-size: 14px;
+        padding: 8px;
+    }
 }
