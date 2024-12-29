@@ -1,265 +1,155 @@
-// Crear el mazo de cartas
-const mazo = [];
+// Crear la baraja española de 40 cartas
 const palos = ["oros", "copas", "espadas", "bastos"];
 const valores = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
+const valorCarta = {
+    1: 1, 2: 1, 3: 10, 4: 4, 5: 5, 6: 6, 7: 7, 10: 10, 11: 10, 12: 10
+};
 
-// Generar las cartas
-palos.forEach(palo => {
-    valores.forEach(valor => {
-        mazo.push({ palo, valor });
-    });
-});
-
-// Barajar las cartas
-function barajarMazo() {
-    return [...mazo].sort(() => Math.random() - 0.5);
-}
-
-// Variables del juego
-let manoJugador = [];
-let manoRival = [];
-let cartasSeleccionadas = [];
-let mazoBarajado = [];
-let faseActual = -1; // -1: Mus, 0: Grande, 1: Chica, 2: Pares, 3: Juego
-let turnoActual = "Jugador";
-let fichasJugador = 0;
-let fichasRival = 0;
-let apuestaActual = 0;
-
-// Mostrar cartas del jugador
-function mostrarCartasJugador() {
-    const cartasJugadorDiv = document.getElementById("cartas-jugador");
-    cartasJugadorDiv.innerHTML = "";
-    manoJugador.forEach((carta, index) => {
-        const cartaHTML = `
-            <img 
-                id="carta-${index}" 
-                class="carta" 
-                src="assets/cartas/${formatoDosDigitos(carta.valor)}-${carta.palo}.png" 
-                alt="${carta.valor} de ${carta.palo}" 
-                onclick="seleccionarCarta(${index})"
-            >
-        `;
-        cartasJugadorDiv.innerHTML += cartaHTML;
-    });
-}
-
-// Mostrar cartas del rival
-function mostrarCartasRival(revelar = false) {
-    const cartasRivalDiv = document.getElementById("cartas-rival");
-    cartasRivalDiv.innerHTML = "";
-    manoRival.forEach(carta => {
-        const cartaHTML = revelar
-            ? `<img 
-                   class="carta" 
-                   src="assets/cartas/${formatoDosDigitos(carta.valor)}-${carta.palo}.png" 
-                   alt="${carta.valor} de ${carta.palo}">
-              `
-            : `<img class="carta" src="assets/cartas/reverso.png" alt="Carta oculta">`;
-        cartasRivalDiv.innerHTML += cartaHTML;
-    });
-}
-
-// Formatear números con dos dígitos
-function formatoDosDigitos(valor) {
-    return valor.toString().padStart(2, "0");
-}
-
-// Función para repartir cartas
-function repartirCartas() {
-    mazoBarajado = barajarMazo();
-    manoJugador = mazoBarajado.splice(0, 4);
-    manoRival = mazoBarajado.splice(0, 4);
-
-    mostrarCartasJugador();
-    mostrarCartasRival();
-
-    cartasSeleccionadas = [];
-    faseActual = -1; // Fase "Mus"
-    turnoActual = "Jugador";
-
-    actualizarFaseTexto("Mus");
-    actualizarTurnoTexto("Jugador");
-
-    habilitarBotonesMus();
-    ocultarBotonesApuestas();
-    actualizarMarcador();
-    console.log("Cartas repartidas. Fase inicial: Mus.");
-}
-
-// Seleccionar cartas para el descarte
-function seleccionarCarta(index) {
-    const cartaElement = document.getElementById(`carta-${index}`);
-    if (cartasSeleccionadas.includes(index)) {
-        cartasSeleccionadas = cartasSeleccionadas.filter(i => i !== index);
-        cartaElement.classList.remove("seleccionada");
-    } else {
-        cartasSeleccionadas.push(index);
-        cartaElement.classList.add("seleccionada");
-    }
-    console.log("Cartas seleccionadas:", cartasSeleccionadas);
-}
-
-// Función para pedir mus
-function pedirMus() {
-    if (cartasSeleccionadas.length === 0) {
-        alert("Selecciona al menos una carta para descartar.");
-        return;
-    }
-
-    if (decidirRivalMus()) {
-        alert("El rival también pide mus.");
-        cartasSeleccionadas.forEach(index => {
-            manoJugador[index] = mazoBarajado.pop();
+// Crear baraja
+function crearBaraja() {
+    const baraja = [];
+    palos.forEach(palo => {
+        valores.forEach(valor => {
+            baraja.push({ palo, valor, puntos: valorCarta[valor] });
         });
-        cartasSeleccionadas = [];
-        mostrarCartasJugador();
-    } else {
-        alert("El rival corta el mus. Comienza la fase Grande.");
-        cortarMus();
-    }
+    });
+    return baraja;
 }
 
-// Cortar el mus y avanzar a la fase Grande
-function cortarMus() {
-    alert("No hay mus. Comienza la fase Grande.");
-    ocultarBotonesMus();
-    ocultarBotonIniciar();
-    mostrarBotonesApuestas();
-    faseActual = 0; // Cambia a la fase "Grande"
-    actualizarFaseTexto("Grande");
-    actualizarTurnoTexto("Jugador");
+// Barajar cartas
+function barajar(baraja) {
+    return baraja.sort(() => Math.random() - 0.5);
 }
 
-// Decisión del rival sobre el mus
-function decidirRivalMus() {
-    return Math.random() < 0.5; // Probabilidad del 50%
+// Jugador y máquina
+const jugador = { nombre: "Jugador", mano: [], piedras: 0 };
+const maquina = { nombre: "Máquina", mano: [], piedras: 0 };
+let baraja = crearBaraja();
+
+// Fases del juego
+let faseActual = "Mus"; // Fases: Mus, Grande, Chica, Pares, Juego
+let turnoActual = "Jugador"; // Turnos: Jugador, Máquina
+let apuestaActual = 0; // Apuesta en la fase actual
+
+// Repartir cartas
+function repartirCartas() {
+    baraja = barajar(baraja);
+    jugador.mano = baraja.splice(0, 4);
+    maquina.mano = baraja.splice(0, 4);
+    console.log("Mano del jugador:", jugador.mano);
+    console.log("Mano de la máquina: [Ocultas]");
 }
 
-// Función para avanzar a la siguiente fase
+// Seleccionar cartas para descarte
+function descarte(jugador, indices) {
+    indices.forEach(index => {
+        jugador.mano[index] = baraja.pop();
+    });
+    console.log(`${jugador.nombre} descarta y recibe nuevas cartas.`);
+}
+
+// Evaluar jugadas
+function evaluarGrande(mano) {
+    return mano.reduce((acum, carta) => acum + carta.puntos, 0);
+}
+
+function evaluarChica(mano) {
+    return mano.reduce((acum, carta) => acum - carta.puntos, 0);
+}
+
+function evaluarJuego(mano) {
+    const suma = mano.reduce((acum, carta) => acum + carta.puntos, 0);
+    if (suma >= 31) return suma;
+    return 0;
+}
+
+// Avanzar fases
 function avanzarFase() {
-    if (faseActual < 3) {
-        faseActual += 1;
-        const fases = ["Grande", "Chica", "Pares", "Juego"];
-        actualizarFaseTexto(fases[faseActual]);
-        turnoActual = "Jugador";
-        actualizarTurnoTexto(turnoActual);
-    } else {
-        finalizarRonda();
-    }
+    const fases = ["Mus", "Grande", "Chica", "Pares", "Juego"];
+    const siguienteFase = fases[fases.indexOf(faseActual) + 1] || "Fin";
+    faseActual = siguienteFase;
+    console.log(`Fase actual: ${faseActual}`);
 }
 
-// Finalizar la ronda y reiniciar
-function finalizarRonda() {
-    alert("Ronda completada. Preparando para la siguiente ronda.");
-    mostrarBotonIniciar();
-    ocultarBotonesApuestas();
-    mostrarCartasRival(true);
-    faseActual = -1; // Reinicia la fase a "Mus"
-}
-
-// Funciones de apuestas
-function apostar() {
-    console.log("El jugador apuesta 1 ficha.");
-    apuestaActual += 1;
-    fichasJugador += 1;
-    actualizarMarcador();
-    cambiarTurno();
-}
-
-function subir() {
-    console.log("El jugador sube la apuesta.");
-    apuestaActual += 2;
-    fichasJugador += 2;
-    actualizarMarcador();
-    cambiarTurno();
-}
-
-function pasar() {
-    console.log("El jugador pasa.");
-    avanzarFase();
-}
-
-// Cambiar turno entre jugador y rival
+// Cambiar turno
 function cambiarTurno() {
-    turnoActual = turnoActual === "Jugador" ? "Rival" : "Jugador";
-    actualizarTurnoTexto(turnoActual);
+    turnoActual = turnoActual === "Jugador" ? "Máquina" : "Jugador";
+    console.log(`Turno actual: ${turnoActual}`);
+}
 
-    if (turnoActual === "Rival") {
-        setTimeout(() => {
-            accionRival();
-            if (faseActual >= 0) {
-                avanzarFase();
-            }
-        }, 1000); // Simula el turno del rival
+// Apuestas
+function envidar(jugador, cantidad) {
+    console.log(`${jugador.nombre} envida ${cantidad} piedras.`);
+    apuestaActual += cantidad;
+}
+
+function aceptarEnvite() {
+    console.log(`${turnoActual} acepta el envite.`);
+    jugador.piedras += apuestaActual;
+    maquina.piedras -= apuestaActual;
+}
+
+function ordago() {
+    console.log(`${turnoActual} lanza un órdago.`);
+    if (turnoActual === "Jugador") {
+        console.log("La máquina acepta el órdago.");
+        finalizarJuego();
+    } else {
+        console.log("El jugador acepta el órdago.");
+        finalizarJuego();
     }
 }
 
-// Acción del rival
-function accionRival() {
+// Finalizar juego
+function finalizarJuego() {
+    console.log("Juego finalizado. Mostrando resultados...");
+    console.log("Mano del jugador:", jugador.mano);
+    console.log("Mano de la máquina:", maquina.mano);
+    // Determinar ganador
+    const puntosJugador = evaluarGrande(jugador.mano);
+    const puntosMaquina = evaluarGrande(maquina.mano);
+    if (puntosJugador > puntosMaquina) {
+        console.log("El jugador gana el juego.");
+    } else {
+        console.log("La máquina gana el juego.");
+    }
+}
+
+// Turnos
+function jugarTurno() {
+    if (turnoActual === "Jugador") {
+        console.log("Es tu turno. Elige una acción:");
+        console.log("1. Mus (Descartar cartas)");
+        console.log("2. Envidar");
+        console.log("3. Ordago");
+    } else {
+        turnoMaquina();
+    }
+}
+
+function turnoMaquina() {
+    console.log("Turno de la máquina...");
     const decision = Math.random();
     if (decision < 0.4) {
-        console.log("El rival pasa.");
+        console.log("La máquina pasa.");
         avanzarFase();
     } else if (decision < 0.7) {
-        console.log("El rival iguala la apuesta.");
-        apuestaActual += 1;
-        fichasRival += 1;
+        envidar(maquina, 2);
     } else {
-        console.log("El rival sube la apuesta.");
-        apuestaActual += 2;
-        fichasRival += 2;
+        ordago();
     }
-    actualizarMarcador();
     cambiarTurno();
 }
 
-// Mostrar y ocultar botones
-function habilitarBotonesMus() {
-    document.getElementById("pedir-mus").style.display = "inline-block";
-    document.getElementById("no-hay-mus").style.display = "inline-block";
+// Interacción inicial
+function iniciarJuego() {
+    console.log("Iniciando el juego de Mus...");
+    repartirCartas();
+    while (faseActual !== "Fin") {
+        jugarTurno();
+    }
+    console.log("Juego completado.");
 }
 
-function ocultarBotonesMus() {
-    document.getElementById("pedir-mus").style.display = "none";
-    document.getElementById("no-hay-mus").style.display = "none";
-}
-
-function mostrarBotonesApuestas() {
-    document.getElementById("apuestas").style.display = "block";
-}
-
-function ocultarBotonesApuestas() {
-    document.getElementById("apuestas").style.display = "none";
-}
-
-function ocultarBotonIniciar() {
-    document.getElementById("iniciar").style.display = "none";
-}
-
-function mostrarBotonIniciar() {
-    document.getElementById("iniciar").style.display = "inline-block";
-}
-
-// Actualizar indicadores
-function actualizarFaseTexto(fase) {
-    document.getElementById("fase-actual").innerText = `Fase: ${fase}`;
-}
-
-function actualizarTurnoTexto(turno) {
-    document.getElementById("turno-actual").innerText = `Turno: ${turno}`;
-}
-
-// Actualizar marcador de fichas
-function actualizarMarcador() {
-    document.getElementById("piedras-jugador").innerText = fichasJugador;
-    document.getElementById("piedras-rival").innerText = fichasRival;
-}
-
-// Eventos de botones
-document.getElementById("iniciar").addEventListener("click", repartirCartas);
-document.getElementById("pedir-mus").addEventListener("click", pedirMus);
-document.getElementById("no-hay-mus").addEventListener("click", cortarMus);
-document.getElementById("apostar").addEventListener("click", apostar);
-document.getElementById("subir").addEventListener("click", subir);
-document.getElementById("pasar").addEventListener("click", pasar);
+// Inicia el juego
+iniciarJuego();
