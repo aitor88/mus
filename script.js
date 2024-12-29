@@ -40,11 +40,20 @@ function repartirCartas() {
         cartasJugadorDiv.innerHTML += cartaHTML;
     });
 
-    // Ocultar cartas del rival (puedes mostrar algo genérico)
+    // Ocultar cartas del rival
     cartasRivalDiv.innerHTML = "Cartas del Rival: [Ocultas]";
 }
 
-// Función para evaluar Grande
+// Función para mostrar las cartas del rival
+function mostrarCartasRival() {
+    cartasRivalDiv.innerHTML = "";
+    manoRival.forEach(carta => {
+        const cartaHTML = `<div>${carta.valor} de ${carta.palo}</div>`;
+        cartasRivalDiv.innerHTML += cartaHTML;
+    });
+}
+
+// Evaluar Grande
 function evaluarGrande() {
     const mayorJugador = Math.max(...manoJugador.map(carta => carta.valor));
     const mayorRival = Math.max(...manoRival.map(carta => carta.valor));
@@ -61,7 +70,7 @@ function evaluarGrande() {
     actualizarMarcador();
 }
 
-// Función para evaluar Chica
+// Evaluar Chica
 function evaluarChica() {
     const menorJugador = Math.min(...manoJugador.map(carta => carta.valor));
     const menorRival = Math.min(...manoRival.map(carta => carta.valor));
@@ -78,7 +87,7 @@ function evaluarChica() {
     actualizarMarcador();
 }
 
-// Función para evaluar Pares
+// Evaluar Pares
 function evaluarPares() {
     const paresJugador = calcularPares(manoJugador);
     const paresRival = calcularPares(manoRival);
@@ -109,7 +118,7 @@ function calcularPares(mano) {
     return pares;
 }
 
-// Función para evaluar Juego
+// Evaluar Juego
 function evaluarJuego() {
     const puntosJugador = sumarPuntos(manoJugador);
     const puntosRival = sumarPuntos(manoRival);
@@ -145,24 +154,78 @@ function actualizarMarcador() {
     marcadorRival.innerText = piedrasRival;
 }
 
-// Eventos de los botones
-document.getElementById("mus").addEventListener("click", () => {
-    alert("Has pedido Mus. Repartiendo nuevas cartas...");
+// Comportamiento del rival
+function comportamientoRival() {
+    alert("Rival está tomando su decisión...");
+
+    // Grande
+    const mayorRival = Math.max(...manoRival.map(carta => carta.valor));
+    if (mayorRival > 10 && Math.random() < 0.5) {
+        alert("El rival envida en Grande");
+        piedrasRival++;
+    }
+
+    // Chica
+    const menorRival = Math.min(...manoRival.map(carta => carta.valor));
+    if (menorRival < 4 && Math.random() < 0.5) {
+        alert("El rival envida en Chica");
+        piedrasRival++;
+    }
+
+    // Pares
+    const paresRival = calcularPares(manoRival);
+    if (paresRival > 0 && Math.random() < 0.5) {
+        alert("El rival envida en Pares");
+        piedrasRival++;
+    }
+
+    // Juego
+    const puntosRival = sumarPuntos(manoRival);
+    if ((puntosRival === 31 || puntosRival === 32) && Math.random() < 0.5) {
+        alert("El rival envida en Juego");
+        piedrasRival++;
+    }
+
+    actualizarMarcador();
+}
+
+// Comprobar ganador
+function comprobarGanador() {
+    if (piedrasJugador >= 40) {
+        alert("¡Felicidades! Has ganado la partida.");
+        reiniciarJuego();
+    } else if (piedrasRival >= 40) {
+        alert("El rival ha ganado la partida. ¡Suerte la próxima vez!");
+        reiniciarJuego();
+    }
+}
+
+function reiniciarJuego() {
+    piedrasJugador = 0;
+    piedrasRival = 0;
+    actualizarMarcador();
     repartirCartas();
-});
+}
 
-document.getElementById("envidar").addEventListener("click", () => {
-    alert("Has envidado. Evaluando...");
+// Jugar una ronda completa
+function jugarRonda() {
+    repartirCartas();
+    alert("Resolviendo Grande...");
     evaluarGrande();
+    alert("Resolviendo Chica...");
     evaluarChica();
+    alert("Resolviendo Pares...");
     evaluarPares();
+    alert("Resolviendo Juego...");
     evaluarJuego();
-});
+    mostrarCartasRival();
+    comportamientoRival();
+    comprobarGanador();
+}
 
-document.getElementById("pasar").addEventListener("click", () => {
-    alert("Has pasado. Turno del Rival.");
-    // Aquí puedes implementar lógica adicional para el rival
-});
+// Eventos de botones
+document.getElementById("iniciar").addEventListener("click", jugarRonda);
+document.getElementById("mus").addEventListener("click", repartirCartas);
 
 // Inicializar el juego
 repartirCartas();
