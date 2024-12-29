@@ -18,31 +18,16 @@ function barajarMazo() {
 // Variables del juego
 let manoJugador = [];
 let manoRival = [];
-let piedrasJugador = 0;
-let piedrasRival = 0;
 let cartasSeleccionadas = [];
 let mazoBarajado = [];
 let faseActual = 0; // 0: Grande, 1: Chica, 2: Pares, 3: Juego
 let turnoActual = "Jugador"; // Alterna entre "Jugador" y "Rival"
-let apuestaActual = 0; // Cantidad de piedras apostadas en esta fase
-
-// Referencias del DOM
-const marcadorJugador = document.getElementById("piedras-jugador");
-const marcadorRival = document.getElementById("piedras-rival");
-const cartasJugadorDiv = document.getElementById("cartas-jugador");
-const cartasRivalDiv = document.getElementById("cartas-rival");
-const faseTexto = document.getElementById("fase-actual");
-const turnoTexto = document.getElementById("turno-actual");
-const apuestasDiv = document.getElementById("apuestas");
-const fichasRivalDiv = document.getElementById("fichas-rival");
-const fichasJugadorDiv = document.getElementById("fichas-jugador");
 
 // Mostrar cartas del jugador
 function mostrarCartasJugador() {
-    const manoOrdenada = [...manoJugador].sort((a, b) => b.valor - a.valor);
-
+    const cartasJugadorDiv = document.getElementById("cartas-jugador");
     cartasJugadorDiv.innerHTML = "";
-    manoOrdenada.forEach((carta, index) => {
+    manoJugador.forEach((carta, index) => {
         const cartaHTML = `
             <img 
                 id="carta-${index}" 
@@ -57,45 +42,66 @@ function mostrarCartasJugador() {
 }
 
 // Mostrar cartas del rival
-function mostrarCartasRival(revelar = false) {
-    const manoOrdenada = [...manoRival].sort((a, b) => b.valor - a.valor);
-
+function mostrarCartasRival() {
+    const cartasRivalDiv = document.getElementById("cartas-rival");
     cartasRivalDiv.innerHTML = "";
-    manoOrdenada.forEach(carta => {
-        const cartaHTML = revelar
-            ? `<img 
-                   class="carta" 
-                   src="assets/cartas/${formatoDosDigitos(carta.valor)}-${carta.palo}.png" 
-                   alt="${carta.valor} de ${carta.palo}"
-               >`
-            : `<img 
-                   class="carta" 
-                   src="assets/cartas/reverso.png" 
-                   alt="Carta oculta"
-               >`;
+    manoRival.forEach(carta => {
+        const cartaHTML = `
+            <img 
+                class="carta" 
+                src="assets/cartas/reverso.png" 
+                alt="Carta oculta"
+            >
+        `;
         cartasRivalDiv.innerHTML += cartaHTML;
     });
 }
 
-// Helper para formatear valores a dos dígitos
-function formatoDosDigitos(valor) {
-    return valor.toString().padStart(2, "0");
+// Repartir cartas
+function repartirCartas() {
+    mazoBarajado = barajarMazo();
+    manoJugador = mazoBarajado.splice(0, 4);
+    manoRival = mazoBarajado.splice(0, 4);
+
+    mostrarCartasJugador();
+    mostrarCartasRival();
+
+    cartasSeleccionadas = [];
+    faseActual = 0;
+    turnoActual = "Jugador";
+
+    actualizarFaseTexto("Grande");
+    actualizarTurnoTexto("Jugador");
+
+    ocultarBotonIniciar();
+    habilitarBotonesMus();
+    ocultarBotonesApuestas();
+
+    console.log("Ronda iniciada: cartas repartidas.");
 }
 
-// Función para seleccionar cartas
-function seleccionarCarta(index) { /* Implementación */ }
+// Actualizar indicadores
+function actualizarFaseTexto(fase) {
+    document.getElementById("fase-actual").innerText = `Fase: ${fase}`;
+}
 
-// Pedir Mus
-function pedirMus() { /* Implementación */ }
+function actualizarTurnoTexto(turno) {
+    document.getElementById("turno-actual").innerText = `Turno: ${turno}`;
+}
 
-// Cortar Mus
-function cortarMus() { /* Implementación */ }
+// Mostrar y ocultar botones
+function ocultarBotonIniciar() {
+    document.getElementById("iniciar").style.display = "none";
+}
 
-// Mostrar/Ocultar botones
-function mostrarBotonesApuestas() { /* Implementación */ }
-function ocultarBotonesApuestas() { /* Implementación */ }
+function habilitarBotonesMus() {
+    document.getElementById("pedir-mus").style.display = "inline-block";
+    document.getElementById("no-hay-mus").style.display = "inline-block";
+}
 
-// Eventos
+function ocultarBotonesApuestas() {
+    document.getElementById("apuestas").style.display = "none";
+}
+
+// Evento para el botón "Iniciar Ronda"
 document.getElementById("iniciar").addEventListener("click", repartirCartas);
-document.getElementById("pedir-mus").addEventListener("click", pedirMus);
-document.getElementById("no-hay-mus").addEventListener("click", cortarMus);
