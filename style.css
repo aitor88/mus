@@ -13,13 +13,13 @@ body {
     height: 100vh;
 }
 
-/* Título del juego */
+/* Título */
 h1 {
     margin-top: 20px;
     font-size: 2.5rem;
 }
 
-/* Contenedor de la mesa */
+/* Mesa */
 #mesa {
     display: flex;
     flex-direction: column;
@@ -41,34 +41,51 @@ h1 {
     margin: 15px 0;
 }
 
-/* Estilo de cada carta */
-#cartas-jugador div, #cartas-rival div {
-    display: inline-block;
-    padding: 15px;
-    background: white;
-    color: black;
-    border: 2px solid #bdc3c7;
-    border-radius: 5px;
+.carta {
     width: 80px;
-    height: 100px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 120px;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
+    animation: repartir 0.5s ease-out;
 }
 
-#cartas-jugador div:hover, #cartas-rival div:hover {
+.carta:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* Contenedor de acciones */
+/* Animaciones */
+@keyframes repartir {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.carta-revelada {
+    animation: flip 0.6s ease-out forwards;
+}
+
+@keyframes flip {
+    from {
+        transform: rotateY(90deg);
+    }
+    to {
+        transform: rotateY(0deg);
+    }
+}
+
+/* Controles */
 #acciones {
     margin: 20px;
 }
 
-/* Botones */
 #acciones button {
     padding: 10px 20px;
     margin: 5px;
@@ -103,4 +120,27 @@ h1 {
     width: 45%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #mesa {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .carta {
+        width: 60px;
+        height: 90px;
+    }
+
+    #acciones button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    #marcador p {
+        font-size: 14px;
+        padding: 8px;
+    }
 }
