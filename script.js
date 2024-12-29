@@ -130,21 +130,5 @@ function avanzarFase() {
     }
 }
 
-// Actualizar indicadores de fase y turno
-function actualizarFaseTexto() {
-    const fases = ["Grande", "Chica", "Pares", "Juego"];
-    faseTexto.innerText = `Fase: ${fases[faseActual]}`;
-}
-
-function actualizarTurnoTexto() {
-    turnoTexto.innerText = `Turno: ${turnoActual}`;
-}
-
-// Cambiar turno
-function cambiarTurno() {
-    turnoActual = turnoActual === "Jugador" ? "Rival" : "Jugador";
-    actualizarTurnoTexto();
-}
-
-// Funciones de apuesta del jugador y rival
-// (Integradas previamente)
+// Funciones relacionadas con apuestas y lógica del rival
+// Continúan integradas previamente
