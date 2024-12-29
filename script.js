@@ -20,7 +20,7 @@ let manoJugador = [];
 let manoRival = [];
 let cartasSeleccionadas = [];
 let mazoBarajado = [];
-let faseActual = 0;
+let faseActual = -1; // -1: Mus, 0: Grande, 1: Chica, 2: Pares, 3: Juego
 let turnoActual = "Jugador";
 
 // Mostrar cartas del jugador
@@ -72,15 +72,14 @@ function repartirCartas() {
     mostrarCartasRival();
 
     cartasSeleccionadas = [];
-    faseActual = 0;
+    faseActual = -1; // Fase "Mus"
     turnoActual = "Jugador";
 
-    actualizarFaseTexto("Grande");
+    actualizarFaseTexto("Mus");
     actualizarTurnoTexto("Jugador");
 
     habilitarBotonesMus();
-
-    console.log("Cartas repartidas y botones de Mus habilitados.");
+    console.log("Cartas repartidas. Fase inicial: Mus.");
 }
 
 // Función para seleccionar cartas
@@ -94,6 +93,43 @@ function seleccionarCarta(index) {
         cartaElement.classList.add("seleccionada");
     }
     console.log("Cartas seleccionadas:", cartasSeleccionadas);
+}
+
+// Función para pedir mus
+function pedirMus() {
+    if (cartasSeleccionadas.length === 0) {
+        alert("Selecciona al menos una carta para descartar.");
+        return;
+    }
+
+    cartasSeleccionadas.forEach(index => {
+        manoJugador[index] = mazoBarajado.pop();
+    });
+
+    cartasSeleccionadas = [];
+    mostrarCartasJugador();
+
+    if (decidirRivalMus()) {
+        alert("El rival también pide mus. Se reparten nuevas cartas.");
+        repartirCartas();
+    } else {
+        alert("El rival corta el mus. Comienza la fase Grande.");
+        cortarMus();
+    }
+}
+
+// Función para cortar el mus
+function cortarMus() {
+    alert("No hay mus. Comienza la fase Grande.");
+    ocultarBotonesMus();
+    faseActual = 0; // Cambia a la fase "Grande"
+    actualizarFaseTexto("Grande");
+    actualizarTurnoTexto("Jugador");
+}
+
+// Decisión del rival sobre el mus
+function decidirRivalMus() {
+    return Math.random() < 0.5; // Probabilidad del 50%
 }
 
 // Mostrar y ocultar botones
@@ -116,5 +152,7 @@ function actualizarTurnoTexto(turno) {
     document.getElementById("turno-actual").innerText = `Turno: ${turno}`;
 }
 
-// Evento para el botón "Iniciar Ronda"
+// Eventos para botones
 document.getElementById("iniciar").addEventListener("click", repartirCartas);
+document.getElementById("pedir-mus").addEventListener("click", pedirMus);
+document.getElementById("no-hay-mus").addEventListener("click", cortarMus);
