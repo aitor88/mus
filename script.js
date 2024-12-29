@@ -18,20 +18,42 @@ function barajarMazo() {
 // Variables del juego
 let manoJugador = [];
 let manoRival = [];
+let cartasSeleccionadas = [];
 let mazoBarajado = [];
+let faseActual = 0;
+let turnoActual = "Jugador";
 
 // Mostrar cartas del jugador
 function mostrarCartasJugador() {
     const cartasJugadorDiv = document.getElementById("cartas-jugador");
     cartasJugadorDiv.innerHTML = "";
-    manoJugador.forEach(carta => {
+    manoJugador.forEach((carta, index) => {
+        const cartaHTML = `
+            <img 
+                id="carta-${index}" 
+                class="carta" 
+                src="assets/cartas/${formatoDosDigitos(carta.valor)}-${carta.palo}.png" 
+                alt="${carta.valor} de ${carta.palo}" 
+                onclick="seleccionarCarta(${index})"
+            >
+        `;
+        cartasJugadorDiv.innerHTML += cartaHTML;
+    });
+}
+
+// Mostrar cartas del rival
+function mostrarCartasRival() {
+    const cartasRivalDiv = document.getElementById("cartas-rival");
+    cartasRivalDiv.innerHTML = "";
+    manoRival.forEach(carta => {
         const cartaHTML = `
             <img 
                 class="carta" 
-                src="assets/cartas/${formatoDosDigitos(carta.valor)}-${carta.palo}.png" 
-                alt="${carta.valor} de ${carta.palo}">
+                src="assets/cartas/reverso.png" 
+                alt="Carta oculta"
+            >
         `;
-        cartasJugadorDiv.innerHTML += cartaHTML;
+        cartasRivalDiv.innerHTML += cartaHTML;
     });
 }
 
@@ -47,8 +69,51 @@ function repartirCartas() {
     manoRival = mazoBarajado.splice(0, 4);
 
     mostrarCartasJugador();
+    mostrarCartasRival();
 
-    console.log("Cartas repartidas correctamente.");
+    cartasSeleccionadas = [];
+    faseActual = 0;
+    turnoActual = "Jugador";
+
+    actualizarFaseTexto("Grande");
+    actualizarTurnoTexto("Jugador");
+
+    habilitarBotonesMus();
+
+    console.log("Cartas repartidas y botones de Mus habilitados.");
+}
+
+// Función para seleccionar cartas
+function seleccionarCarta(index) {
+    const cartaElement = document.getElementById(`carta-${index}`);
+    if (cartasSeleccionadas.includes(index)) {
+        cartasSeleccionadas = cartasSeleccionadas.filter(i => i !== index);
+        cartaElement.classList.remove("seleccionada");
+    } else {
+        cartasSeleccionadas.push(index);
+        cartaElement.classList.add("seleccionada");
+    }
+    console.log("Cartas seleccionadas:", cartasSeleccionadas);
+}
+
+// Mostrar y ocultar botones
+function habilitarBotonesMus() {
+    document.getElementById("pedir-mus").style.display = "inline-block";
+    document.getElementById("no-hay-mus").style.display = "inline-block";
+}
+
+function ocultarBotonesMus() {
+    document.getElementById("pedir-mus").style.display = "none";
+    document.getElementById("no-hay-mus").style.display = "none";
+}
+
+// Actualizar indicadores
+function actualizarFaseTexto(fase) {
+    document.getElementById("fase-actual").innerText = `Fase: ${fase}`;
+}
+
+function actualizarTurnoTexto(turno) {
+    document.getElementById("turno-actual").innerText = `Turno: ${turno}`;
 }
 
 // Evento para el botón "Iniciar Ronda"
