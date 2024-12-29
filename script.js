@@ -79,6 +79,7 @@ function repartirCartas() {
     actualizarTurnoTexto("Jugador");
 
     habilitarBotonesMus();
+    ocultarBotonesApuestas();
     console.log("Cartas repartidas. Fase inicial: Mus.");
 }
 
@@ -110,8 +111,7 @@ function pedirMus() {
     mostrarCartasJugador();
 
     if (decidirRivalMus()) {
-        alert("El rival también pide mus. Se reparten nuevas cartas.");
-        repartirCartas();
+        alert("El rival también pide mus. Se han descartado tus cartas seleccionadas.");
     } else {
         alert("El rival corta el mus. Comienza la fase Grande.");
         cortarMus();
@@ -122,6 +122,8 @@ function pedirMus() {
 function cortarMus() {
     alert("No hay mus. Comienza la fase Grande.");
     ocultarBotonesMus();
+    ocultarBotonIniciar();
+    mostrarBotonesApuestas();
     faseActual = 0; // Cambia a la fase "Grande"
     actualizarFaseTexto("Grande");
     actualizarTurnoTexto("Jugador");
@@ -141,6 +143,18 @@ function habilitarBotonesMus() {
 function ocultarBotonesMus() {
     document.getElementById("pedir-mus").style.display = "none";
     document.getElementById("no-hay-mus").style.display = "none";
+}
+
+function mostrarBotonesApuestas() {
+    document.getElementById("apuestas").style.display = "block";
+}
+
+function ocultarBotonesApuestas() {
+    document.getElementById("apuestas").style.display = "none";
+}
+
+function ocultarBotonIniciar() {
+    document.getElementById("iniciar").style.display = "none";
 }
 
 // Actualizar indicadores
