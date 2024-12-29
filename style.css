@@ -14,7 +14,6 @@ h1 {
     color: #ecf0f1;
 }
 
-/* Mesa del juego */
 #mesa {
     display: flex;
     flex-direction: column;
@@ -29,73 +28,12 @@ h1 {
     margin: 20px auto;
 }
 
-/* Cartas */
-#cartas-rival,
-#cartas-jugador {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px 0;
-}
-
 .carta {
     width: 80px;
     height: 120px;
-    margin: 5px;
     border-radius: 5px;
+    margin: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.carta:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-}
-
-.carta.seleccionada {
-    border: 2px solid yellow;
-    box-shadow: 0 0 10px yellow;
-}
-
-/* Indicadores */
-#indicadores {
-    margin: 15px 0;
-}
-
-#fase-actual, #turno-actual {
-    font-size: 1.2rem;
-    color: #ecf0f1;
-    margin: 5px 0;
-}
-
-/* Fichas */
-#fichas {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin: 10px 0;
-}
-
-#fichas-rival,
-#fichas-jugador {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-    align-items: center;
-}
-
-.ficha {
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Acciones */
-#acciones {
-    margin: 20px;
 }
 
 button {
@@ -107,35 +45,9 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease;
 }
 
 button:hover {
     background: #c0392b;
-    transform: scale(1.05);
-}
-
-/* Botones específicos de apuestas */
-#apuestas button {
-    background: #16a085;
-}
-
-#apuestas button:hover {
-    background: #1abc9c;
-}
-
-/* Marcador */
-#marcador {
-    margin: 20px 0;
-    font-size: 18px;
-    color: #ecf0f1;
-}
-
-#marcador p {
-    margin: 5px 0;
-}
-
-/* Ocultar elementos */
-button[style="display: none;"] {
-    display: none !important;
 }
