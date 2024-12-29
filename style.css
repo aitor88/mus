@@ -1,3 +1,4 @@
+/* Estilo general */
 body {
     font-family: Arial, sans-serif;
     background-color: #2c3e50;
@@ -5,26 +6,69 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
+/* Título del juego */
 h1 {
     margin-top: 20px;
+    font-size: 2.5rem;
 }
 
+/* Contenedor de la mesa */
 #mesa {
     display: flex;
-    justify-content: space-around;
-    margin: 20px;
-    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: #34495e;
+    padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 800px;
 }
 
+/* Cartas */
+#cartas-jugador, #cartas-rival {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+/* Estilo de cada carta */
+#cartas-jugador div, #cartas-rival div {
+    display: inline-block;
+    padding: 15px;
+    background: white;
+    color: black;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+    width: 80px;
+    height: 100px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#cartas-jugador div:hover, #cartas-rival div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Contenedor de acciones */
 #acciones {
     margin: 20px;
 }
 
+/* Botones */
 #acciones button {
     padding: 10px 20px;
     margin: 5px;
@@ -33,12 +77,30 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 #acciones button:hover {
     background: #c0392b;
 }
 
+/* Marcador */
 #marcador {
+    display: flex;
+    justify-content: space-around;
     margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+#marcador p {
+    background: #16a085;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    width: 45%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
