@@ -91,8 +91,9 @@ function repartirCartas() {
     mostrarCartasRival();
     limpiarFichas(); // Limpia las fichas al iniciar nueva ronda
     cartasSeleccionadas = [];
-    document.getElementById("pedir-mus").style.display = "inline-block";
-    document.getElementById("no-hay-mus").style.display = "inline-block";
+    habilitarBotonesMus(); // Habilitar los botones de mus
+    actualizarFaseTexto("Grande");
+    actualizarTurnoTexto("Jugador");
 }
 
 // Limpieza de fichas visuales
@@ -113,22 +114,26 @@ function añadirFicha(jugador) {
     }
 }
 
-// Avanzar fase
-function avanzarFase() {
-    if (faseActual < 3) {
-        faseActual += 1; // Avanzar a la siguiente fase
-        actualizarFaseTexto();
-        turnoActual = "Jugador"; // Reinicia el turno al jugador
-        actualizarTurnoTexto();
-        empezarApuestas(); // Inicia la nueva fase de apuestas
-    } else {
-        // Ronda terminada: Revelar las cartas del rival
-        mostrarCartasRival(true); // Revelar cartas del rival
-        alert("Ronda terminada. ¡Prepárate para la siguiente ronda!");
-        faseActual = 0; // Reinicia las fases
-        repartirCartas(); // Reparte nuevas cartas
-    }
+// Actualizar indicadores de fase y turno
+function actualizarFaseTexto(fase) {
+    const fases = {
+        Grande: "Grande",
+        Chica: "Chica",
+        Pares: "Pares",
+        Juego: "Juego",
+    };
+    faseTexto.innerText = `Fase: ${fases[fase] || "Inicio"}`;
 }
 
-// Funciones relacionadas con apuestas y lógica del rival
-// Continúan integradas previamente
+function actualizarTurnoTexto(turno) {
+    turnoTexto.innerText = `Turno: ${turno}`;
+}
+
+// Habilitar botones de mus
+function habilitarBotonesMus() {
+    document.getElementById("pedir-mus").style.display = "inline-block";
+    document.getElementById("no-hay-mus").style.display = "inline-block";
+}
+
+// Eventos
+document.getElementById("iniciar").addEventListener("click", repartirCartas);
