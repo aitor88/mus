@@ -24,6 +24,7 @@ let faseActual = -1; // -1: Mus, 0: Grande, 1: Chica, 2: Pares, 3: Juego
 let turnoActual = "Jugador";
 let fichasJugador = 0;
 let fichasRival = 0;
+let apuestaActual = 0;
 
 // Mostrar cartas del jugador
 function mostrarCartasJugador() {
@@ -44,17 +45,17 @@ function mostrarCartasJugador() {
 }
 
 // Mostrar cartas del rival
-function mostrarCartasRival() {
+function mostrarCartasRival(revelar = false) {
     const cartasRivalDiv = document.getElementById("cartas-rival");
     cartasRivalDiv.innerHTML = "";
     manoRival.forEach(carta => {
-        const cartaHTML = `
-            <img 
-                class="carta" 
-                src="assets/cartas/reverso.png" 
-                alt="Carta oculta"
-            >
-        `;
+        const cartaHTML = revelar
+            ? `<img 
+                   class="carta" 
+                   src="assets/cartas/${formatoDosDigitos(carta.valor)}-${carta.palo}.png" 
+                   alt="${carta.valor} de ${carta.palo}">
+              `
+            : `<img class="carta" src="assets/cartas/reverso.png" alt="Carta oculta">`;
         cartasRivalDiv.innerHTML += cartaHTML;
     });
 }
@@ -82,6 +83,7 @@ function repartirCartas() {
 
     habilitarBotonesMus();
     ocultarBotonesApuestas();
+    actualizarMarcador();
     console.log("Cartas repartidas. Fase inicial: Mus.");
 }
 
@@ -137,6 +139,7 @@ function decidirRivalMus() {
 // Funciones para apuestas
 function apostar() {
     console.log("El jugador apuesta 1 ficha.");
+    apuestaActual += 1;
     fichasJugador += 1;
     actualizarMarcador();
     cambiarTurno();
@@ -144,14 +147,37 @@ function apostar() {
 
 function subir() {
     console.log("El jugador sube la apuesta.");
-    fichasJugador += 2; // Subir implica aumentar la apuesta en más de 1 ficha
+    apuestaActual += 2;
+    fichasJugador += 2;
     actualizarMarcador();
     cambiarTurno();
 }
 
 function pasar() {
     console.log("El jugador pasa.");
-    cambiarTurno();
+    determinarGanador();
+}
+
+// Determinar ganador de la fase
+function determinarGanador() {
+    mostrarCartasRival(true); // Revela las cartas del rival
+    const jugadorGana = Math.random() < 0.5; // Simulación de resultado
+    if (jugadorGana) {
+        alert("¡Ganas esta fase!");
+        fichasJugador += apuestaActual;
+    } else {
+        alert("El rival gana esta fase.");
+        fichasRival += apuestaActual;
+    }
+    finalizarFase();
+}
+
+// Finalizar la fase y reiniciar
+function finalizarFase() {
+    apuestaActual = 0;
+    actualizarMarcador();
+    ocultarBotonesApuestas();
+    mostrarBotonIniciar();
 }
 
 // Cambiar turno entre jugador y rival
@@ -168,15 +194,18 @@ function accionRival() {
     const decision = Math.random();
     if (decision < 0.4) {
         console.log("El rival pasa.");
+        determinarGanador();
     } else if (decision < 0.7) {
         console.log("El rival iguala la apuesta.");
+        apuestaActual += 1;
         fichasRival += 1;
     } else {
         console.log("El rival sube la apuesta.");
+        apuestaActual += 2;
         fichasRival += 2;
     }
     actualizarMarcador();
-    cambiarTurno(); // Regresa el turno al jugador
+    cambiarTurno();
 }
 
 // Mostrar/Ocultar botones
@@ -200,6 +229,10 @@ function ocultarBotonesApuestas() {
 
 function ocultarBotonIniciar() {
     document.getElementById("iniciar").style.display = "none";
+}
+
+function mostrarBotonIniciar() {
+    document.getElementById("iniciar").style.display = "inline-block";
 }
 
 // Actualizar indicadores
