@@ -33,21 +33,33 @@ function mostrarCartasJugador() {
     cartasJugadorDiv.innerHTML = "";
     manoJugador.forEach((carta, index) => {
         const cartaHTML = `
-            <div id="carta-${index}" class="carta" onclick="seleccionarCarta(${index})">
-                ${carta.valor} de ${carta.palo}
-            </div>`;
+            <img 
+                id="carta-${index}" 
+                class="carta" 
+                src="assets/cartas/${carta.valor}-${carta.palo}.png" 
+                alt="${carta.valor} de ${carta.palo}" 
+                onclick="seleccionarCarta(${index})"
+            >
+        `;
         cartasJugadorDiv.innerHTML += cartaHTML;
     });
 }
 
 // Función para mostrar cartas del rival
-function mostrarCartasRival() {
+function mostrarCartasRival(revelar = false) {
     cartasRivalDiv.innerHTML = "";
     manoRival.forEach(carta => {
-        const cartaHTML = `
-            <div class="carta">
-                ${carta.valor} de ${carta.palo}
-            </div>`;
+        const cartaHTML = revelar
+            ? `<img 
+                   class="carta" 
+                   src="assets/cartas/${carta.valor}-${carta.palo}.png" 
+                   alt="${carta.valor} de ${carta.palo}"
+               >`
+            : `<img 
+                   class="carta" 
+                   src="assets/cartas/dorso.png" 
+                   alt="Carta oculta"
+               >`;
         cartasRivalDiv.innerHTML += cartaHTML;
     });
 }
@@ -58,7 +70,7 @@ function repartirCartas() {
     manoJugador = mazoBarajado.splice(0, 4);
     manoRival = mazoBarajado.splice(0, 4);
     mostrarCartasJugador();
-    cartasRivalDiv.innerHTML = "Cartas del Rival: [Ocultas]";
+    mostrarCartasRival(); // Mostrar el dorso inicialmente
 }
 
 // Seleccionar una carta
@@ -75,7 +87,6 @@ function seleccionarCarta(index) {
     }
 }
 
-// Pedir Mus
 function pedirMus() {
     if (cartasSeleccionadas.length === 0) {
         alert("Selecciona al menos una carta para descartar.");
@@ -97,6 +108,10 @@ function pedirMus() {
 function actualizarMarcador() {
     marcadorJugador.innerText = piedrasJugador;
     marcadorRival.innerText = piedrasRival;
+}
+
+function revelarCartasRival() {
+    mostrarCartasRival(true); // Cambiar de dorso a cartas reales
 }
 
 // Eventos
