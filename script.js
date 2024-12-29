@@ -87,7 +87,7 @@ function repartirCartas() {
     console.log("Cartas repartidas. Fase inicial: Mus.");
 }
 
-// Función para seleccionar cartas
+// Seleccionar cartas para el descarte
 function seleccionarCarta(index) {
     const cartaElement = document.getElementById(`carta-${index}`);
     if (cartasSeleccionadas.includes(index)) {
@@ -120,7 +120,7 @@ function pedirMus() {
     }
 }
 
-// Función para cortar el mus
+// Cortar el mus y avanzar a la fase Grande
 function cortarMus() {
     alert("No hay mus. Comienza la fase Grande.");
     ocultarBotonesMus();
@@ -136,7 +136,29 @@ function decidirRivalMus() {
     return Math.random() < 0.5; // Probabilidad del 50%
 }
 
-// Funciones para apuestas
+// Función para avanzar a la siguiente fase
+function avanzarFase() {
+    if (faseActual < 3) {
+        faseActual += 1;
+        const fases = ["Grande", "Chica", "Pares", "Juego"];
+        actualizarFaseTexto(fases[faseActual]);
+        turnoActual = "Jugador";
+        actualizarTurnoTexto(turnoActual);
+    } else {
+        finalizarRonda();
+    }
+}
+
+// Finalizar la ronda y reiniciar
+function finalizarRonda() {
+    alert("Ronda completada. Preparando para la siguiente ronda.");
+    mostrarBotonIniciar();
+    ocultarBotonesApuestas();
+    mostrarCartasRival(true);
+    faseActual = -1; // Reinicia la fase a "Mus"
+}
+
+// Funciones de apuestas
 function apostar() {
     console.log("El jugador apuesta 1 ficha.");
     apuestaActual += 1;
@@ -155,46 +177,30 @@ function subir() {
 
 function pasar() {
     console.log("El jugador pasa.");
-    determinarGanador();
-}
-
-// Determinar ganador de la fase
-function determinarGanador() {
-    mostrarCartasRival(true); // Revela las cartas del rival
-    const jugadorGana = Math.random() < 0.5; // Simulación de resultado
-    if (jugadorGana) {
-        alert("¡Ganas esta fase!");
-        fichasJugador += apuestaActual;
-    } else {
-        alert("El rival gana esta fase.");
-        fichasRival += apuestaActual;
-    }
-    finalizarFase();
-}
-
-// Finalizar la fase y reiniciar
-function finalizarFase() {
-    apuestaActual = 0;
-    actualizarMarcador();
-    ocultarBotonesApuestas();
-    mostrarBotonIniciar();
+    avanzarFase();
 }
 
 // Cambiar turno entre jugador y rival
 function cambiarTurno() {
     turnoActual = turnoActual === "Jugador" ? "Rival" : "Jugador";
     actualizarTurnoTexto(turnoActual);
+
     if (turnoActual === "Rival") {
-        setTimeout(accionRival, 1000); // Simula el turno del rival
+        setTimeout(() => {
+            accionRival();
+            if (faseActual >= 0) {
+                avanzarFase();
+            }
+        }, 1000); // Simula el turno del rival
     }
 }
 
-// Simula una acción del rival
+// Acción del rival
 function accionRival() {
     const decision = Math.random();
     if (decision < 0.4) {
         console.log("El rival pasa.");
-        determinarGanador();
+        avanzarFase();
     } else if (decision < 0.7) {
         console.log("El rival iguala la apuesta.");
         apuestaActual += 1;
@@ -208,7 +214,7 @@ function accionRival() {
     cambiarTurno();
 }
 
-// Mostrar/Ocultar botones
+// Mostrar y ocultar botones
 function habilitarBotonesMus() {
     document.getElementById("pedir-mus").style.display = "inline-block";
     document.getElementById("no-hay-mus").style.display = "inline-block";
@@ -250,7 +256,7 @@ function actualizarMarcador() {
     document.getElementById("piedras-rival").innerText = fichasRival;
 }
 
-// Eventos para botones
+// Eventos de botones
 document.getElementById("iniciar").addEventListener("click", repartirCartas);
 document.getElementById("pedir-mus").addEventListener("click", pedirMus);
 document.getElementById("no-hay-mus").addEventListener("click", cortarMus);
