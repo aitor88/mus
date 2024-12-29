@@ -59,7 +59,7 @@ function mostrarCartasRival(revelar = false) {
                >`
             : `<img 
                    class="carta" 
-                   src="assets/cartas/dorso.png" 
+                   src="assets/cartas/reverso.png" 
                    alt="Carta oculta"
                >`;
         cartasRivalDiv.innerHTML += cartaHTML;
