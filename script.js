@@ -1,6 +1,6 @@
 // Variables globales
 let jugador1 = { nombre: "Jugador 1", piedras: 0, cartas: [] };
-let jugador2 = { nombre: "Jugador 2", piedras: 0, cartas: [] };
+let jugador2 = { nombre: "Jugador 2", piedras: 0, cartas: [] }; // Controlado por la máquina
 let turno = 1;
 let fase = "Reparto";
 let baraja = [];
@@ -57,6 +57,10 @@ function formatearCarta(carta) {
 function cambiarTurno() {
   turno = turno === 1 ? 2 : 1;
   turnoDisplay.textContent = `Turno: ${turno === 1 ? "Jugador 1" : "Jugador 2"}`;
+
+  if (turno === 2) {
+    setTimeout(accionesMaquina, 1000); // La máquina actúa después de 1 segundo
+  }
 }
 
 // Resolver jugada
@@ -65,6 +69,137 @@ function resolverJugada() {
     .map(carta => `<img src="assets/cartas/${formatearCarta(carta)}.png" alt="${carta.valor} de ${carta.palo}">`)
     .join("");
   alert("Resolviendo la jugada...");
+}
+
+// Acciones de la máquina
+function accionesMaquina() {
+  switch (fase) {
+    case "Reparto":
+      maquinaDecideReparto();
+      break;
+    case "Grande":
+      maquinaDecideGrande();
+      break;
+    case "Chica":
+      maquinaDecideChica();
+      break;
+    case "Pares":
+      maquinaDecidePares();
+      break;
+    case "Juego":
+      maquinaDecideJuego();
+      break;
+    default:
+      break;
+  }
+}
+
+// Máquina en Reparto
+function maquinaDecideReparto() {
+  if (Math.random() > 0.5) {
+    alert("La máquina corta el Mus.");
+    fase = "Grande";
+    actualizarInterfaz();
+  } else {
+    alert("La máquina pide Mus.");
+    repartirCartas();
+    actualizarInterfaz();
+  }
+}
+
+// Máquina en Grande
+function maquinaDecideGrande() {
+  const valorGrande = calcularValorGrande(jugador2.cartas);
+
+  if (valorGrande > 30) {
+    alert("La máquina envida.");
+    apuestas.grande += 2;
+  } else {
+    alert("La máquina pasa.");
+  }
+
+  cambiarTurno();
+}
+
+// Máquina en Chica
+function maquinaDecideChica() {
+  const valorChica = calcularValorChica(jugador2.cartas);
+
+  if (valorChica < 15) {
+    alert("La máquina envida en Chica.");
+    apuestas.chica += 2;
+  } else {
+    alert("La máquina pasa.");
+  }
+
+  cambiarTurno();
+}
+
+// Máquina en Pares
+function maquinaDecidePares() {
+  const pares = contarPares(jugador2.cartas);
+
+  if (pares > 0) {
+    alert("La máquina tiene pares y pasa.");
+  } else {
+    alert("La máquina no tiene pares.");
+  }
+
+  cambiarTurno();
+}
+
+// Máquina en Juego
+function maquinaDecideJuego() {
+  const juego = calcularJuego(jugador2.cartas);
+
+  if (juego >= 31) {
+    alert("La máquina tiene Juego y lanza un Órdago.");
+    apuestas.juego += 2;
+  } else {
+    alert("La máquina no tiene Juego y pasa.");
+  }
+
+  cambiarTurno();
+}
+
+// Cálculos
+function calcularValorGrande(cartas) {
+  return cartas.reduce((acc, carta) => acc + carta.valor, 0);
+}
+
+function calcularValorChica(cartas) {
+  return cartas.reduce((acc, carta) => acc + carta.valor, 0);
+}
+
+function contarPares(cartas) {
+  const valores = cartas.map(carta => carta.valor);
+  const contador = {};
+  valores.forEach(valor => {
+    contador[valor] = (contador[valor] || 0) + 1;
+  });
+
+  if (Object.values(contador).includes(4)) return 3; // Duples
+  if (Object.values(contador).includes(3)) return 2; // Medias
+  if (Object.values(contador).includes(2)) return 1; // Par
+  return 0; // Sin pares
+}
+
+function calcularJuego(cartas) {
+  const suma = cartas.reduce((acc, carta) => acc + carta.valor, 0);
+  return suma >= 31 ? suma : 0;
+}
+
+// Inicializar juego
+function inicializarJuego() {
+  crearBaraja();
+  barajarCartas();
+  repartirCartas();
+  actualizarInterfaz();
+}
+
+function actualizarInterfaz() {
+  faseDisplay.textContent = `Fase actual: ${fase}`;
+  marcadorDisplay.textContent = `Marcador: Jugador 1: ${jugador1.piedras} | Jugador 2: ${jugador2.piedras}`;
 }
 
 // Configurar botones
@@ -80,18 +215,5 @@ document.getElementById("noMus").addEventListener("click", () => {
 });
 
 document.getElementById("ordago").addEventListener("click", resolverJugada);
-
-// Inicializar juego
-function inicializarJuego() {
-  crearBaraja();
-  barajarCartas();
-  repartirCartas();
-  actualizarInterfaz();
-}
-
-function actualizarInterfaz() {
-  faseDisplay.textContent = `Fase actual: ${fase}`;
-  marcadorDisplay.textContent = `Marcador: Jugador 1: ${jugador1.piedras} | Jugador 2: ${jugador2.piedras}`;
-}
 
 inicializarJuego();
