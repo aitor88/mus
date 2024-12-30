@@ -44,6 +44,10 @@ h1 {
   transform: scale(1.05);
 }
 
+.cartas img.seleccionada {
+  border: 3px solid #ff9e00; /* Resaltar las cartas seleccionadas */
+}
+
 #controles {
   margin: 20px auto;
   display: flex;
