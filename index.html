@@ -1,44 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juego de Mus</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Mus</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Juego de Mus</h1>
-  <div id="estadoJuego">
-    <p id="turno">Turno: Jugador 1</p>
-    <p id="fase">Fase actual: Mus</p>
-    <p id="marcador">Marcador: Jugador 1: 0 | Máquina: 0</p>
-    <p id="apuestaActual">Apuesta actual: 0</p>
-  </div>
-
-  <div id="tablero">
-    <div id="cartasJugador1" class="zonaCartas"></div>
-    <div id="cartasJugador2" class="zonaCartas"></div>
-  </div>
-
-  <div id="accionesJugador">
-    <!-- Botones para la fase de Mus -->
-    <button id="mus">Mus</button>
-    <button id="noMus">No hay Mus</button>
-
-    <!-- Botones para apuestas -->
-    <button id="envite" style="display: none;">Envido</button>
-    <button id="ordago" style="display: none;">Órdago</button>
-    <button id="pasar" style="display: none;">Pasar</button>
-
-    <!-- Botones para aceptar o rechazar apuestas -->
-    <button id="aceptarApuesta" style="display: none;">Aceptar</button>
-    <button id="rechazarApuesta" style="display: none;">Rechazar</button>
-  </div>
-
-  <!-- Registro de decisiones -->
-  <h2>Registro de Decisiones</h2>
-  <ul id="registroDecisiones"></ul>
-
-  <script src="script.js"></script>
+    <h1>Juego de Mus</h1>
+    <div id="tablero">
+        <div id="cartasJugador1"></div>
+        <div id="botonesMus">
+            <button id="mus">Mus</button>
+            <button id="noMus">No hay Mus</button>
+        </div>
+    </div>
+    <ul id="registroDecisiones"></ul>
+    <script src="script.js"></script>
 </body>
 </html>
