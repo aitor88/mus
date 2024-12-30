@@ -1,43 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mus - Un Jugador</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mus para dos jugadores</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <h1>Juego de Mus - Un Jugador</h1>
-        <div class="status">
-            <p><strong>Fase:</strong> <span id="fase-actual">Mus</span></p>
-            <p><strong>Turno:</strong> <span id="turno-actual">Jugador</span></p>
-        </div>
-        
-        <div class="player-area">
-            <h2>Jugador</h2>
-            <div id="cartas-jugador" class="cartas"></div>
-            <p><strong>Piedras:</strong> <span id="piedras-jugador">0</span></p>
-        </div>
-
-        <div class="machine-area">
-            <h2>Máquina</h2>
-            <div id="cartas-maquina" class="cartas"></div>
-            <p><strong>Piedras:</strong> <span id="piedras-maquina">0</span></p>
-        </div>
-
-        <div class="actions">
-            <button id="btn-mus">Mus</button>
-            <button id="btn-envidar">Envidar</button>
-            <button id="btn-ordago">Órdago</button>
-        </div>
-
-        <div class="log">
-            <h3>Registro</h3>
-            <ul id="log-mensajes"></ul>
-        </div>
+  <div id="app">
+    <h1>Mus para dos jugadores</h1>
+    <div id="estadoJuego">
+      <p id="turno">Turno: Jugador 1</p>
+      <p id="fase">Fase actual: Reparto</p>
+      <p id="marcador">Marcador: Jugador 1: 0 | Jugador 2: 0</p>
     </div>
-
-    <script src="game.js"></script>
+    <div id="mesa">
+      <div id="cartasJugador1" class="cartas"></div>
+      <div id="cartasJugador2" class="cartas"></div>
+    </div>
+    <div id="controles">
+      <button id="mus">Mus</button>
+      <button id="noMus">No hay Mus</button>
+      <button id="envite">Envidar</button>
+      <button id="ordago">Órdago</button>
+      <button id="pasar">Pasar</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
