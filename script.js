@@ -61,6 +61,15 @@ function formatearCarta(carta) {
   return `${valorFormateado}-${carta.palo}`;
 }
 
+// Alternar visibilidad de botones
+function alternarBotonesMus(mostrarMus) {
+  document.getElementById("mus").style.display = mostrarMus ? "inline-block" : "none";
+  document.getElementById("noMus").style.display = mostrarMus ? "inline-block" : "none";
+  document.getElementById("envite").style.display = mostrarMus ? "none" : "inline-block";
+  document.getElementById("ordago").style.display = mostrarMus ? "none" : "inline-block";
+  document.getElementById("pasar").style.display = mostrarMus ? "none" : "inline-block";
+}
+
 // Registro de decisiones
 function actualizarRegistro(mensaje) {
   const registro = document.getElementById("registroDecisiones");
@@ -97,6 +106,7 @@ botonConfirmarDescarte.addEventListener("click", () => {
   botonConfirmarDescarte.style.display = "none";
 
   fase = "Grande";
+  alternarBotonesMus(false); // Muestra los botones de apuesta tras el descarte
   actualizarInterfaz();
 });
 
@@ -110,6 +120,7 @@ document.getElementById("noMus").addEventListener("click", () => {
   actualizarRegistro("Jugador 1 ha cortado el Mus. La partida comienza sin descartes.");
   acuerdoMus = false;
   fase = "Grande";
+  alternarBotonesMus(false); // Muestra los botones de apuestas
   actualizarInterfaz();
 });
 
@@ -122,6 +133,7 @@ function maquinaDecideMus(jugadorQuiereMus) {
     actualizarRegistro("La máquina corta el Mus. La partida comienza sin descartes.");
     acuerdoMus = false;
     fase = "Grande";
+    alternarBotonesMus(false); // Muestra los botones de apuestas
     actualizarInterfaz();
   }
 }
@@ -143,6 +155,7 @@ function inicializarJuego() {
   crearBaraja();
   barajarCartas();
   repartirCartas();
+  alternarBotonesMus(true); // Muestra botones de Mus al iniciar
   actualizarInterfaz();
 }
 
