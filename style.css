@@ -6,6 +6,14 @@ body {
   padding: 0;
 }
 
+h1 {
+  margin: 20px 0;
+}
+
+#estadoJuego {
+  margin-bottom: 20px;
+}
+
 #mesa {
   display: flex;
   justify-content: space-around;
@@ -13,10 +21,16 @@ body {
 }
 
 .cartas {
-  width: 40%;
-  background: #ddd;
-  padding: 10px;
-  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cartas img {
+  width: 80px;
+  height: 120px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #controles {
@@ -28,4 +42,12 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
