@@ -96,11 +96,13 @@ botonConfirmarDescarte.addEventListener("click", () => {
   mostrarCartas(); // Actualizar las cartas visibles después del descarte
   botonConfirmarDescarte.style.display = "none"; // Ocultar botón de descarte
 
-  // Volver a mostrar los botones de Mus
+  // Volver a mostrar los botones de Mus y No hay Mus
   document.getElementById("mus").style.display = "inline-block";
   document.getElementById("noMus").style.display = "inline-block";
 
-  iniciarFaseGrande();
+  // Volver a la fase Mus
+  fase = "Mus";
+  actualizarInterfaz();
 });
 
 // Actualizar registro
