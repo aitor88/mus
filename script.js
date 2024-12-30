@@ -100,7 +100,7 @@ botonConfirmarDescarte.addEventListener("click", () => {
   document.getElementById("mus").style.display = "inline-block";
   document.getElementById("noMus").style.display = "inline-block";
 
-  // Volver a la fase Mus
+  // Cambiar la fase a Mus para permitir decidir si hacer un nuevo Mus
   fase = "Mus";
   actualizarInterfaz();
 });
