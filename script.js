@@ -5,11 +5,16 @@ let baraja = [];
 let cartasDescartadas = []; // Cartas descartadas para reconstruir el mazo
 let cartasSeleccionadas = []; // Cartas seleccionadas por el jugador para descarte
 let faseActual = "Mus"; // Fase inicial
+let turnoJugador = true; // Determina de quién es el turno (true para jugador1, false para máquina)
+let apuestaActual = 0; // Almacena la apuesta actual en piedras
 
 // Elementos HTML
 const cartasJugador1 = document.getElementById("cartasJugador1");
 const botonMus = document.getElementById("mus");
 const botonNoMus = document.getElementById("noMus");
+const botonEnvite = document.getElementById("envite");
+const botonOrdago = document.getElementById("ordago");
+const botonPasar = document.getElementById("pasar");
 const registro = document.getElementById("registroDecisiones");
 
 // Crear y barajar baraja
@@ -108,7 +113,6 @@ function mostrarDescarte() {
 
         botonConfirmarDescarte.addEventListener("click", () => {
             if (cartasSeleccionadas.length > 0) {
-                // Guardar las cartas descartadas para reconstruir el mazo si es necesario
                 cartasSeleccionadas.forEach((index) => {
                     cartasDescartadas.push(jugador1.cartas[index]);
                     jugador1.cartas[index] = baraja.shift();
@@ -160,15 +164,101 @@ function rehacerMazo() {
     actualizarRegistro("La baraja se ha reconstruido con las cartas descartadas.");
 }
 
-// Iniciar la fase Grande
+// Fase Grande
 function iniciarFaseGrande() {
     faseActual = "Grande";
     botonMus.style.display = "none";
     botonNoMus.style.display = "none";
-    actualizarRegistro("Fase Grande iniciada.");
+    alternarBotonesApuestas(true);
+    actualizarRegistro("Fase Grande iniciada. Turno de Jugador 1.");
+    turnoJugador = true;
 }
 
-// Inicializar el juego
+function alternarBotonesApuestas(visible) {
+    const display = visible ? "inline-block" : "none";
+    botonEnvite.style.display = display;
+    botonOrdago.style.display = display;
+    botonPasar.style.display = display;
+}
+
+botonEnvite.addEventListener("click", () => {
+    if (turnoJugador && faseActual === "Grande") {
+        apuestaActual += 2;
+        actualizarRegistro(`Jugador 1 envida 2 piedras. Apuesta actual: ${apuestaActual}`);
+        turnoJugador = false;
+        maquinaRespondeApuesta();
+    }
+});
+
+botonOrdago.addEventListener("click", () => {
+    if (turnoJugador && faseActual === "Grande") {
+        actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
+        turnoJugador = false;
+        maquinaRespondeOrdago();
+    }
+});
+
+botonPasar.addEventListener("click", () => {
+    if (turnoJugador && faseActual === "Grande") {
+        actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
+        turnoJugador = false;
+        maquinaRespondePaso();
+    }
+});
+
+function maquinaRespondeOrdago() {
+    const decision = Math.random();
+    if (decision < 0.5) {
+        actualizarRegistro("La máquina acepta el Órdago. Resolviendo...");
+        actualizarRegistro("Órdago ganado por el Jugador 1. Fin de partida.");
+        reiniciarJuego();
+    } else {
+        actualizarRegistro("La máquina no acepta el Órdago. Jugador 1 gana la fase Grande.");
+        avanzarFase();
+    }
+}
+
+function maquinaRespondeApuesta() {
+    const decision = Math.random();
+    if (decision < 0.5) {
+        actualizarRegistro("La máquina acepta la apuesta. Turno de Jugador 1.");
+        turnoJugador = true;
+    } else {
+        actualizarRegistro("La máquina no acepta la apuesta. Jugador 1 gana la fase Grande.");
+        avanzarFase();
+    }
+}
+
+function maquinaRespondePaso() {
+    const decision = Math.random();
+    if (decision < 0.5) {
+        actualizarRegistro("La máquina también pasa. Fase Grande finalizada.");
+        avanzarFase();
+    } else {
+        apuestaActual += 2;
+        actualizarRegistro(`La máquina envida 2 piedras. Apuesta actual: ${apuestaActual}`);
+        turnoJugador = true;
+    }
+}
+
+function avanzarFase() {
+    if (faseActual === "Grande") {
+        faseActual = "Chica";
+        actualizarRegistro("Comienza la fase Chica.");
+    }
+    alternarBotonesApuestas(false);
+}
+
+function reiniciarJuego() {
+    crearBaraja();
+    barajarCartas();
+    repartirCartas();
+    actualizarRegistro("Juego reiniciado. Fase inicial: Mus.");
+    faseActual = "Mus";
+    turnoJugador = true;
+    apuestaActual = 0;
+}
+
 function inicializarJuego() {
     crearBaraja();
     barajarCartas();
