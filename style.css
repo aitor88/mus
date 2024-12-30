@@ -105,9 +105,6 @@ button:focus {
   padding: 10px;
   background-color: #e9ecef;
   border-radius: 10px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 #registro h2 {
@@ -118,8 +115,6 @@ button:focus {
 #registroDecisiones {
   list-style: none;
   padding: 0;
-  max-height: 200px;
-  overflow-y: auto;
 }
 
 #registroDecisiones li {
@@ -129,60 +124,4 @@ button:focus {
   border-radius: 5px;
   font-size: 0.9rem;
   text-align: left;
-}
-
-/* Diseño responsive */
-
-/* Para dispositivos móviles pequeños (máx. 480px) */
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  #mesa {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .cartas img {
-    width: 60px;
-    height: 90px;
-  }
-
-  button {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-    min-width: 80px;
-  }
-
-  #registro {
-    padding: 8px;
-    max-width: 90%;
-  }
-
-  #registro h2 {
-    font-size: 1rem;
-  }
-
-  #registroDecisiones li {
-    font-size: 0.8rem;
-  }
-}
-
-/* Para tabletas (máx. 768px) */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  .cartas img {
-    width: 70px;
-    height: 105px;
-  }
-
-  button {
-    font-size: 0.95rem;
-    padding: 9px 13px;
-    min-width: 90px;
-  }
 }
