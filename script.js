@@ -2,6 +2,7 @@
 let jugador1 = { nombre: "Jugador 1", piedras: 0, cartas: [] };
 let jugador2 = { nombre: "Máquina", piedras: 0, cartas: [] };
 let baraja = [];
+let cartasDescartadas = []; // Cartas descartadas para reconstruir el mazo
 let cartasSeleccionadas = []; // Cartas seleccionadas por el jugador para descarte
 let faseActual = "Mus"; // Fase inicial
 
@@ -107,9 +108,17 @@ function mostrarDescarte() {
 
         botonConfirmarDescarte.addEventListener("click", () => {
             if (cartasSeleccionadas.length > 0) {
+                // Guardar las cartas descartadas para reconstruir el mazo si es necesario
                 cartasSeleccionadas.forEach((index) => {
-                    jugador1.cartas[index] = baraja.shift(); // Reemplazar cartas seleccionadas
+                    cartasDescartadas.push(jugador1.cartas[index]);
+                    jugador1.cartas[index] = baraja.shift();
                 });
+
+                // Comprobar si quedan cartas en la baraja
+                if (baraja.length === 0) {
+                    rehacerMazo();
+                }
+
                 actualizarRegistro("Se han repartido nuevas cartas.");
                 cartasSeleccionadas = [];
                 ordenarMano(jugador1.cartas); // Ordenar las cartas después del descarte
@@ -126,9 +135,12 @@ function mostrarDescarte() {
 }
 
 function maquinaDescarta() {
-    // Decidir cuántas cartas descartar
     const cantidadDescartar = Math.floor(Math.random() * 4); // Máquina descarta de 0 a 3 cartas
     for (let i = 0; i < cantidadDescartar; i++) {
+        if (baraja.length === 0) {
+            rehacerMazo();
+        }
+        cartasDescartadas.push(jugador2.cartas[i]);
         jugador2.cartas[i] = baraja.shift();
     }
     ordenarMano(jugador2.cartas); // Ordenar la mano de la máquina
@@ -139,6 +151,13 @@ function maquinaDescarta() {
     } else {
         actualizarRegistro("La máquina no ha descartado cartas.");
     }
+}
+
+function rehacerMazo() {
+    baraja = [...cartasDescartadas];
+    cartasDescartadas = [];
+    barajarCartas();
+    actualizarRegistro("La baraja se ha reconstruido con las cartas descartadas.");
 }
 
 // Iniciar la fase Grande
