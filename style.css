@@ -56,7 +56,7 @@ button {
   font-size: 1rem;
   padding: 10px 15px;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   min-width: 100px;
 }
@@ -91,4 +91,35 @@ button:focus {
 
 #confirmarDescarte:hover {
   background-color: #218838;
+}
+
+#registro {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#registro h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+#registroDecisiones {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#registroDecisiones li {
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-align: left;
 }
