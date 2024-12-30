@@ -132,14 +132,15 @@ document.getElementById("envite").addEventListener("click", () => {
     apuestaActual += 2; // Incrementa la apuesta
     actualizarRegistro(`Jugador 1 envida. Apuesta total: ${apuestaActual} piedras.`);
     turnoJugador = false;
-    maquinaRespondeApuesta();
+    setTimeout(maquinaRespondeApuesta, 1000); // La máquina responde después de 1 segundo
   }
 });
 
 document.getElementById("ordago").addEventListener("click", () => {
   if (turnoJugador) {
     actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
-    maquinaRespondeOrdago();
+    turnoJugador = false;
+    setTimeout(maquinaRespondeOrdago, 1000); // La máquina responde después de 1 segundo
   }
 });
 
@@ -147,7 +148,7 @@ document.getElementById("pasar").addEventListener("click", () => {
   if (turnoJugador) {
     actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
     turnoJugador = false;
-    maquinaRespondePaso();
+    setTimeout(maquinaRespondePaso, 1000); // La máquina responde después de 1 segundo
   }
 });
 
