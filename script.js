@@ -7,12 +7,16 @@ let faseActualIndex = 0; // Índice de la fase actual
 let fase = fases[faseActualIndex];
 let apuestaActual = 0;
 let baraja = [];
+let cartasSeleccionadas = []; // Cartas seleccionadas para el descarte
 const registro = document.getElementById("registroDecisiones");
 
 // Elementos HTML
 const turnoDisplay = document.getElementById("turno");
 const faseDisplay = document.getElementById("fase");
 const marcadorDisplay = document.getElementById("marcador");
+const cartasJugador1 = document.getElementById("cartasJugador1");
+const cartasJugador2 = document.getElementById("cartasJugador2");
+const botonConfirmarDescarte = document.getElementById("confirmarDescarte");
 
 // Crear y barajar baraja
 function crearBaraja() {
@@ -40,21 +44,55 @@ function formatearCarta(carta) {
 function repartirCartas() {
   jugador1.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor);
   jugador2.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor);
+  mostrarCartas();
 }
 
 // Mostrar cartas
 function mostrarCartas() {
-  const cartasJugador1 = document.getElementById("cartasJugador1");
-  const cartasJugador2 = document.getElementById("cartasJugador2");
-
   cartasJugador1.innerHTML = jugador1.cartas
-    .map(carta => `<img src="assets/cartas/${formatearCarta(carta)}" alt="${carta.valor} de ${carta.palo}">`)
+    .map(
+      (carta, index) =>
+        `<img src="assets/cartas/${formatearCarta(carta)}" alt="${carta.valor} de ${carta.palo}" data-index="${index}" class="carta">`
+    )
     .join("");
+
+  document.querySelectorAll("#cartasJugador1 img").forEach(carta => {
+    carta.addEventListener("click", () => seleccionarCartaParaDescarte(carta));
+  });
 
   cartasJugador2.innerHTML = jugador2.cartas
     .map(() => `<img src="assets/cartas/reverso.png" alt="Carta oculta">`)
     .join("");
 }
+
+// Seleccionar cartas para descarte
+function seleccionarCartaParaDescarte(carta) {
+  const index = carta.getAttribute("data-index");
+
+  if (cartasSeleccionadas.includes(index)) {
+    cartasSeleccionadas = cartasSeleccionadas.filter(i => i !== index);
+    carta.classList.remove("seleccionada");
+  } else {
+    cartasSeleccionadas.push(index);
+    carta.classList.add("seleccionada");
+  }
+
+  botonConfirmarDescarte.style.display = cartasSeleccionadas.length > 0 ? "block" : "none";
+}
+
+// Confirmar descarte
+botonConfirmarDescarte.addEventListener("click", () => {
+  cartasSeleccionadas.forEach(index => {
+    jugador1.cartas[index] = baraja.pop();
+  });
+
+  actualizarRegistro("Jugador 1 ha descartado y recibido nuevas cartas.");
+  cartasSeleccionadas = [];
+  document.getElementById("descarte").style.display = "none";
+  botonConfirmarDescarte.style.display = "none";
+
+  iniciarFaseGrande();
+});
 
 // Actualizar registro
 function actualizarRegistro(mensaje) {
@@ -106,39 +144,69 @@ function iniciarFaseGrande() {
   actualizarInterfaz();
 }
 
-// Avanzar a la siguiente fase
-function avanzarFase() {
-  faseActualIndex++;
-  if (faseActualIndex >= fases.length) {
-    actualizarRegistro("Turno completado. Resolviendo jugadas...");
-    resolverJugada(); // Resolver jugadas y calcular puntos
-    faseActualIndex = 1; // Reiniciar en la fase Grande para el próximo turno
+// Lógica de apuestas en la fase Grande
+document.getElementById("envite").addEventListener("click", () => {
+  if (turnoJugador && fase === "Grande") {
+    apuestaActual += 2;
+    actualizarRegistro(`Jugador 1 envida. Apuesta actual: ${apuestaActual}`);
+    turnoJugador = false;
+    setTimeout(maquinaRespondeApuesta, 1000);
   }
-  fase = fases[faseActualIndex];
-  actualizarInterfaz();
+});
+
+document.getElementById("ordago").addEventListener("click", () => {
+  if (turnoJugador && fase === "Grande") {
+    actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
+    turnoJugador = false;
+    setTimeout(maquinaRespondeOrdago, 1000);
+  }
+});
+
+document.getElementById("pasar").addEventListener("click", () => {
+  if (turnoJugador && fase === "Grande") {
+    actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
+    turnoJugador = false;
+    setTimeout(maquinaRespondePaso, 1000);
+  }
+});
+
+// Respuestas de la máquina
+function maquinaRespondeApuesta() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta la apuesta.");
+    turnoJugador = true;
+    avanzarFase();
+  } else if (decision < 0.8) {
+    apuestaActual += 2;
+    actualizarRegistro(`La máquina sube la apuesta. Apuesta actual: ${apuestaActual}`);
+    turnoJugador = true;
+  } else {
+    actualizarRegistro("La máquina no acepta la apuesta. Jugador 1 gana la fase.");
+    turnoJugador = true;
+    avanzarFase();
+  }
 }
 
-// Resolver jugadas
-function resolverJugada() {
-  jugador1.piedras += 1; // Ejemplo: sumar un punto al jugador 1
-  actualizarPuntuacion();
+function maquinaRespondeOrdago() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta el Órdago. Resolviendo...");
+  } else {
+    actualizarRegistro("La máquina no acepta el Órdago. Jugador 1 gana el juego.");
+  }
 }
 
-// Actualizar puntuación visual
-function actualizarPuntuacion() {
-  const fichasJugador1 = document.querySelector("#puntuacionJugador1 .fichas");
-  const fichasJugador2 = document.querySelector("#puntuacionJugador2 .fichas");
-
-  // Dibujar las piedras
-  fichasJugador1.innerHTML = "🟡".repeat(jugador1.piedras % 5) + "🔵".repeat(Math.floor(jugador1.piedras / 5));
-  fichasJugador2.innerHTML = "🟡".repeat(jugador2.piedras % 5) + "🔵".repeat(Math.floor(jugador2.piedras / 5));
-}
-
-// Alternar botones de apuestas
-function alternarBotonesApuestas(visible) {
-  document.getElementById("envite").style.display = visible ? "inline-block" : "none";
-  document.getElementById("ordago").style.display = visible ? "inline-block" : "none";
-  document.getElementById("pasar").style.display = visible ? "inline-block" : "none";
+function maquinaRespondePaso() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina también pasa.");
+    avanzarFase();
+  } else {
+    apuestaActual += 2;
+    actualizarRegistro(`La máquina envida. Apuesta actual: ${apuestaActual}`);
+    turnoJugador = true;
+  }
 }
 
 // Actualizar interfaz
