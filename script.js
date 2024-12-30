@@ -30,6 +30,12 @@ function barajarCartas() {
   baraja.sort(() => Math.random() - 0.5);
 }
 
+// Formatear el nombre de las cartas
+function formatearCarta(carta) {
+  const valorFormateado = carta.valor.toString().padStart(2, "0");
+  return `${valorFormateado}-${carta.palo}.png`;
+}
+
 // Repartir cartas
 function repartirCartas() {
   jugador1.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor);
@@ -39,7 +45,7 @@ function repartirCartas() {
 
 function mostrarCartas() {
   cartasJugador1.innerHTML = jugador1.cartas
-    .map(carta => `<img src="assets/cartas/${carta.valor}-${carta.palo}.png" alt="${carta.valor} de ${carta.palo}">`)
+    .map(carta => `<img src="assets/cartas/${formatearCarta(carta)}" alt="${carta.valor} de ${carta.palo}">`)
     .join("");
 
   cartasJugador2.innerHTML = jugador2.cartas
