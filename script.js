@@ -96,16 +96,27 @@ function mostrarDescarte() {
   botonConfirmarDescarte.addEventListener("click", () => {
     if (cartasSeleccionadas.length > 0) {
       cartasSeleccionadas.forEach((index) => {
-        jugador1.cartas[index] = baraja.shift();
+        jugador1.cartas[index] = baraja.shift(); // Reemplazar cartas seleccionadas
       });
       actualizarRegistro("Se han repartido nuevas cartas.");
       cartasSeleccionadas = [];
-      repartirCartas();
+      mostrarCartas();
       botonConfirmarDescarte.remove();
+
+      // La máquina realiza su descarte
+      maquinaDescarta();
     } else {
       actualizarRegistro("No seleccionaste cartas para descartar.");
     }
   });
+}
+
+function maquinaDescarta() {
+  const cantidadDescartar = Math.floor(Math.random() * 4); // Máquina descarta de 0 a 3 cartas
+  for (let i = 0; i < cantidadDescartar; i++) {
+    jugador2.cartas[i] = baraja.shift();
+  }
+  actualizarRegistro("La máquina ha realizado su descarte.");
 }
 
 // Iniciar la fase Grande
@@ -114,7 +125,6 @@ function iniciarFaseGrande() {
   botonMus.style.display = "none";
   botonNoMus.style.display = "none";
   actualizarRegistro("Fase Grande iniciada.");
-  // Aquí agregarás lógica para los botones de apuestas más adelante.
 }
 
 // Inicializar el juego
