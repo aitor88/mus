@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mus - Juego</title>
+  <title>Juego de Mus</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,20 +16,27 @@
   </div>
 
   <div id="tablero">
-    <div id="cartasJugador1"></div>
-    <div id="cartasJugador2"></div>
+    <div id="cartasJugador1" class="zonaCartas"></div>
+    <div id="cartasJugador2" class="zonaCartas"></div>
   </div>
 
   <div id="accionesJugador">
+    <!-- Botones para la fase de Mus -->
     <button id="mus">Mus</button>
     <button id="noMus">No hay Mus</button>
+
+    <!-- Botones para apuestas -->
     <button id="envite" style="display: none;">Envido</button>
     <button id="ordago" style="display: none;">Órdago</button>
     <button id="pasar" style="display: none;">Pasar</button>
+
+    <!-- Botones para aceptar o rechazar apuestas -->
     <button id="aceptarApuesta" style="display: none;">Aceptar</button>
     <button id="rechazarApuesta" style="display: none;">Rechazar</button>
   </div>
 
+  <!-- Registro de decisiones -->
+  <h2>Registro de Decisiones</h2>
   <ul id="registroDecisiones"></ul>
 
   <script src="main.js"></script>
