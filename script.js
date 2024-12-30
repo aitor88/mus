@@ -59,147 +59,74 @@ function actualizarInterfaz() {
   mostrarCartas();
 }
 
-// Mostrar cartas (solo para desarrollo)
+// Mostrar cartas (ocultar cartas del Jugador 2 hasta el final de la fase)
 function mostrarCartas() {
-  cartasJugador1.innerHTML = jugador1.cartas.map(carta => `${carta.valor} de ${carta.palo}`).join(", ");
-  cartasJugador2.innerHTML = jugador2.cartas.map(carta => `${carta.valor} de ${carta.palo}`).join(", ");
+  cartasJugador1.innerHTML = jugador1.cartas
+    .map(carta => `<img src="assets/cartas/${formatearCarta(carta)}.png" alt="${carta.valor} de ${carta.palo}">`)
+    .join("");
+
+  cartasJugador2.innerHTML = jugador2.cartas
+    .map(() => `<img src="assets/cartas/reverso.png" alt="Reverso">`)
+    .join("");
 }
 
-// Resolver la jugada de una fase
+// Formatear carta para coincidir con los archivos de imagen
+function formatearCarta(carta) {
+  const valorFormateado = carta.valor.toString().padStart(2, "0");
+  return `${valorFormateado}-${carta.palo}`;
+}
+
+// Mostrar cartas del Jugador 2 al final de la fase
+function revelarCartasJugador2() {
+  cartasJugador2.innerHTML = jugador2.cartas
+    .map(carta => `<img src="assets/cartas/${formatearCarta(carta)}.png" alt="${carta.valor} de ${carta.palo}">`)
+    .join("");
+}
+
+// Resolver jugadas
 function resolverJugada(fase) {
-  let ganador = null;
-
-  switch (fase) {
-    case "Grande":
-      ganador = compararGrande();
-      break;
-    case "Chica":
-      ganador = compararChica();
-      break;
-    case "Pares":
-      ganador = compararPares();
-      break;
-    case "Juego":
-      ganador = compararJuego();
-      break;
-    case "Punto":
-      ganador = compararPunto();
-      break;
-  }
-
-  if (ganador) {
-    ganador.piedras += apuestas[fase.toLowerCase()];
-    alert(`${ganador.nombre} gana la fase de ${fase} y recibe ${apuestas[fase.toLowerCase()]} piedras`);
-  } else {
-    alert(`Empate en la fase de ${fase}`);
-  }
-
-  // Reiniciar las apuestas de esta fase
-  apuestas[fase.toLowerCase()] = 0;
-
-  // Cambiar a la siguiente fase
+  // Resolver la fase y revelar cartas del Jugador 2
+  alert(`Resolviendo la fase de ${fase}`);
+  revelarCartasJugador2();
   avanzarFase();
   actualizarInterfaz();
-}
-
-// Comparar Grande
-function compararGrande() {
-  const valorJugador1 = calcularValorGrande(jugador1.cartas);
-  const valorJugador2 = calcularValorGrande(jugador2.cartas);
-
-  if (valorJugador1 > valorJugador2) return jugador1;
-  if (valorJugador2 > valorJugador1) return jugador2;
-  return null; // Empate
-}
-
-// Comparar Chica
-function compararChica() {
-  const valorJugador1 = calcularValorChica(jugador1.cartas);
-  const valorJugador2 = calcularValorChica(jugador2.cartas);
-
-  if (valorJugador1 < valorJugador2) return jugador1;
-  if (valorJugador2 < valorJugador1) return jugador2;
-  return null; // Empate
-}
-
-// Comparar Pares
-function compararPares() {
-  const paresJugador1 = contarPares(jugador1.cartas);
-  const paresJugador2 = contarPares(jugador2.cartas);
-
-  if (paresJugador1 > paresJugador2) return jugador1;
-  if (paresJugador2 > paresJugador1) return jugador2;
-  return null; // Empate
-}
-
-// Comparar Juego
-function compararJuego() {
-  const juegoJugador1 = calcularJuego(jugador1.cartas);
-  const juegoJugador2 = calcularJuego(jugador2.cartas);
-
-  if (juegoJugador1 > juegoJugador2) return jugador1;
-  if (juegoJugador2 > juegoJugador1) return jugador2;
-  return null; // Empate
-}
-
-// Comparar Punto
-function compararPunto() {
-  const puntoJugador1 = calcularPunto(jugador1.cartas);
-  const puntoJugador2 = calcularPunto(jugador2.cartas);
-
-  if (puntoJugador1 > puntoJugador2) return jugador1;
-  if (puntoJugador2 > puntoJugador1) return jugador2;
-  return null; // Empate
-}
-
-// Calcular valor Grande
-function calcularValorGrande(cartas) {
-  return cartas.reduce((acc, carta) => acc + carta.valor, 0);
-}
-
-// Calcular valor Chica
-function calcularValorChica(cartas) {
-  return cartas.reduce((acc, carta) => acc + carta.valor, 0);
-}
-
-// Contar Pares
-function contarPares(cartas) {
-  const valores = cartas.map(carta => carta.valor);
-  const contador = {};
-  valores.forEach(valor => {
-    contador[valor] = (contador[valor] || 0) + 1;
-  });
-
-  if (Object.values(contador).includes(4)) return 3; // Duples
-  if (Object.values(contador).includes(3)) return 2; // Medias
-  if (Object.values(contador).includes(2)) return 1; // Par
-  return 0; // Sin pares
-}
-
-// Calcular Juego
-function calcularJuego(cartas) {
-  const suma = cartas.reduce((acc, carta) => acc + carta.valor, 0);
-  return suma >= 31 ? suma : 0;
-}
-
-// Calcular Punto
-function calcularPunto(cartas) {
-  const suma = cartas.reduce((acc, carta) => acc + carta.valor, 0);
-  return suma < 31 ? suma : 0;
 }
 
 // Avanzar a la siguiente fase
 function avanzarFase() {
   const fases = ["Grande", "Chica", "Pares", "Juego", "Punto"];
   const indice = fases.indexOf(fase);
-
-  if (indice < fases.length - 1) {
-    fase = fases[indice + 1];
-  } else {
-    fase = "Reparto"; // Reiniciar las fases
-    repartirCartas();
-  }
+  fase = indice < fases.length - 1 ? fases[indice + 1] : "Reparto";
+  if (fase === "Reparto") repartirCartas();
 }
+
+// Acciones de botones
+document.getElementById("mus").addEventListener("click", () => {
+  alert("Mus pedido. Se descartan cartas.");
+  repartirCartas();
+  actualizarInterfaz();
+});
+
+document.getElementById("noMus").addEventListener("click", () => {
+  alert("No hay Mus. Inicia la fase de Grande.");
+  fase = "Grande";
+  actualizarInterfaz();
+});
+
+document.getElementById("envite").addEventListener("click", () => {
+  alert("Envite realizado.");
+  cambiarTurno();
+});
+
+document.getElementById("ordago").addEventListener("click", () => {
+  alert("¡Órdago lanzado!");
+  resolverJugada(fase);
+});
+
+document.getElementById("pasar").addEventListener("click", () => {
+  alert("Pasar.");
+  cambiarTurno();
+});
 
 // Iniciar el juego
 iniciarJuego();
