@@ -108,12 +108,10 @@ function cambiarAFaseSiguiente() {
 
 // Reiniciar los botones para las fases de apuestas
 function reiniciarBotones() {
-  if (fase !== "Mus") {
-    alternarBotonesApuestas(true);
-    botonEnvite.disabled = false;
-    botonOrdago.disabled = false;
-    botonPasar.disabled = false;
-  }
+  alternarBotonesApuestas(fase !== "Mus"); // Mostrar botones de apuestas solo si no estamos en Mus
+  botonEnvite.disabled = false;
+  botonOrdago.disabled = false;
+  botonPasar.disabled = false;
 }
 
 // Alternar visibilidad de los botones de apuesta
