@@ -30,7 +30,13 @@ function barajarCartas() {
 function repartirCartas() {
   jugador1.cartas = baraja.splice(0, 4);
   jugador2.cartas = baraja.splice(0, 4);
+  ordenarMano(jugador1.cartas);
+  ordenarMano(jugador2.cartas);
   mostrarCartas();
+}
+
+function ordenarMano(cartas) {
+  cartas.sort((a, b) => b.valor - a.valor); // Ordenar de mayor a menor
 }
 
 function mostrarCartas() {
@@ -100,6 +106,7 @@ function mostrarDescarte() {
       });
       actualizarRegistro("Se han repartido nuevas cartas.");
       cartasSeleccionadas = [];
+      ordenarMano(jugador1.cartas); // Ordenar las cartas después del descarte
       mostrarCartas();
       botonConfirmarDescarte.remove();
 
@@ -116,6 +123,7 @@ function maquinaDescarta() {
   for (let i = 0; i < cantidadDescartar; i++) {
     jugador2.cartas[i] = baraja.shift();
   }
+  ordenarMano(jugador2.cartas); // Ordenar la mano de la máquina
   actualizarRegistro("La máquina ha realizado su descarte.");
 }
 
