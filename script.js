@@ -126,12 +126,19 @@ function mostrarDescarte() {
 }
 
 function maquinaDescarta() {
+    // Decidir cuántas cartas descartar
     const cantidadDescartar = Math.floor(Math.random() * 4); // Máquina descarta de 0 a 3 cartas
     for (let i = 0; i < cantidadDescartar; i++) {
         jugador2.cartas[i] = baraja.shift();
     }
     ordenarMano(jugador2.cartas); // Ordenar la mano de la máquina
-    actualizarRegistro("La máquina ha realizado su descarte.");
+
+    // Actualizar el registro para mostrar cuántas cartas descartó
+    if (cantidadDescartar > 0) {
+        actualizarRegistro(`La máquina ha descartado ${cantidadDescartar} carta(s).`);
+    } else {
+        actualizarRegistro("La máquina no ha descartado cartas.");
+    }
 }
 
 // Iniciar la fase Grande
