@@ -10,7 +10,7 @@ body {
 
 h1 {
   font-size: 2rem;
-  margin: 20px 0;
+  margin: 20px 10px;
 }
 
 #estadoJuego {
@@ -21,6 +21,7 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  flex-wrap: wrap;
   margin: 20px 0;
 }
 
@@ -28,6 +29,7 @@ h1 {
   display: flex;
   justify-content: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .cartas img {
@@ -35,6 +37,11 @@ h1 {
   height: 120px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.cartas img:hover {
+  transform: scale(1.05);
 }
 
 .cartas img.seleccionada {
@@ -122,4 +129,60 @@ button:focus {
   border-radius: 5px;
   font-size: 0.9rem;
   text-align: left;
+}
+
+/* Diseño responsive */
+
+/* Para dispositivos móviles pequeños (máx. 480px) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  #mesa {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cartas img {
+    width: 60px;
+    height: 90px;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    min-width: 80px;
+  }
+
+  #registro {
+    padding: 8px;
+    max-width: 90%;
+  }
+
+  #registro h2 {
+    font-size: 1rem;
+  }
+
+  #registroDecisiones li {
+    font-size: 0.8rem;
+  }
+}
+
+/* Para tabletas (máx. 768px) */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .cartas img {
+    width: 70px;
+    height: 105px;
+  }
+
+  button {
+    font-size: 0.95rem;
+    padding: 9px 13px;
+    min-width: 90px;
+  }
 }
