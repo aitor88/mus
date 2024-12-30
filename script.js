@@ -61,6 +61,15 @@ function formatearCarta(carta) {
   return `${valorFormateado}-${carta.palo}`;
 }
 
+// Registro de decisiones
+function actualizarRegistro(mensaje) {
+  const registro = document.getElementById("registroDecisiones");
+  const nuevaEntrada = document.createElement("li");
+  nuevaEntrada.textContent = mensaje;
+  registro.appendChild(nuevaEntrada);
+  registro.scrollTop = registro.scrollHeight;
+}
+
 // Seleccionar cartas para el descarte
 function seleccionarCartaParaDescarte(carta) {
   const index = carta.getAttribute("data-index");
@@ -82,7 +91,7 @@ botonConfirmarDescarte.addEventListener("click", () => {
     jugador1.cartas[index] = baraja.pop();
   });
 
-  alert("Has descartado y recibido nuevas cartas.");
+  actualizarRegistro("Jugador 1 ha descartado y recibido nuevas cartas.");
   cartasSeleccionadas = [];
   document.getElementById("descarte").style.display = "none";
   botonConfirmarDescarte.style.display = "none";
@@ -93,12 +102,12 @@ botonConfirmarDescarte.addEventListener("click", () => {
 
 // Acciones del Mus
 document.getElementById("mus").addEventListener("click", () => {
-  alert("Has pedido Mus. La máquina decidirá...");
+  actualizarRegistro("Jugador 1 ha pedido Mus.");
   maquinaDecideMus(true);
 });
 
 document.getElementById("noMus").addEventListener("click", () => {
-  alert("Has cortado el Mus. La partida comienza sin descartes.");
+  actualizarRegistro("Jugador 1 ha cortado el Mus. La partida comienza sin descartes.");
   acuerdoMus = false;
   fase = "Grande";
   actualizarInterfaz();
@@ -106,11 +115,11 @@ document.getElementById("noMus").addEventListener("click", () => {
 
 function maquinaDecideMus(jugadorQuiereMus) {
   if (Math.random() > 0.5) {
-    alert("La máquina también quiere Mus.");
+    actualizarRegistro("La máquina también quiere Mus.");
     acuerdoMus = jugadorQuiereMus;
     activarDescarte();
   } else {
-    alert("La máquina corta el Mus. La partida comienza sin descartes.");
+    actualizarRegistro("La máquina corta el Mus. La partida comienza sin descartes.");
     acuerdoMus = false;
     fase = "Grande";
     actualizarInterfaz();
@@ -118,8 +127,7 @@ function maquinaDecideMus(jugadorQuiereMus) {
 }
 
 function activarDescarte() {
-  alert("Ambos han aceptado el Mus. Selecciona cartas para descartar.");
-  document.getElementById("descarte").style.display = "block";
+  actualizarRegistro("Ambos han aceptado el Mus. La máquina descarta automáticamente.");
   jugador2.cartas = baraja.splice(0, 4);
   mostrarCartas();
 }
