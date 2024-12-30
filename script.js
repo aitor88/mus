@@ -100,8 +100,10 @@ function iniciarDescarte() {
 function iniciarFaseGrande() {
   faseActualIndex = 1; // Cambia a la fase Grande
   fase = fases[faseActualIndex];
+  document.getElementById("mus").style.display = "none"; // Ocultar botón de Mus
+  document.getElementById("noMus").style.display = "none"; // Ocultar botón de No hay Mus
+  alternarBotonesApuestas(true); // Mostrar botones de apuesta
   actualizarInterfaz();
-  alternarBotonesApuestas(true); // Habilitar botones de apuesta
 }
 
 // Avanzar a la siguiente fase
