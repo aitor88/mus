@@ -106,6 +106,24 @@ function cambiarAFaseSiguiente() {
   actualizarRegistro(`Comienza la fase ${fase}.`);
 }
 
+// Reiniciar los botones para las fases de apuestas
+function reiniciarBotones() {
+  if (fase !== "Mus") {
+    alternarBotonesApuestas(true);
+    botonEnvite.disabled = false;
+    botonOrdago.disabled = false;
+    botonPasar.disabled = false;
+  }
+}
+
+// Alternar visibilidad de los botones de apuesta
+function alternarBotonesApuestas(visible) {
+  const display = visible ? "inline-block" : "none";
+  botonEnvite.style.display = display;
+  botonOrdago.style.display = display;
+  botonPasar.style.display = display;
+}
+
 // Mostrar botón de descarte
 function mostrarBotonDescarte() {
   botonConfirmarDescarte.style.display = "inline-block";
@@ -135,6 +153,7 @@ function maquinaDescarta() {
     jugador2.cartas[i] = baraja.shift();
   }
   actualizarRegistro("La máquina ha realizado su descarte.");
+  iniciarFaseGrande(); // Pasar automáticamente a la fase Grande tras el descarte
 }
 
 // Máquina decide sobre el Mus
@@ -169,6 +188,7 @@ function iniciarFaseGrande() {
   fase = fases[faseActualIndex];
   botonMus.style.display = "none";
   botonNoMus.style.display = "none";
+  alternarBotonesApuestas(true); // Mostrar botones de apuestas
   actualizarInterfaz();
 }
 
