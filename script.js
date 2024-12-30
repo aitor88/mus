@@ -61,6 +61,41 @@ function mostrarCartas() {
     .join("");
 }
 
+// Seleccionar cartas para descarte
+function seleccionarCartaParaDescarte(carta) {
+  const index = carta.getAttribute("data-index");
+
+  if (cartasSeleccionadas.includes(index)) {
+    cartasSeleccionadas = cartasSeleccionadas.filter(i => i !== index);
+    carta.classList.remove("seleccionada");
+  } else {
+    cartasSeleccionadas.push(index);
+    carta.classList.add("seleccionada");
+  }
+
+  botonConfirmarDescarte.style.display = cartasSeleccionadas.length > 0 ? "block" : "none";
+}
+
+// Confirmar descarte
+botonConfirmarDescarte.addEventListener("click", () => {
+  cartasSeleccionadas.forEach(index => {
+    jugador1.cartas[index] = baraja.pop();
+  });
+
+  jugador1.cartas.sort((a, b) => b.valor - a.valor);
+
+  actualizarRegistro("Jugador 1 ha descartado y recibido nuevas cartas.");
+  cartasSeleccionadas = [];
+  mostrarCartas();
+  botonConfirmarDescarte.style.display = "none";
+
+  document.getElementById("mus").style.display = "inline-block";
+  document.getElementById("noMus").style.display = "inline-block";
+
+  fase = "Mus";
+  actualizarInterfaz();
+});
+
 // Actualizar registro
 function actualizarRegistro(mensaje) {
   const entrada = document.createElement("li");
