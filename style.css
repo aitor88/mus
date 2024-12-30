@@ -37,6 +37,11 @@ h1 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.cartas img.seleccionada {
+  border: 3px solid red;
+  box-shadow: 0 0 10px red;
+}
+
 #controles {
   margin: 20px auto;
   display: flex;
@@ -69,40 +74,21 @@ button:focus {
   box-shadow: 0 0 5px #007aff;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  #mesa {
-    flex-direction: column;
-  }
-
-  .cartas img {
-    width: 60px;
-    height: 90px;
-  }
-
-  button {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-    min-width: 80px;
-  }
+#descarte {
+  margin-top: 20px;
 }
 
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.2rem;
-  }
+#confirmarDescarte {
+  margin-top: 10px;
+  background-color: #28a745;
+  color: white;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-  button {
-    font-size: 0.8rem;
-    padding: 6px 10px;
-  }
-
-  .cartas img {
-    width: 50px;
-    height: 75px;
-  }
+#confirmarDescarte:hover {
+  background-color: #218838;
 }
