@@ -1,149 +1,64 @@
-/* Estilos globales */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f9;
-  color: #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
 }
 
 h1 {
-  text-align: center;
-  margin: 20px 0;
-  color: #444;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-h2 {
-  text-align: center;
-  margin-top: 30px;
-}
-
-/* Estado del juego */
-#estadoJuego {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-#estadoJuego p {
-  margin: 5px 0;
-  font-size: 18px;
-}
-
-/* Tablero del juego */
 #tablero {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin: 20px auto;
-  max-width: 800px;
-  flex-wrap: wrap;
-}
-
-.zonaCartas {
-  width: 40%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.zonaCartas img {
-  width: 60px;
-  height: 90px;
-  border-radius: 5px;
-  transition: transform 0.2s ease-in-out;
-  cursor: pointer;
-}
-
-.zonaCartas img:hover {
-  transform: scale(1.1);
-}
-
-/* Acciones del jugador */
-#accionesJugador {
-  text-align: center;
-  margin: 20px 0;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Registro de decisiones */
-#registroDecisiones {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #fff;
-  height: 200px;
-  overflow-y: auto;
-  list-style: none;
-}
-
-#registroDecisiones li {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #555;
-}
-
-/* Estilos responsivos */
-@media screen and (max-width: 768px) {
-  #tablero {
+    display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 20px;
-  }
-
-  .zonaCartas img {
-    width: 50px;
-    height: 75px;
-  }
-
-  button {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-
-  #registroDecisiones {
-    height: 150px;
-  }
 }
 
-@media screen and (max-width: 480px) {
-  #estadoJuego p {
-    font-size: 16px;
-  }
+#cartasJugador1 {
+    display: flex;
+    gap: 10px;
+}
 
-  button {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-
-  #registroDecisiones {
-    height: 120px;
-  }
+.carta {
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border 0.2s;
 }
 
 .carta.seleccionada {
-  border: 2px solid red;
-  transform: scale(1.1);
+    border: 2px solid red;
+    transform: scale(1.1);
+}
+
+#botonesMus {
+    display: flex;
+    gap: 10px; /* Espacio entre botones */
+}
+
+#botonesMus button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#registroDecisiones {
+    list-style: none;
+    padding: 0;
+    max-width: 500px;
+    margin: 20px auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+#registroDecisiones li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }
