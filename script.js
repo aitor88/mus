@@ -49,9 +49,9 @@ function mostrarCartas() {
     cartasJugador1.innerHTML = jugador1.cartas
         .map(
             (carta, index) =>
-                `<img src="assets/cartas/${carta.valor
+                `<img src="./assets/cartas/${carta.valor
                     .toString()
-                    .padStart(2, "0")}-${carta.palo}.png" alt="Carta ${index}" data-index="${index}" class="carta ${
+                    .padStart(2, "0")}-${carta.palo}.png" alt="${carta.valor} de ${carta.palo}" data-index="${index}" class="carta ${
                     cartasSeleccionadas.includes(index) ? "seleccionada" : ""
                 }">`
         )
