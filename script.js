@@ -145,11 +145,69 @@ function iniciarFaseGrande() {
   actualizarInterfaz();
 }
 
-// Alternar botones de apuestas
-function alternarBotonesApuestas(visible) {
-  document.getElementById("envite").style.display = visible ? "inline-block" : "none";
-  document.getElementById("ordago").style.display = visible ? "inline-block" : "none";
-  document.getElementById("pasar").style.display = visible ? "inline-block" : "none";
+// Lógica de apuestas en la fase Grande
+document.getElementById("envite").addEventListener("click", () => {
+  if (turnoJugador && fase === "Grande") {
+    apuestaActual += 2;
+    actualizarRegistro(`Jugador 1 envida. Apuesta actual: ${apuestaActual}`);
+    turnoJugador = false;
+    setTimeout(maquinaRespondeApuesta, 1000);
+  }
+});
+
+document.getElementById("ordago").addEventListener("click", () => {
+  if (turnoJugador && fase === "Grande") {
+    actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
+    turnoJugador = false;
+    setTimeout(maquinaRespondeOrdago, 1000);
+  }
+});
+
+document.getElementById("pasar").addEventListener("click", () => {
+  if (turnoJugador && fase === "Grande") {
+    actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
+    turnoJugador = false;
+    setTimeout(maquinaRespondePaso, 1000);
+  }
+});
+
+// Respuestas de la máquina
+function maquinaRespondeApuesta() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta la apuesta.");
+    turnoJugador = true;
+    avanzarFase();
+  } else if (decision < 0.8) {
+    apuestaActual += 2;
+    actualizarRegistro(`La máquina sube la apuesta. Apuesta actual: ${apuestaActual}`);
+    turnoJugador = true;
+  } else {
+    actualizarRegistro("La máquina no acepta la apuesta. Jugador 1 gana la fase.");
+    turnoJugador = true;
+    avanzarFase();
+  }
+}
+
+function maquinaRespondeOrdago() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta el Órdago. Resolviendo...");
+  } else {
+    actualizarRegistro("La máquina no acepta el Órdago. Jugador 1 gana el juego.");
+  }
+}
+
+function maquinaRespondePaso() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina también pasa.");
+    avanzarFase();
+  } else {
+    apuestaActual += 2;
+    actualizarRegistro(`La máquina envida. Apuesta actual: ${apuestaActual}`);
+    turnoJugador = true;
+  }
 }
 
 // Actualizar interfaz
