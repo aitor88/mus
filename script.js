@@ -60,7 +60,54 @@ function actualizarRegistro(mensaje) {
   registro.appendChild(entrada);
 }
 
-// Lógica de los botones
+// Botón de Mus
+document.getElementById("mus").addEventListener("click", () => {
+  actualizarRegistro("Jugador 1 ha pedido Mus.");
+  maquinaDecideMus(true);
+});
+
+// Botón de No hay Mus
+document.getElementById("noMus").addEventListener("click", () => {
+  actualizarRegistro("Jugador 1 ha cortado el Mus. Comienza la fase de Grande.");
+  iniciarFaseGrande();
+});
+
+// Decisión de la máquina sobre el Mus
+function maquinaDecideMus(jugadorQuiereMus) {
+  if (Math.random() > 0.5) {
+    actualizarRegistro("La máquina también quiere Mus.");
+    if (jugadorQuiereMus) {
+      iniciarDescarte();
+    }
+  } else {
+    actualizarRegistro("La máquina corta el Mus. Comienza la fase de Grande.");
+    iniciarFaseGrande();
+  }
+}
+
+// Iniciar la fase de descarte
+function iniciarDescarte() {
+  actualizarRegistro("Ambos jugadores aceptan Mus. Inicia el descarte.");
+  document.getElementById("descarte").style.display = "block";
+  document.getElementById("mus").style.display = "none";
+  document.getElementById("noMus").style.display = "none";
+}
+
+// Iniciar la fase de Grande
+function iniciarFaseGrande() {
+  fase = "Grande";
+  actualizarInterfaz();
+  alternarBotonesApuestas(true); // Habilitar botones de apuesta
+}
+
+// Alternar botones de apuestas
+function alternarBotonesApuestas(visible) {
+  document.getElementById("envite").style.display = visible ? "inline-block" : "none";
+  document.getElementById("ordago").style.display = visible ? "inline-block" : "none";
+  document.getElementById("pasar").style.display = visible ? "inline-block" : "none";
+}
+
+// Lógica de los botones de apuesta
 document.getElementById("envite").addEventListener("click", () => {
   if (turnoJugador) {
     apuestaActual += 2;
