@@ -121,7 +121,7 @@ document.getElementById("mus").addEventListener("click", () => {
 // Botón de No hay Mus
 document.getElementById("noMus").addEventListener("click", () => {
   actualizarRegistro("Jugador 1 ha cortado el Mus. Comienza la fase de Grande.");
-  iniciarFaseGrande(); // Aquí cambia la fase correctamente
+  cambiarAFaseSiguiente(); // Cambiamos a la siguiente fase
 });
 
 // Decisión de la máquina sobre el Mus
@@ -133,7 +133,7 @@ function maquinaDecideMus(jugadorQuiereMus) {
     }
   } else {
     actualizarRegistro("La máquina corta el Mus. Comienza la fase de Grande.");
-    iniciarFaseGrande(); // Aquí también cambia la fase correctamente
+    cambiarAFaseSiguiente(); // Cambiamos a la siguiente fase
   }
 }
 
@@ -145,79 +145,31 @@ function iniciarDescarte() {
   botonConfirmarDescarte.style.display = "block";
 }
 
+// Cambiar a la siguiente fase
+function cambiarAFaseSiguiente() {
+  faseActualIndex++;
+  if (faseActualIndex >= fases.length) {
+    faseActualIndex = 0; // Reiniciar a Mus si llegamos al final
+  }
+  fase = fases[faseActualIndex];
+  actualizarInterfaz();
+  if (fase === "Grande") {
+    iniciarFaseGrande();
+  }
+}
+
 // Iniciar la fase de Grande
 function iniciarFaseGrande() {
-  faseActualIndex = 1; // Cambia a la fase Grande
-  fase = fases[faseActualIndex];
-  document.getElementById("mus").style.display = "none";
-  document.getElementById("noMus").style.display = "none";
   alternarBotonesApuestas(true); // Mostrar botones de apuesta
-  actualizarInterfaz();
+  actualizarRegistro("Comienza la fase Grande.");
 }
 
-// Lógica de apuestas en la fase Grande
-document.getElementById("envite").addEventListener("click", () => {
-  if (turnoJugador && fase === "Grande") {
-    apuestaActual += 2;
-    actualizarRegistro(`Jugador 1 envida. Apuesta actual: ${apuestaActual}`);
-    turnoJugador = false;
-    setTimeout(maquinaRespondeApuesta, 1000);
-  }
-});
-
-document.getElementById("ordago").addEventListener("click", () => {
-  if (turnoJugador && fase === "Grande") {
-    actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
-    turnoJugador = false;
-    setTimeout(maquinaRespondeOrdago, 1000);
-  }
-});
-
-document.getElementById("pasar").addEventListener("click", () => {
-  if (turnoJugador && fase === "Grande") {
-    actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
-    turnoJugador = false;
-    setTimeout(maquinaRespondePaso, 1000);
-  }
-});
-
-// Respuestas de la máquina
-function maquinaRespondeApuesta() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina acepta la apuesta.");
-    turnoJugador = true;
-    avanzarFase();
-  } else if (decision < 0.8) {
-    apuestaActual += 2;
-    actualizarRegistro(`La máquina sube la apuesta. Apuesta actual: ${apuestaActual}`);
-    turnoJugador = true;
-  } else {
-    actualizarRegistro("La máquina no acepta la apuesta. Jugador 1 gana la fase.");
-    turnoJugador = true;
-    avanzarFase();
-  }
-}
-
-function maquinaRespondeOrdago() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina acepta el Órdago. Resolviendo...");
-  } else {
-    actualizarRegistro("La máquina no acepta el Órdago. Jugador 1 gana el juego.");
-  }
-}
-
-function maquinaRespondePaso() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina también pasa.");
-    avanzarFase();
-  } else {
-    apuestaActual += 2;
-    actualizarRegistro(`La máquina envida. Apuesta actual: ${apuestaActual}`);
-    turnoJugador = true;
-  }
+// Alternar visibilidad de los botones de apuesta
+function alternarBotonesApuestas(visible) {
+  const display = visible ? "inline-block" : "none";
+  document.getElementById("envite").style.display = display;
+  document.getElementById("ordago").style.display = display;
+  document.getElementById("pasar").style.display = display;
 }
 
 // Actualizar interfaz
@@ -225,7 +177,6 @@ function actualizarInterfaz() {
   turnoDisplay.textContent = `Turno: ${turnoJugador ? "Jugador 1" : "Máquina"}`;
   faseDisplay.textContent = `Fase actual: ${fase}`;
   marcadorDisplay.textContent = `Marcador: Jugador 1: ${jugador1.piedras} | Máquina: ${jugador2.piedras}`;
-  document.getElementById("apuestaActual").textContent = `Apuesta actual: ${apuestaActual}`;
 }
 
 // Inicializar el juego
