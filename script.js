@@ -121,7 +121,7 @@ document.getElementById("mus").addEventListener("click", () => {
 // Botón de No hay Mus
 document.getElementById("noMus").addEventListener("click", () => {
   actualizarRegistro("Jugador 1 ha cortado el Mus. Comienza la fase de Grande.");
-  iniciarFaseGrande();
+  iniciarFaseGrande(); // Aquí cambia la fase correctamente
 });
 
 // Decisión de la máquina sobre el Mus
@@ -133,7 +133,7 @@ function maquinaDecideMus(jugadorQuiereMus) {
     }
   } else {
     actualizarRegistro("La máquina corta el Mus. Comienza la fase de Grande.");
-    iniciarFaseGrande();
+    iniciarFaseGrande(); // Aquí también cambia la fase correctamente
   }
 }
 
