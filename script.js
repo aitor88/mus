@@ -83,14 +83,22 @@ function seleccionarCartaParaDescarte(carta) {
 
 // Confirmar descarte
 botonConfirmarDescarte.addEventListener("click", () => {
+  // Reemplazar las cartas descartadas por nuevas cartas
   cartasSeleccionadas.forEach(index => {
     jugador1.cartas[index] = baraja.pop();
   });
+
+  // Ordenar las cartas del jugador 1 de mayor a menor
+  jugador1.cartas.sort((a, b) => b.valor - a.valor);
 
   actualizarRegistro("Jugador 1 ha descartado y recibido nuevas cartas.");
   cartasSeleccionadas = [];
   mostrarCartas(); // Actualizar las cartas visibles después del descarte
   botonConfirmarDescarte.style.display = "none"; // Ocultar botón de descarte
+
+  // Volver a mostrar los botones de Mus
+  document.getElementById("mus").style.display = "inline-block";
+  document.getElementById("noMus").style.display = "inline-block";
 
   iniciarFaseGrande();
 });
