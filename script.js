@@ -119,6 +119,21 @@ botonNoMus.addEventListener("click", () => {
   iniciarFaseGrande();
 });
 
+// Máquina decide sobre el Mus
+function maquinaDecideMus(jugadorPidioMus) {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta el Mus.");
+    if (jugadorPidioMus) {
+      repartirCartas();
+      actualizarRegistro("Se reparten nuevas cartas.");
+    }
+  } else {
+    actualizarRegistro("La máquina corta el Mus. Comienza la fase de Grande.");
+    iniciarFaseGrande();
+  }
+}
+
 // Iniciar la fase de Grande
 function iniciarFaseGrande() {
   faseActualIndex = 1; // Cambiar a la fase Grande
