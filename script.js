@@ -7,7 +7,6 @@ let faseActualIndex = 0;
 let fase = fases[faseActualIndex];
 let apuestaActual = 0;
 let baraja = [];
-let cartasSeleccionadas = [];
 const registro = document.getElementById("registroDecisiones");
 
 // Elementos HTML
@@ -203,16 +202,14 @@ function maquinaRespondeApuesta() {
 // Botón aceptar apuesta
 botonAceptarApuesta.addEventListener("click", () => {
   actualizarRegistro("Jugador 1 acepta la apuesta.");
-  jugador1.piedras += apuestaActual;
-  mostrarBotonesApuesta(false);
+  turnoJugador = true;
   cambiarAFaseSiguiente();
 });
 
 // Botón rechazar apuesta
 botonRechazarApuesta.addEventListener("click", () => {
-  actualizarRegistro("Jugador 1 rechaza la apuesta. La máquina gana la fase.");
-  jugador2.piedras += apuestaActual;
-  mostrarBotonesApuesta(false);
+  actualizarRegistro("Jugador 1 rechaza la apuesta. Avanzamos a la siguiente fase.");
+  turnoJugador = true;
   cambiarAFaseSiguiente();
 });
 
