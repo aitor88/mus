@@ -34,8 +34,8 @@ function barajarCartas() {
 }
 
 function repartirCartas() {
-  jugador1.cartas = baraja.splice(0, 4);
-  jugador2.cartas = baraja.splice(0, 4);
+  jugador1.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor); // Ordenar cartas de mayor a menor
+  jugador2.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor);
   mostrarCartas();
 }
 
@@ -78,7 +78,6 @@ function actualizarRegistro(mensaje) {
   const nuevaEntrada = document.createElement("li");
   nuevaEntrada.textContent = mensaje;
   registro.appendChild(nuevaEntrada);
-  registro.scrollTop = registro.scrollHeight;
 }
 
 // Seleccionar cartas para el descarte
@@ -126,69 +125,22 @@ document.getElementById("noMus").addEventListener("click", () => {
   actualizarInterfaz();
 });
 
-// Lógica de los botones de apuesta
-document.getElementById("envite").addEventListener("click", () => {
-  if (turnoJugador) {
-    apuestaActual += 2; // Incrementa la apuesta
-    actualizarRegistro(`Jugador 1 envida. Apuesta total: ${apuestaActual} piedras.`);
-    turnoJugador = false;
-    setTimeout(maquinaRespondeApuesta, 1000); // La máquina responde después de 1 segundo
-  }
-});
-
-document.getElementById("ordago").addEventListener("click", () => {
-  if (turnoJugador) {
-    actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
-    turnoJugador = false;
-    setTimeout(maquinaRespondeOrdago, 1000); // La máquina responde después de 1 segundo
-  }
-});
-
-document.getElementById("pasar").addEventListener("click", () => {
-  if (turnoJugador) {
-    actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
-    turnoJugador = false;
-    setTimeout(maquinaRespondePaso, 1000); // La máquina responde después de 1 segundo
-  }
-});
-
-// Respuestas de la máquina
-function maquinaRespondeApuesta() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina acepta la apuesta.");
-    turnoJugador = true;
-  } else if (decision < 0.8) {
-    apuestaActual += 2;
-    actualizarRegistro(`La máquina reenvía. Apuesta total: ${apuestaActual} piedras.`);
-    turnoJugador = true;
+// Maquina decide
+function maquinaDecideMus(jugadorQuiereMus) {
+  if (Math.random() > 0.5) {
+    actualizarRegistro("La máquina también quiere Mus.");
+    acuerdoMus = true;
+    document.getElementById("descarte").style.display = "block";
   } else {
-    actualizarRegistro("La máquina no acepta la apuesta. El jugador gana la fase.");
-    turnoJugador = true;
+    actualizarRegistro("La máquina corta el Mus. La partida comienza sin descartes.");
+    fase = "Grande";
+    alternarBotonesMus(false); // Muestra los botones de apuestas
   }
 }
 
-function maquinaRespondeOrdago() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina acepta el Órdago. Resolviendo la fase...");
-  } else {
-    actualizarRegistro("La máquina no acepta el Órdago. El jugador gana el juego.");
-  }
-}
-
-function maquinaRespondePaso() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina también pasa. Resolviendo la fase...");
-  } else {
-    apuestaActual += 2;
-    actualizarRegistro(`La máquina envida. Apuesta total: ${apuestaActual} piedras.`);
-    turnoJugador = true;
-  }
-}
-
+// Actualizar interfaz
 function actualizarInterfaz() {
+  turnoDisplay.textContent = `Turno: ${turnoJugador ? "Jugador 1" : "Jugador 2"}`;
   faseDisplay.textContent = `Fase actual: ${fase}`;
   marcadorDisplay.textContent = `Marcador: Jugador 1: ${jugador1.piedras} | Jugador 2: ${jugador2.piedras}`;
   mostrarCartas();
