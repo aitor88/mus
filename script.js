@@ -1,34 +1,15 @@
 // Variables globales
 let jugador1 = { nombre: "Jugador 1", piedras: 0, cartas: [] };
 let jugador2 = { nombre: "Máquina", piedras: 0, cartas: [] };
-let turnoJugador = true;
-const fases = ["Mus", "Grande", "Chica", "Pares", "Juego"];
-let faseActualIndex = 0;
-let fase = fases[faseActualIndex];
-let apuestaActual = 0;
 let baraja = [];
 let cartasSeleccionadas = []; // Cartas seleccionadas por el jugador para descarte
-const registro = document.getElementById("registroDecisiones");
+let faseActual = "Mus"; // Fase inicial
 
 // Elementos HTML
-const turnoDisplay = document.getElementById("turno");
-const faseDisplay = document.getElementById("fase");
-const marcadorDisplay = document.getElementById("marcador");
 const cartasJugador1 = document.getElementById("cartasJugador1");
-const cartasJugador2 = document.getElementById("cartasJugador2");
 const botonMus = document.getElementById("mus");
 const botonNoMus = document.getElementById("noMus");
-const botonEnvite = document.getElementById("envite");
-const botonOrdago = document.getElementById("ordago");
-const botonPasar = document.getElementById("pasar");
-const botonAceptarApuesta = document.getElementById("aceptarApuesta");
-const botonRechazarApuesta = document.getElementById("rechazarApuesta");
-
-// Botón de confirmación para descarte
-const botonConfirmarDescarte = document.createElement("button");
-botonConfirmarDescarte.textContent = "Confirmar Descarte";
-botonConfirmarDescarte.style.display = "none";
-document.body.appendChild(botonConfirmarDescarte);
+const registro = document.getElementById("registroDecisiones");
 
 // Crear y barajar baraja
 function crearBaraja() {
@@ -46,15 +27,9 @@ function barajarCartas() {
   baraja.sort(() => Math.random() - 0.5);
 }
 
-function formatearCarta(carta) {
-  const valorFormateado = carta.valor.toString().padStart(2, "0");
-  return `assets/cartas/${valorFormateado}-${carta.palo}.png`;
-}
-
-// Repartir cartas
 function repartirCartas() {
-  jugador1.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor);
-  jugador2.cartas = baraja.splice(0, 4).sort((a, b) => b.valor - a.valor);
+  jugador1.cartas = baraja.splice(0, 4);
+  jugador2.cartas = baraja.splice(0, 4);
   mostrarCartas();
 }
 
@@ -62,194 +37,84 @@ function mostrarCartas() {
   cartasJugador1.innerHTML = jugador1.cartas
     .map(
       (carta, index) =>
-        `<img src="${formatearCarta(carta)}" alt="${carta.valor} de ${carta.palo}" data-index="${index}" class="carta ${
+        `<img src="assets/cartas/${carta.valor
+          .toString()
+          .padStart(2, "0")}-${carta.palo}.png" alt="Carta ${index}" data-index="${index}" class="carta ${
           cartasSeleccionadas.includes(index) ? "seleccionada" : ""
         }">`
     )
     .join("");
 
-  cartasJugador2.innerHTML = jugador2.cartas
-    .map(() => `<img src="assets/cartas/reverso.png" alt="Carta oculta">`)
-    .join("");
-
-  // Habilitar clic en las cartas del jugador para seleccionar
+  // Evento para seleccionar cartas
   document.querySelectorAll("#cartasJugador1 .carta").forEach((carta) => {
     carta.addEventListener("click", (e) => {
       const index = parseInt(e.target.dataset.index);
       if (cartasSeleccionadas.includes(index)) {
         cartasSeleccionadas = cartasSeleccionadas.filter((i) => i !== index);
-      } else if (cartasSeleccionadas.length < 4) {
+      } else {
         cartasSeleccionadas.push(index);
       }
-      mostrarCartas(); // Actualizar visualmente las cartas seleccionadas
+      mostrarCartas(); // Actualizar visualización
     });
   });
 }
 
-// Actualizar registro de decisiones
 function actualizarRegistro(mensaje) {
   const entrada = document.createElement("li");
   entrada.textContent = mensaje;
   registro.appendChild(entrada);
 }
 
-// Cambiar a la siguiente fase
-function cambiarAFaseSiguiente() {
-  faseActualIndex++;
-  if (faseActualIndex >= fases.length) {
-    faseActualIndex = 0; // Reiniciar a Mus si llegamos al final
-  }
-  fase = fases[faseActualIndex];
-  apuestaActual = 0; // Reiniciar la apuesta al cambiar de fase
-  actualizarInterfaz();
-  reiniciarBotones(); // Resetear los botones para la nueva fase
-  actualizarRegistro(`Comienza la fase ${fase}.`);
-}
-
-// Reiniciar los botones para las fases de apuestas
-function reiniciarBotones() {
-  alternarBotonesApuestas(fase !== "Mus"); // Mostrar botones de apuestas solo si no estamos en Mus
-  botonEnvite.disabled = false;
-  botonOrdago.disabled = false;
-  botonPasar.disabled = false;
-}
-
-// Alternar visibilidad de los botones de apuesta
-function alternarBotonesApuestas(visible) {
-  const display = visible ? "inline-block" : "none";
-  botonEnvite.style.display = display;
-  botonOrdago.style.display = display;
-  botonPasar.style.display = display;
-}
-
-// Funciones para los botones de apuestas
-botonEnvite.addEventListener("click", () => {
-  if (turnoJugador) {
-    apuestaActual += 2;
-    actualizarRegistro(`Jugador 1 envida 2 piedras. Apuesta actual: ${apuestaActual}`);
-    turnoJugador = false;
-    maquinaRespondeApuesta();
-  }
-});
-
-botonOrdago.addEventListener("click", () => {
-  if (turnoJugador) {
-    actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
-    turnoJugador = false;
-    maquinaRespondeOrdago();
-  }
-});
-
-botonPasar.addEventListener("click", () => {
-  if (turnoJugador) {
-    actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
-    turnoJugador = false;
-    maquinaRespondePaso();
-  }
-});
-
-// Respuesta de la máquina a Órdago
-function maquinaRespondeOrdago() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina acepta el Órdago. Resolviendo...");
-    resetJuego();
-  } else {
-    actualizarRegistro("La máquina no acepta el Órdago. Jugador 1 gana la partida.");
-    resetJuego();
-  }
-}
-
-// Respuesta de la máquina a Pasar
-function maquinaRespondePaso() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina también pasa. Avanzamos a la siguiente fase.");
-    cambiarAFaseSiguiente();
-  } else {
-    apuestaActual += 2;
-    actualizarRegistro(`La máquina envida 2 piedras. Apuesta actual: ${apuestaActual}`);
-    turnoJugador = true;
-  }
-}
-
-// Respuesta de la máquina a Envido
-function maquinaRespondeApuesta() {
-  const decision = Math.random();
-  if (decision < 0.5) {
-    actualizarRegistro("La máquina acepta la apuesta.");
-    turnoJugador = true;
-    cambiarAFaseSiguiente();
-  } else if (decision < 0.8) {
-    apuestaActual += 2;
-    actualizarRegistro(`La máquina sube la apuesta. Apuesta actual: ${apuestaActual}`);
-    turnoJugador = true;
-  } else {
-    actualizarRegistro("La máquina no acepta la apuesta. Jugador 1 gana la fase.");
-    turnoJugador = true;
-    cambiarAFaseSiguiente();
-  }
-}
-
-// Mostrar botón de descarte
-function mostrarBotonDescarte() {
-  botonConfirmarDescarte.style.display = "inline-block";
-  actualizarRegistro("Selecciona las cartas que deseas descartar.");
-}
-
-// Confirmar descarte
-botonConfirmarDescarte.addEventListener("click", () => {
-  if (cartasSeleccionadas.length > 0) {
-    cartasSeleccionadas.forEach((index) => {
-      jugador1.cartas[index] = baraja.shift();
-    });
-    cartasSeleccionadas = []; // Limpiar selección
-    mostrarCartas();
-    actualizarRegistro("Se han repartido nuevas cartas.");
-    botonConfirmarDescarte.style.display = "none";
-    maquinaDescarta(); // Máquina realiza su descarte
-  } else {
-    actualizarRegistro("No seleccionaste cartas para descartar.");
-  }
-});
-
-// Máquina realiza su descarte
-function maquinaDescarta() {
-  const cantidadDescartar = Math.floor(Math.random() * 4); // Máquina descarta de 0 a 3 cartas
-  for (let i = 0; i < cantidadDescartar; i++) {
-    jugador2.cartas[i] = baraja.shift();
-  }
-  actualizarRegistro("La máquina ha realizado su descarte.");
-  iniciarFaseGrande();
-}
-
-// Botón de Mus
+// Lógica de Mus
 botonMus.addEventListener("click", () => {
   actualizarRegistro("Jugador 1 ha pedido Mus.");
-  maquinaDecideMus(true);
+  maquinaDecideMus();
 });
 
-// Botón de No hay Mus
 botonNoMus.addEventListener("click", () => {
-  actualizarRegistro("Jugador 1 ha cortado el Mus. Comienza la fase de Grande.");
+  actualizarRegistro("Jugador 1 ha cortado el Mus. Comienza la fase Grande.");
   iniciarFaseGrande();
 });
 
-// Iniciar la fase de Grande
-function iniciarFaseGrande() {
-  faseActualIndex = 1; // Cambiar a la fase Grande
-  fase = fases[faseActualIndex];
-  botonMus.style.display = "none";
-  botonNoMus.style.display = "none";
-  alternarBotonesApuestas(true); // Mostrar botones de apuestas
-  actualizarInterfaz();
+function maquinaDecideMus() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta el Mus.");
+    mostrarDescarte();
+  } else {
+    actualizarRegistro("La máquina corta el Mus. Comienza la fase Grande.");
+    iniciarFaseGrande();
+  }
 }
 
-// Actualizar la interfaz
-function actualizarInterfaz() {
-  turnoDisplay.textContent = `Turno: ${turnoJugador ? "Jugador 1" : "Máquina"}`;
-  faseDisplay.textContent = `Fase actual: ${fase}`;
-  marcadorDisplay.textContent = `Marcador: Jugador 1: ${jugador1.piedras} | Máquina: ${jugador2.piedras}`;
+function mostrarDescarte() {
+  actualizarRegistro("Selecciona las cartas para descartar.");
+  const botonConfirmarDescarte = document.createElement("button");
+  botonConfirmarDescarte.textContent = "Confirmar Descarte";
+  document.body.appendChild(botonConfirmarDescarte);
+
+  botonConfirmarDescarte.addEventListener("click", () => {
+    if (cartasSeleccionadas.length > 0) {
+      cartasSeleccionadas.forEach((index) => {
+        jugador1.cartas[index] = baraja.shift();
+      });
+      actualizarRegistro("Se han repartido nuevas cartas.");
+      cartasSeleccionadas = [];
+      repartirCartas();
+      botonConfirmarDescarte.remove();
+    } else {
+      actualizarRegistro("No seleccionaste cartas para descartar.");
+    }
+  });
+}
+
+// Iniciar la fase Grande
+function iniciarFaseGrande() {
+  faseActual = "Grande";
+  botonMus.style.display = "none";
+  botonNoMus.style.display = "none";
+  actualizarRegistro("Fase Grande iniciada.");
+  // Aquí agregarás lógica para los botones de apuestas más adelante.
 }
 
 // Inicializar el juego
@@ -257,8 +122,7 @@ function inicializarJuego() {
   crearBaraja();
   barajarCartas();
   repartirCartas();
-  mostrarCartas();
-  actualizarInterfaz();
+  actualizarRegistro("Juego iniciado. Fase actual: Mus.");
 }
 
 inicializarJuego();
