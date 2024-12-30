@@ -6,6 +6,8 @@ let fase = "Reparto";
 let acuerdoMus = false;
 let baraja = [];
 let cartasSeleccionadas = [];
+let apuestaActual = 0; // Puntos apostados en la fase actual
+let turnoJugador = true; // Indica si es el turno del jugador (true) o de la máquina (false)
 const botonConfirmarDescarte = document.getElementById("confirmarDescarte");
 
 // Elementos HTML
@@ -124,24 +126,65 @@ document.getElementById("noMus").addEventListener("click", () => {
   actualizarInterfaz();
 });
 
-function maquinaDecideMus(jugadorQuiereMus) {
-  if (Math.random() > 0.5) {
-    actualizarRegistro("La máquina también quiere Mus.");
-    acuerdoMus = jugadorQuiereMus;
-    activarDescarte();
+// Lógica de los botones de apuesta
+document.getElementById("envite").addEventListener("click", () => {
+  if (turnoJugador) {
+    apuestaActual += 2; // Incrementa la apuesta
+    actualizarRegistro(`Jugador 1 envida. Apuesta total: ${apuestaActual} piedras.`);
+    turnoJugador = false;
+    maquinaRespondeApuesta();
+  }
+});
+
+document.getElementById("ordago").addEventListener("click", () => {
+  if (turnoJugador) {
+    actualizarRegistro("Jugador 1 lanza un Órdago. La máquina decide...");
+    maquinaRespondeOrdago();
+  }
+});
+
+document.getElementById("pasar").addEventListener("click", () => {
+  if (turnoJugador) {
+    actualizarRegistro("Jugador 1 pasa. Turno de la máquina.");
+    turnoJugador = false;
+    maquinaRespondePaso();
+  }
+});
+
+// Respuestas de la máquina
+function maquinaRespondeApuesta() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta la apuesta.");
+    turnoJugador = true;
+  } else if (decision < 0.8) {
+    apuestaActual += 2;
+    actualizarRegistro(`La máquina reenvía. Apuesta total: ${apuestaActual} piedras.`);
+    turnoJugador = true;
   } else {
-    actualizarRegistro("La máquina corta el Mus. La partida comienza sin descartes.");
-    acuerdoMus = false;
-    fase = "Grande";
-    alternarBotonesMus(false); // Muestra los botones de apuestas
-    actualizarInterfaz();
+    actualizarRegistro("La máquina no acepta la apuesta. El jugador gana la fase.");
+    turnoJugador = true;
   }
 }
 
-function activarDescarte() {
-  actualizarRegistro("Ambos han aceptado el Mus. La máquina descarta automáticamente.");
-  jugador2.cartas = baraja.splice(0, 4);
-  mostrarCartas();
+function maquinaRespondeOrdago() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina acepta el Órdago. Resolviendo la fase...");
+  } else {
+    actualizarRegistro("La máquina no acepta el Órdago. El jugador gana el juego.");
+  }
+}
+
+function maquinaRespondePaso() {
+  const decision = Math.random();
+  if (decision < 0.5) {
+    actualizarRegistro("La máquina también pasa. Resolviendo la fase...");
+  } else {
+    apuestaActual += 2;
+    actualizarRegistro(`La máquina envida. Apuesta total: ${apuestaActual} piedras.`);
+    turnoJugador = true;
+  }
 }
 
 function actualizarInterfaz() {
@@ -155,7 +198,7 @@ function inicializarJuego() {
   crearBaraja();
   barajarCartas();
   repartirCartas();
-  alternarBotonesMus(true); // Muestra botones de Mus al iniciar
+  alternarBotonesMus(true);
   actualizarInterfaz();
 }
 
