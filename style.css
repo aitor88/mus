@@ -142,3 +142,8 @@ button:disabled {
     height: 120px;
   }
 }
+
+.carta.seleccionada {
+  border: 2px solid red;
+  transform: scale(1.1);
+}
