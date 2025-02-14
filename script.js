@@ -48,6 +48,26 @@ function checkGameOver() {
     }
 }
 
+function swipe(direction) {
+    const card = document.querySelector(".event-card");
+    card.classList.add(direction === "left" ? "swipe-left" : "swipe-right");
+
+    setTimeout(() => {
+        card.classList.remove("swipe-left", "swipe-right");
+        checkGameOver();
+    }, 300);
+}
+
+document.getElementById("option-left").addEventListener("click", () => {
+    updateStats(events[currentEventIndex].left);
+    swipe("left");
+});
+
+document.getElementById("option-right").addEventListener("click", () => {
+    updateStats(events[currentEventIndex].right);
+    swipe("right");
+});
+
 document.getElementById("option-left").addEventListener("click", () => {
     updateStats(events[currentEventIndex].left);
 });
