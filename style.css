@@ -31,35 +31,22 @@ body {
     border-radius: 8px;
 }
 
-button {
+.option-btn {
+    width: 90%;
     margin: 10px;
-    padding: 10px 20px;
-    font-size: 1.2em;
+    padding: 10px;
+    font-size: 1em;
     border: none;
     cursor: pointer;
     border-radius: 5px;
 }
 
-#option-left {
+.red {
     background-color: #ff4c4c;
     color: white;
 }
 
-#option-right {
+.green {
     background-color: #4caf50;
     color: white;
-}
-
-.event-card {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-}
-
-.swipe-left {
-    transform: translateX(-100%);
-    opacity: 0;
-}
-
-.swipe-right {
-    transform: translateX(100%);
-    opacity: 0;
 }
