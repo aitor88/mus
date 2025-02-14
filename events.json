@@ -1,12 +1,102 @@
 [
     {
-        "text": "Un inversor quiere comprar el 30% de la startup.",
-        "left": {"text": "Aceptamos la inversión.", "money": 20, "morale": -10},
-        "right": {"text": "No, seguimos independientes.", "money": -10, "morale": 10}
+        "text": "Un inversor ofrece $500,000 por el 30% de la startup.",
+        "left": { "text": "Aceptamos la inversión.", "money": 30, "morale": -5 },
+        "right": { "text": "Rechazamos, queremos más control.", "money": -10, "morale": 10 }
     },
     {
-        "text": "Tu programador quiere un aumento de sueldo.",
-        "left": {"text": "Págale más, es clave.", "money": -15, "morale": 15},
-        "right": {"text": "No podemos, el presupuesto es ajustado.", "morale": -10}
+        "text": "Un conocido Business Angel quiere invertir, pero quiere opinar en cada decisión.",
+        "left": { "text": "Aceptamos su inversión.", "money": 20, "reputation": -5 },
+        "right": { "text": "Rechazamos, preferimos independencia.", "money": -10, "reputation": 5 }
+    },
+    {
+        "text": "Un fondo de capital riesgo quiere invertir, pero exige crecimiento agresivo.",
+        "left": { "text": "Aceptamos el reto.", "money": 25, "innovation": -5 },
+        "right": { "text": "No queremos presión excesiva.", "money": -10, "morale": 5 }
+    },
+    {
+        "text": "Un inversor sospechoso te ofrece dinero sin hacer muchas preguntas.",
+        "left": { "text": "Aceptamos, el dinero es dinero.", "money": 20, "reputation": -10 },
+        "right": { "text": "Rechazamos, no nos arriesgamos.", "reputation": 5 }
+    },
+    {
+        "text": "Un competidor intenta comprar tu startup antes de que crezcas demasiado.",
+        "left": { "text": "Vendemos y nos hacemos ricos.", "money": 100, "reputation": -20 },
+        "right": { "text": "Rechazamos, queremos ser líderes.", "money": -10, "reputation": 10 }
+    },
+    {
+        "text": "Tu CTO exige un aumento de sueldo.",
+        "left": { "text": "Págale más, es clave.", "money": -15, "morale": 10, "innovation": 5 },
+        "right": { "text": "No podemos, el presupuesto es ajustado.", "morale": -10 }
+    },
+    {
+        "text": "Uno de tus programadores está siendo tentado por una empresa más grande.",
+        "left": { "text": "Le hacemos una contraoferta.", "money": -10, "morale": 5 },
+        "right": { "text": "Lo dejamos ir, no podemos competir.", "morale": -15, "innovation": -5 }
+    },
+    {
+        "text": "Tu web colapsa por demasiadas visitas después de una campaña viral.",
+        "left": { "text": "Invertimos en mejores servidores.", "money": -20, "reputation": 10 },
+        "right": { "text": "Esperamos que pase la crisis.", "reputation": -10 }
+    },
+    {
+        "text": "Un bug crítico está afectando a cientos de usuarios.",
+        "left": { "text": "Invertimos en un equipo de soporte 24/7.", "money": -30, "reputation": 10 },
+        "right": { "text": "Lo ignoramos, nadie se dará cuenta.", "reputation": -20 }
+    },
+    {
+        "text": "Un usuario famoso hace una reseña negativa de tu producto.",
+        "left": { "text": "Le enviamos mejoras y le pedimos una segunda oportunidad.", "money": -10, "reputation": 15 },
+        "right": { "text": "No hacemos nada, no queremos darle más visibilidad.", "reputation": -10 }
+    },
+    {
+        "text": "Un influencer quiere promocionarte, pero es caro.",
+        "left": { "text": "Pagamos, necesitamos visibilidad.", "money": -15, "reputation": 10 },
+        "right": { "text": "No, el boca a boca es mejor.", "money": 10 }
+    },
+    {
+        "text": "Un hacker ha encontrado una vulnerabilidad en tu app.",
+        "left": { "text": "Pagamos un parche de seguridad inmediato.", "money": -30, "reputation": 10 },
+        "right": { "text": "Lo ignoramos, confiamos en la suerte.", "reputation": -20 }
+    },
+    {
+        "text": "Tu proveedor de servidores ha triplicado los precios.",
+        "left": { "text": "Cambiamos de proveedor, aunque es riesgoso.", "innovation": -5 },
+        "right": { "text": "Pagamos, no queremos problemas.", "money": -20 }
+    },
+    {
+        "text": "Un evento de networking te permite conocer inversores clave.",
+        "left": { "text": "Participamos activamente.", "reputation": 10, "money": -5 },
+        "right": { "text": "No tenemos tiempo para esto.", "money": 5 }
+    },
+    {
+        "text": "Hacienda te notifica que debes revisar tu situación fiscal.",
+        "left": { "text": "Contratamos a un asesor.", "money": -20, "reputation": 5 },
+        "right": { "text": "Ignoramos el aviso.", "reputation": -10 }
+    },
+    {
+        "text": "Un periodista tech quiere hacer una entrevista sobre tu startup.",
+        "left": { "text": "Aceptamos, buena publicidad gratuita.", "reputation": 10 },
+        "right": { "text": "No queremos distracciones.", "money": 5 }
+    },
+    {
+        "text": "Tu equipo de ventas se queja de la falta de comisiones.",
+        "left": { "text": "Aumentamos las comisiones.", "money": -15, "morale": 10 },
+        "right": { "text": "Les explicamos que no es viable.", "morale": -10 }
+    },
+    {
+        "text": "Una regulación nueva podría afectar tu negocio.",
+        "left": { "text": "Nos adaptamos rápido a la normativa.", "money": -20, "innovation": 10 },
+        "right": { "text": "Esperamos a ver qué pasa.", "reputation": -10 }
+    },
+    {
+        "text": "Un cliente insatisfecho amenaza con hacer una denuncia pública.",
+        "left": { "text": "Lo compensamos con un descuento.", "money": -10, "reputation": 10 },
+        "right": { "text": "Lo ignoramos, hay clientes más importantes.", "reputation": -15 }
+    },
+    {
+        "text": "La prensa te menciona como una de las startups más prometedoras.",
+        "left": { "text": "Aprovechamos la oportunidad para hacer más marketing.", "money": -10, "reputation": 15 },
+        "right": { "text": "No hacemos nada, dejamos que fluya.", "reputation": 5 }
     }
 ]
