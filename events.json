@@ -1,0 +1,12 @@
+[
+    {
+        "text": "Un inversor quiere comprar el 30% de la startup.",
+        "left": {"text": "Aceptamos la inversión.", "money": 20, "morale": -10},
+        "right": {"text": "No, seguimos independientes.", "money": -10, "morale": 10}
+    },
+    {
+        "text": "Tu programador quiere un aumento de sueldo.",
+        "left": {"text": "Págale más, es clave.", "money": -15, "morale": 15},
+        "right": {"text": "No podemos, el presupuesto es ajustado.", "morale": -10}
+    }
+]
