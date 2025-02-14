@@ -15,10 +15,7 @@ async function loadEvents() {
 }
 
 function showEvent() {
-    if (currentEventIndex >= events.length) {
-        currentEventIndex = 0; // Reiniciar eventos cuando se terminen
-    }
-
+    currentEventIndex = Math.floor(Math.random() * events.length);
     const event = events[currentEventIndex];
     document.getElementById("event-text").innerText = event.text;
 }
