@@ -1,21 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Mus</title>
+    <title>Startup Swipe</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Juego de Mus</h1>
-    <div id="tablero">
-        <div id="cartasJugador1"></div>
-        <div id="botonesMus">
-            <button id="mus">Mus</button>
-            <button id="noMus">No hay Mus</button>
+    <div class="game-container">
+        <div class="stats">
+            <div class="stat">💰 <span id="money">50</span></div>
+            <div class="stat">😊 <span id="morale">50</span></div>
+            <div class="stat">⚙ <span id="innovation">50</span></div>
+            <div class="stat">⭐ <span id="reputation">50</span></div>
+        </div>
+
+        <div class="event-card">
+            <p id="event-text">Cargando...</p>
+            <button id="option-left">⬅</button>
+            <button id="option-right">➡</button>
         </div>
     </div>
-    <ul id="registroDecisiones"></ul>
+
     <script src="script.js"></script>
 </body>
 </html>
