@@ -55,6 +55,16 @@ function swipe(direction) {
     }, 300);
 }
 
+function checkVictory() {
+    if (gameState.money > 100 && gameState.reputation > 80) {
+        alert("¡Has logrado una IPO! 🎉 Eres millonario.");
+        location.reload();
+    } else if (gameState.money <= 0) {
+        alert("💸 Tu startup ha quebrado. Fin del juego.");
+        location.reload();
+    }
+}
+
 document.getElementById("option-left").addEventListener("click", () => {
     updateStats(events[currentEventIndex].left);
     swipe("left");
