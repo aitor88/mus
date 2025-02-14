@@ -49,3 +49,17 @@ button {
     background-color: #4caf50;
     color: white;
 }
+
+.event-card {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.swipe-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.swipe-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
