@@ -3,25 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Startup Swipe</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Robo Perfecto</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
+        canvas { touch-action: none; }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="stats">
-            <div class="stat">💰 <span id="money">50</span> <span id="money-change" class="stat-change"></span></div>
-            <div class="stat">😊 <span id="morale">50</span> <span id="morale-change" class="stat-change"></span></div>
-            <div class="stat">⚙ <span id="innovation">50</span> <span id="innovation-change" class="stat-change"></span></div>
-            <div class="stat">⭐ <span id="reputation">50</span> <span id="reputation-change" class="stat-change"></span></div>
-        </div>
+<script>
+const config = {
+    type: Phaser.AUTO,
+    width: 400,
+    height: 400,
+    backgroundColor: "#1a1a1a",
+    scene: { preload, create, update }
+};
 
-        <div class="event-card">
-            <p id="event-text">Cargando...</p>
-            <button id="option-left" class="option-btn red">Opción 1</button>
-            <button id="option-right" class="option-btn green">Opción 2</button>
-        </div>
-    </div>
+const gridSize = 50;
+const cols = 8;
+const rows = 8;
+let player, guard, target, exit;
+let guardPath = [[5, 2], [6, 2], [6, 3], [5, 3]]; // Ruta del guardia
+let guardIndex = 0;
 
-    <script src="script.js"></script>
+const game = new Phaser.Game(config);
+
+function preload() {
+    this.load.image('player', 'https://i.imgur.com/WaZDf54.png'); // Imagen del jugador (puedes cambiarla)
+    this.load.image('guard', 'https://i.imgur.com/Ur8sX6T.png'); // Imagen del guardia
+    this.load.image('target', 'https://i.imgur.com/dEwU80x.png'); // Imagen del objeto
+    this.load.image('exit', 'https://i.imgur.com/lJhF4qM.png'); // Imagen de la salida
+}
+
+function create() {
+    // Crear tablero visual
+    for (let x = 0; x < cols; x++) {
+        for (let y = 0; y < rows; y++) {
+            this.add.rectangle(x * gridSize + gridSize / 2, y * gridSize + gridSize / 2, gridSize - 2, gridSize - 2, 0x333333);
+        }
+    }
+
+    // Colocar objetos
+    player = this.add.image(50, 300, 'player').setScale(0.5);
+    guard = this.add.image(250, 100, 'guard').setScale(0.5);
+    target = this.add.image(350, 50, 'target').setScale(0.5);
+    exit = this.add.image(350, 350, 'exit').setScale(0.5);
+
+    // Controles táctiles y teclado
+    this.input.keyboard.on('keydown', (event) => movePlayer(event.key));
+    this.input.on('pointerdown', (pointer) => handleTouch(pointer));
+}
+
+function movePlayer(direction) {
+    let newX = player.x, newY = player.y;
+
+    if (direction === 'ArrowUp' && player.y > 50) newY -= gridSize;
+    if (direction === 'ArrowDown' && player.y < (rows - 1) * gridSize) newY += gridSize;
+    if (direction === 'ArrowLeft' && player.x > 50) newX -= gridSize;
+    if (direction === 'ArrowRight' && player.x < (cols - 1) * gridSize) newX += gridSize;
+
+    player.setPosition(newX, newY);
+    moveGuard();
+
+    checkCollision();
+}
+
+function handleTouch(pointer) {
+    let dx = pointer.x - player.x;
+    let dy = pointer.y - player.y;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        movePlayer(dx > 0 ? "ArrowRight" : "ArrowLeft");
+    } else {
+        movePlayer(dy > 0 ? "ArrowDown" : "ArrowUp");
+    }
+}
+
+function moveGuard() {
+    guardIndex = (guardIndex + 1) % guardPath.length;
+    let [gx, gy] = guardPath[guardIndex];
+    guard.setPosition(gx * gridSize + gridSize / 2, gy * gridSize + gridSize / 2);
+}
+
+function checkCollision() {
+    if (Phaser.Math.Distance.Between(player.x, player.y, guard.x, guard.y) < 10) {
+        alert("¡Te atraparon! Inténtalo de nuevo.");
+        resetGame();
+    }
+    if (Phaser.Math.Distance.Between(player.x, player.y, target.x, target.y) < 10) {
+        alert("¡Has robado el objeto! Ahora escapa.");
+        target.destroy();
+    }
+    if (Phaser.Math.Distance.Between(player.x, player.y, exit.x, exit.y) < 10 && !target.active) {
+        alert("¡Has escapado con el botín! ¡Ganaste!");
+        resetGame();
+    }
+}
+
+function resetGame() {
+    player.setPosition(50, 300);
+    guard.setPosition(250, 100);
+}
+
+</script>
 </body>
 </html>
