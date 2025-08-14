@@ -3,109 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robo Perfecto</title>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <title>El Viaje del Ganchero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
-        canvas { touch-action: none; }
+        body {
+            font-family: 'Lora', serif;
+            background-color: #f0e8d9; /* Un color pergamino claro */
+        }
+        .game-container {
+            background-color: #ffffff;
+            border: 2px solid #8B4513; /* Marrón silla de montar */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .choice-button {
+            background-color: #A0522D; /* Siena */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .choice-button:hover {
+            background-color: #8B4513; /* Marrón más oscuro */
+            transform: translateY(-2px);
+        }
+        #story-image {
+            border-bottom: 2px solid #8B4513;
+        }
     </style>
 </head>
-<body>
-<script>
-const config = {
-    type: Phaser.AUTO,
-    width: 400,
-    height: 400,
-    backgroundColor: "#1a1a1a",
-    scene: { preload, create, update }
-};
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-const gridSize = 50;
-const cols = 8;
-const rows = 8;
-let player, guard, target, exit;
-let guardPath = [[5, 2], [6, 2], [6, 3], [5, 3]]; // Ruta del guardia
-let guardIndex = 0;
+    <div id="game-container" class="game-container w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
+        <!-- Imagen de la Escena -->
+        <img id="story-image" src="https://placehold.co/800x400/6b8e23/ffffff?text=Sierra+de+Albarrac%C3%ADn" alt="Escena del juego" class="w-full h-48 sm:h-64 object-cover">
+        
+        <div class="p-6 md:p-8">
+            <!-- Nombre del Personaje -->
+            <div id="name-input-container" class="text-center">
+                <h1 class="text-2xl font-bold text-gray-800 mb-4">El Viaje del Ganchero</h1>
+                <p class="text-gray-600 mb-4">Antes de empezar, dale un nombre a tu ganchero. Un nombre que suene a sierra y a río.</p>
+                <input type="text" id="character-name" placeholder="Ej: Beltrán, el de los Ojos de Río" class="w-full max-w-sm p-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#8B4513]">
+                <button id="start-game-button" class="choice-button text-white font-bold py-2 px-6 rounded-lg w-full max-w-sm">Comenzar Aventura</button>
+            </div>
 
-const game = new Phaser.Game(config);
+            <!-- Contenido del Juego (inicialmente oculto) -->
+            <div id="story-container" class="hidden">
+                <h2 id="stage-title" class="text-xl font-bold text-gray-800 mb-2"></h2>
+                <p id="story-text" class="text-gray-700 leading-relaxed mb-6"></p>
+                <div id="choices-container" class="grid grid-cols-1 gap-4">
+                    <!-- Los botones de opción se generarán aquí -->
+                </div>
+                 <button id="restart-button" class="hidden mt-6 w-full text-center text-gray-500 hover:text-gray-800">Volver a empezar</button>
+            </div>
+        </div>
+    </div>
 
-function preload() {
-    this.load.image('player', 'https://i.imgur.com/WaZDf54.png'); // Imagen del jugador (puedes cambiarla)
-    this.load.image('guard', 'https://i.imgur.com/Ur8sX6T.png'); // Imagen del guardia
-    this.load.image('target', 'https://i.imgur.com/dEwU80x.png'); // Imagen del objeto
-    this.load.image('exit', 'https://i.imgur.com/lJhF4qM.png'); // Imagen de la salida
-}
+    <script>
+        const gameData = {
+            start: {
+                title: "Prólogo: El Nacimiento en los Altos",
+                text: (name) => `Naciste en un pequeño y humilde pueblo de los Altos de Albarracín. El olor a pino y a leña mojada es tu primer recuerdo. Tu padre, un ganchero curtido, te alzó y dijo: "Ese es tu sino, ${name}, el canto de la madera". Tu infancia transcurre entre los gigantescos pinos rodenos; tu aula es el bosque y tus maestros, los viejos gancheros.`,
+                image: "https://placehold.co/800x400/6b8e23/ffffff?text=Nacimiento+en+la+Sierra",
+                choices: [
+                    { text: "Continuar...", nextStage: "apprentice" }
+                ]
+            },
+            apprentice: {
+                title: "Etapa 1: Los Años de Aprendiz",
+                text: (name) => `A tus 14 años, tu padre decide que ha llegado el momento. Empiezas como "rancherillo". Una tarde, un enorme tronco se atasca en unas rocas, creando una peligrosa presa. Los gancheros gritan, pero el agua ruge con demasiada fuerza. Tu padre está entre ellos, en peligro.`,
+                image: "https://placehold.co/800x400/4682b4/ffffff?text=El+Tronco+Atascado",
+                choices: [
+                    { text: "Buscar consejo de un veterano.", nextStage: "apprentice_prudence" },
+                    { text: "Lanzarse al agua para ayudar.", nextStage: "apprentice_bravery" },
+                    { text: "Desviar un arroyo cercano.", nextStage: "apprentice_ingenuity" }
+                ]
+            },
+            apprentice_prudence: {
+                title: "El Camino de la Prudencia",
+                text: (name) => `Siguiendo tu instinto, encuentras a "El Viejo", un ganchero retirado que observa desde la orilla. Con su guía, indicas a los hombres el punto exacto donde apalancar. El tronco cede lentamente, sin más incidentes. Ganas el respeto de los veteranos por tu cabeza fría.`,
+                image: "https://placehold.co/800x400/a0a0a0/ffffff?text=Sabidur%C3%ADa+y+Respeto",
+                choices: [
+                    { text: "Los años pasan...", nextStage: "ganchero" }
+                ]
+            },
+            apprentice_bravery: {
+                title: "El Camino de la Valentía",
+                text: (name) => `El frío del agua te corta la respiración, pero logras afianzarte en la orilla opuesta. Tu pequeña ayuda da el impulso necesario para que los hombres liberen el tronco en una explosión de espuma. Sales del agua tiritando, pero con la mirada de orgullo de tu padre y una cicatriz en la mano que contarás por años.`,
+                image: "https://placehold.co/800x400/dc143c/ffffff?text=Coraje+en+el+R%C3%ADo",
+                choices: [
+                    { text: "Los años pasan...", nextStage: "ganchero" }
+                ]
+            },
+            apprentice_ingenuity: {
+                title: "El Camino del Ingenio",
+                text: (name) => `Tu idea parece una locura, pero funciona. El pequeño arroyo, concentrado, golpea el tronco en un punto débil. Con un crujido, la presa se rompe. No solo salvas la maderada, sino que lo haces sin arriesgar a nadie. Tu fama de "listo" empieza a correr por el río.`,
+                image: "https://placehold.co/800x400/ffd700/000000?text=Una+Idea+Brillante",
+                choices: [
+                    { text: "Los años pasan...", nextStage: "ganchero" }
+                ]
+            },
+            ganchero: {
+                title: "Etapa 2: El Ganchero",
+                text: (name) => `Ahora eres un ganchero respetado. El río Turia es tu hogar. En Chelva, un capataz rival, "El Chato", te desafía a una apuesta: el primero en atravesar el peligroso cañón de "La Hoz" se llevará una parte extra de la paga.`,
+                image: "https://placehold.co/800x400/8b4513/ffffff?text=El+Ca%C3%B1%C3%B3n+de+La+Hoz",
+                choices: [
+                    { text: "Aceptar la carrera. ¡A por la gloria!", nextStage: "ganchero_competition" },
+                    { text: "Proponer una apuesta de habilidad, no de velocidad.", nextStage: "ganchero_strategy" },
+                    { text: "Sugerir unir fuerzas para pasar juntos.", nextStage: "ganchero_collaboration" }
+                ]
+            },
+            ganchero_competition: {
+                title: "La Carrera de la Hoz",
+                text: (name) => `La carrera es una locura de espuma y madera. Arriesgas en cada curva, saltando de tronco en tronco. Sales del cañón por los pelos, justo por delante de "El Chato". Ganas la apuesta y la fama de ser el más rápido del Turia, pero pierdes tres troncos en el proceso.`,
+                image: "https://placehold.co/800x400/ff4500/ffffff?text=Victoria+Arriesgada",
+                choices: [
+                    { text: "El tiempo sigue su curso...", nextStage: "legend" }
+                ]
+            },
+            ganchero_strategy: {
+                title: "La Victoria del Maestro",
+                text: (name) => `"El Chato" se ríe, pero acepta. Él corre, tú trabajas con precisión. Él llega primero, pero ha perdido cinco troncos. Tú llegas después, pero con la carga intacta. El terrateniente, impresionado, te da a ti la recompensa. Demuestras que ser ganchero es más que ser rápido.`,
+                image: "https://placehold.co/800x400/1e90ff/ffffff?text=Mente+sobre+M%C3%BAsculo",
+                choices: [
+                    { text: "El tiempo sigue su curso...", nextStage: "legend" }
+                ]
+            },
+            ganchero_collaboration: {
+                title: "La Unión del Río",
+                text: (name) => `Sorprendido, "El Chato" acepta. Combinando vuestras cuadrillas, superáis el cañón con una eficacia nunca vista. No hay competencia, solo trabajo en equipo. Compartís la recompensa y forjas una alianza inesperada. En el río, aprendes que no siempre hay que luchar solo.`,
+                image: "https://placehold.co/800x400/32cd32/ffffff?text=La+Fuerza+de+la+Uni%C3%B3n",
+                choices: [
+                    { text: "El tiempo sigue su curso...", nextStage: "legend" }
+                ]
+            },
+            legend: {
+                title: "Etapa 3: La Leyenda del Río",
+                text: (name) => `Eres un anciano sabio. Cerca de la desembocadura, un joven te cuenta asustado sobre luces y susurros en el agua: la leyenda del "Caimán del Turia" ha vuelto, y los hombres tienen miedo de continuar.`,
+                image: "https://placehold.co/800x400/00008b/ffffff?text=La+Leyenda+del+Caim%C3%A1n",
+                choices: [
+                    { text: "Descartar la leyenda con lógica.", nextStage: "legend_realism" },
+                    { text: "Honrar la tradición con una ofrenda.", nextStage: "legend_tradition" },
+                    { text: "Enfrentar la 'bestia' para inspirarlos.", nextStage: "legend_heroism" }
+                ]
+            },
+            legend_realism: {
+                title: "Epílogo: La Voz de la Razón",
+                text: (name) => `Con paciencia, explicas los sonidos y las luces del río. Tu calma y tu lógica apaciguan sus miedos. Llegas a Valencia con la maderada completa. Eres recordado como ${name}, el ganchero que entendía el río no con miedo, sino con conocimiento. Tu legado es la sabiduría.`,
+                image: "https://placehold.co/800x400/b0c4de/000000?text=El+Legado+de+la+Sabidur%C3%ADa",
+                choices: []
+            },
+            legend_tradition: {
+                title: "Epílogo: El Guardián de las Costumbres",
+                text: (name) => `Organizas una pequeña ceremonia en la orilla, arrojando una rama de pino al agua como ofrenda. El gesto une a los hombres y les devuelve la confianza. Llegas a Valencia en armonía. Eres recordado como ${name}, el que respetaba tanto a la madera como a las historias del río. Tu legado es el respeto.`,
+                image: "https://placehold.co/800x400/2e8b57/ffffff?text=El+Legado+del+Respeto",
+                choices: []
+            },
+            legend_heroism: {
+                title: "Epílogo: El Héroe del Turia",
+                text: (name) => `Pasas la noche en la orilla, tu silueta recortada contra la luna. Por la mañana, tu calma es la mejor prueba de que no hay nada que temer. Tu valentía se convierte en leyenda. Eres recordado como ${name}, el ganchero que no temía ni a los rápidos ni a los fantasmas. Tu legado es una leyenda.`,
+                image: "https://placehold.co/800x400/daa520/ffffff?text=El+Legado+de+una+Leyenda",
+                choices: []
+            }
+        };
 
-function create() {
-    // Crear tablero visual
-    for (let x = 0; x < cols; x++) {
-        for (let y = 0; y < rows; y++) {
-            this.add.rectangle(x * gridSize + gridSize / 2, y * gridSize + gridSize / 2, gridSize - 2, gridSize - 2, 0x333333);
+        const nameInputContainer = document.getElementById('name-input-container');
+        const storyContainer = document.getElementById('story-container');
+        const startGameButton = document.getElementById('start-game-button');
+        const characterNameInput = document.getElementById('character-name');
+        
+        const storyImage = document.getElementById('story-image');
+        const stageTitle = document.getElementById('stage-title');
+        const storyText = document.getElementById('story-text');
+        const choicesContainer = document.getElementById('choices-container');
+        const restartButton = document.getElementById('restart-button');
+
+        let characterName = "Ganchero";
+
+        startGameButton.addEventListener('click', () => {
+            const name = characterNameInput.value.trim();
+            if (name) {
+                characterName = name;
+            }
+            nameInputContainer.classList.add('hidden');
+            storyContainer.classList.remove('hidden');
+            renderStage('start');
+        });
+        
+        restartButton.addEventListener('click', () => {
+            storyContainer.classList.add('hidden');
+            nameInputContainer.classList.remove('hidden');
+            characterNameInput.value = '';
+        });
+
+        function renderStage(stageKey) {
+            const stage = gameData[stageKey];
+            if (!stage) {
+                console.error("Stage not found:", stageKey);
+                return;
+            }
+
+            // Actualizar contenido
+            stageTitle.textContent = stage.title;
+            storyText.textContent = stage.text(characterName);
+            storyImage.src = stage.image;
+            storyImage.alt = stage.title;
+
+            // Limpiar opciones anteriores
+            choicesContainer.innerHTML = '';
+
+            // Crear nuevas opciones
+            if (stage.choices.length > 0) {
+                stage.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.textContent = choice.text;
+                    button.className = 'choice-button text-white font-bold py-3 px-4 rounded-lg w-full text-left';
+                    button.onclick = () => renderStage(choice.nextStage);
+                    choicesContainer.appendChild(button);
+                });
+                restartButton.classList.add('hidden');
+            } else {
+                // Es una etapa final
+                restartButton.classList.remove('hidden');
+            }
         }
-    }
-
-    // Colocar objetos
-    player = this.add.image(50, 300, 'player').setScale(0.5);
-    guard = this.add.image(250, 100, 'guard').setScale(0.5);
-    target = this.add.image(350, 50, 'target').setScale(0.5);
-    exit = this.add.image(350, 350, 'exit').setScale(0.5);
-
-    // Controles táctiles y teclado
-    this.input.keyboard.on('keydown', (event) => movePlayer(event.key));
-    this.input.on('pointerdown', (pointer) => handleTouch(pointer));
-}
-
-function movePlayer(direction) {
-    let newX = player.x, newY = player.y;
-
-    if (direction === 'ArrowUp' && player.y > 50) newY -= gridSize;
-    if (direction === 'ArrowDown' && player.y < (rows - 1) * gridSize) newY += gridSize;
-    if (direction === 'ArrowLeft' && player.x > 50) newX -= gridSize;
-    if (direction === 'ArrowRight' && player.x < (cols - 1) * gridSize) newX += gridSize;
-
-    player.setPosition(newX, newY);
-    moveGuard();
-
-    checkCollision();
-}
-
-function handleTouch(pointer) {
-    let dx = pointer.x - player.x;
-    let dy = pointer.y - player.y;
-
-    if (Math.abs(dx) > Math.abs(dy)) {
-        movePlayer(dx > 0 ? "ArrowRight" : "ArrowLeft");
-    } else {
-        movePlayer(dy > 0 ? "ArrowDown" : "ArrowUp");
-    }
-}
-
-function moveGuard() {
-    guardIndex = (guardIndex + 1) % guardPath.length;
-    let [gx, gy] = guardPath[guardIndex];
-    guard.setPosition(gx * gridSize + gridSize / 2, gy * gridSize + gridSize / 2);
-}
-
-function checkCollision() {
-    if (Phaser.Math.Distance.Between(player.x, player.y, guard.x, guard.y) < 10) {
-        alert("¡Te atraparon! Inténtalo de nuevo.");
-        resetGame();
-    }
-    if (Phaser.Math.Distance.Between(player.x, player.y, target.x, target.y) < 10) {
-        alert("¡Has robado el objeto! Ahora escapa.");
-        target.destroy();
-    }
-    if (Phaser.Math.Distance.Between(player.x, player.y, exit.x, exit.y) < 10 && !target.active) {
-        alert("¡Has escapado con el botín! ¡Ganaste!");
-        resetGame();
-    }
-}
-
-function resetGame() {
-    player.setPosition(50, 300);
-    guard.setPosition(250, 100);
-}
-
-</script>
+    </script>
 </body>
 </html>
+
