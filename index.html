@@ -9,30 +9,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <style>
-        /* Base styles for a clean, modern look */
         body {
             font-family: 'Lora', serif;
             background-color: #1a1a1a;
             color: #333;
-            /* Prevents the main page from scrolling */
             overflow: hidden;
         }
-        /* Main game container styling */
         .game-container {
             background-color: #fdfdfd;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            /* This flex setup is key for the height adjustment */
             display: flex;
             flex-direction: column;
-            /* Ensures the container doesn't exceed the screen height */
             max-height: 100%;
             height: 100%;
         }
-        /* The area that will contain the story text and scroll if necessary */
         .content-area {
             overflow-y: auto;
         }
-        /* Consistent button style */
         .choice-button {
             background-color: #333;
             border: 1px solid #333;
@@ -43,7 +36,14 @@
             background-color: #fff;
             color: #333;
         }
-        /* Simple fade-in animation for transitions */
+        .iker-choice {
+            background-color: #6B4F3A;
+            border-color: #6B4F3A;
+        }
+        .iker-choice:hover {
+            background-color: #fff;
+            color: #6B4F3A;
+        }
         .fade-in {
             animation: fadeIn 0.7s ease-in-out;
         }
@@ -51,7 +51,6 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Custom scrollbar for a cleaner look */
         .content-area::-webkit-scrollbar { width: 8px; }
         .content-area::-webkit-scrollbar-track { background: #f1f1f1; }
         .content-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
@@ -61,7 +60,6 @@
 <body class="h-full flex items-center justify-center p-2 md:p-4">
 
     <div id="game-container" class="game-container w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
-        <!-- The dynamic content (intro, stages, ending) will be rendered here -->
         <div id="content-wrapper" class="flex-grow flex flex-col"></div>
     </div>
 
@@ -71,7 +69,7 @@
 
         // --- GAME ENGINE ---
         function renderComponent(component) {
-            contentWrapper.innerHTML = ''; // Clear previous content
+            contentWrapper.innerHTML = '';
             contentWrapper.appendChild(component);
         }
 
@@ -102,6 +100,7 @@
                     wealth: 0,
                     injury: false,
                     navarreKnowledge: false,
+                    relianceOnIker: 0,
                     path: []
                 };
                 renderStage('start');
@@ -116,12 +115,12 @@
             }
 
             const container = document.createElement('div');
-            // This flex structure ensures the component fills the available height
             container.className = 'flex flex-col h-full';
             
             let choicesHTML = stage.choices.map((choice, index) => {
                 if (choice.requires && !choice.requires(gameState)) return '';
-                return `<button class="choice-button w-full text-left font-bold py-3 px-5 rounded-md" data-choice-index="${index}">${choice.text}</button>`;
+                const buttonClass = choice.isIker ? 'iker-choice' : '';
+                return `<button class="choice-button ${buttonClass} w-full text-left font-bold py-3 px-5 rounded-md" data-choice-index="${index}">${choice.text}</button>`;
             }).join('');
 
             container.innerHTML = `
@@ -157,12 +156,11 @@
             return container;
         }
         
-        // --- GAME FLOW ---
         function renderStage(stageKey) {
             renderComponent(createStageComponent(stageKey));
         }
 
-        // --- GAME DATA (STAGES & CHOICES) ---
+        // --- GAME DATA ---
         const gameData = {
             'start': {
                 title: "La Promesa",
@@ -185,19 +183,29 @@
             'navarros': {
                 title: "El Encuentro Navarro",
                 image: "https://placehold.co/800x400/964B00/ffffff?text=Almadieros+Navarros",
-                text: (gs) => `Os encontráis con almadieros navarros. Su líder, Iker, os mira con sorna. "Vosotros bailáis con troncos sueltos", dice. "Nosotros domamos al río con balsas enteras, las almadías".`,
+                text: (gs) => `Os encontráis con almadieros navarros. Su líder, Iker, os mira con sorna. "Vosotros bailáis con troncos sueltos", dice. "Nosotros domamos al río con balsas. Pero el río es el río". Decide viajar con vosotros un tramo para aprender del Turia.`,
                 choices: [
-                    { id: 'c1', text: "Compartir vuestro vino y escuchar sus técnicas.", nextStage: () => 'paga', action: (gs) => gs.navarreKnowledge = true },
-                    { id: 'c2', text: "Ignorarlos. Son competencia.", nextStage: () => 'paga' }
+                    { id: 'c1', text: "Compartir vuestro vino y escucharlo.", nextStage: () => 'paga', action: (gs) => gs.navarreKnowledge = true },
+                    { id: 'c2', text: "Mantener las distancias. Es un extraño.", nextStage: () => 'paga' }
                 ]
             },
             'paga': {
                 title: "La Paga del Hambre",
                 image: "https://placehold.co/800x400/D2B48C/000000?text=La+Paga",
-                text: (gs) => `Día de paga. El representante del maderero os paga menos de lo acordado. Los demás callan por miedo.`,
+                text: (gs) => `Día de paga. El representante del maderero os paga menos de lo acordado. Los demás callan por miedo. Iker, el navarro, te observa, esperando tu reacción.`,
                 choices: [
                     { id: 'd1', text: "Reclamar lo que es justo, delante de todos.", nextStage: () => 'chelva', action: (gs) => { gs.reputation++; gs.wealth--; } },
                     { id: 'd2', text: "Callar. No buscas problemas.", nextStage: () => 'chelva' },
+                    { id: 'd3', text: "Consultar a Iker, el navarro.", isIker: true, nextStage: () => 'paga_iker', requires: (gs) => gs.navarreKnowledge, action: (gs) => gs.relianceOnIker++ }
+                ]
+            },
+            'paga_iker': {
+                title: "El Consejo de Iker",
+                image: "https://placehold.co/800x400/6B4F3A/ffffff?text=El+Consejo",
+                text: (gs) => `Apartas a Iker. "En mi tierra", dice en voz baja, "un hombre solo que grita es un loco. Una cuadrilla entera que calla es un problema. No reclaméis a voces. Haced un plante silencioso. Dejad las herramientas en el suelo. El silencio asusta más que los gritos".`,
+                choices: [
+                    { id: 'di1', text: "Seguir su consejo. Organizar un plante silencioso.", nextStage: () => 'chelva', action: (gs) => { gs.reputation += 2; } },
+                    { id: 'di2', text: "Agradecerle, pero reclamar a tu manera.", nextStage: () => 'chelva', action: (gs) => { gs.reputation++; gs.wealth--; } }
                 ]
             },
             'chelva': {
@@ -207,13 +215,22 @@
                 choices: [
                     { id: 'e1', text: "Aceptar. El honor lo es todo.", nextStage: () => 'azud', action: (gs) => gs.reputation++ },
                     { id: 'e2', text: "Proponer una apuesta con dinero.", nextStage: () => 'azud', action: (gs) => gs.wealth++ },
-                    { id: 'e3', text: "Rechazar. La seguridad es lo primero.", nextStage: () => 'azud' }
+                    { id: 'e3', text: "Consultar a Iker, si aún viaja contigo.", isIker: true, nextStage: () => 'chelva_iker', requires: (gs) => gs.navarreKnowledge, action: (gs) => gs.relianceOnIker++ }
+                ]
+            },
+            'chelva_iker': {
+                title: "La Perspectiva Almadiera",
+                image: "https://placehold.co/800x400/6B4F3A/ffffff?text=La+Perspectiva",
+                text: (gs) => `Iker se ríe. "¿Honor? El honor es llevar toda la madera a su destino, no perder la mitad por ir rápido. Proponle un desafío de habilidad: la cuadrilla que llegue con menos troncos perdidos, gana. Eso es ser un hombre de río, no un corredor."`,
+                choices: [
+                    { id: 'ei1', text: "Proponer el desafío de habilidad.", nextStage: () => 'azud', action: (gs) => { gs.reputation++; gs.wealth++; } },
+                    { id: 'ei2', text: "Ignorar su consejo y aceptar la carrera.", nextStage: () => 'azud', action: (gs) => gs.reputation++ }
                 ]
             },
             'azud': {
                 title: "El Azud de la Muerte",
                 image: "https://placehold.co/800x400/708090/ffffff?text=El+Azud",
-                text: (gs) => `Cerca de Pedralba, un azud amenaza la maderada. Alguien debe arriesgarse a guiar los troncos clave por la compuerta.`,
+                text: (gs) => `Cerca de Pedralba, un azud amenaza la maderada. Alguien debe arriesgarse a guiar los troncos clave por la compuerta. Es una tarea casi suicida.`,
                 choices: [
                     { id: 'f1', text: "Ofrecerte voluntario.", nextStage: (gs) => gs.navarreKnowledge ? 'carta' : 'final', action: (gs) => { gs.reputation++; if(Math.random() < 0.5) gs.injury = true; } },
                     { id: 'f2', text: "Esperar a que suba el caudal. Es más seguro.", nextStage: (gs) => gs.navarreKnowledge ? 'carta' : 'final', action: (gs) => gs.wealth-- }
@@ -222,7 +239,7 @@
             'carta': {
                 title: "La Carta de Navarra",
                 image: "https://placehold.co/800x400/F5DEB3/000000?text=La+Carta",
-                text: (gs) => `Recibes una carta de Iker, el navarro. "Necesitamos gente dura en el río Irati. La paga es buena y el trabajo es noble. Vente al norte". El mar está cerca... pero esta es la oportunidad de tu vida.`,
+                text: (gs) => `Recibes una carta de Iker. "Te he visto trabajar. Eres de los nuestros, aunque no lo sepas. Vente al Irati. Hay un futuro aquí para ti". El mar está cerca... pero esta es la oportunidad de tu vida.`,
                 choices: [
                     { id: 'g1', text: "Ir a Navarra. Una nueva vida te espera.", nextStage: () => 'final' },
                     { id: 'g2', text: "Rechazar. Debes cumplir tu promesa.", nextStage: () => 'final' },
@@ -235,6 +252,10 @@
             // Navarra Endings
             { condition: (gs) => gs.path.includes('g1') && gs.reputation > 2, title: "Maestro Almadiero del Irati", text: "Dejaste el Turia atrás. En Navarra, tu habilidad te convirtió en leyenda. Moriste anciano, respetado, con el sonido de los ríos pirenaicos como última canción de cuna." },
             { condition: (gs) => gs.path.includes('g1'), title: "Una Vida en el Norte", text: "Cambiaste el Turia por el Irati. La vida fue dura, pero buena. Formaste una familia, y aunque nunca viste el mar de tu madre, tus hijos crecieron escuchando historias de dos ríos." },
+            
+            // Iker Influence Endings
+            { condition: (gs) => gs.relianceOnIker >= 2 && gs.reputation > 2, title: "Puente entre Ríos", text: "Llegaste al mar, pero tu mayor logro fue aprender. Fusionaste la agilidad del ganchero con la estrategia del almadiero, creando nuevas técnicas. Te convertiste en un maestro respetado en todas las cuencas, un hombre sabio que supo escuchar." },
+            { condition: (gs) => gs.relianceOnIker >= 2, title: "La Sombra del Navarro", text: "Cumpliste tu promesa, pero siempre dudaste de tu instinto, apoyándote en Iker. Fuiste un buen ganchero, sí, pero en las tabernas se decía que tu leyenda le debía mucho a la sabiduría de un navarro." },
             
             // Injury Endings
             { condition: (gs) => gs.injury && gs.wealth < 0, title: "El Tullido de la Ribera", text: "El río te cobró su peaje. La lesión nunca sanó bien. Viste el mar, pero pasaste el resto de tus días con un dolor sordo, viviendo de la caridad y contando historias de cuando podías bailar sobre los troncos." },
