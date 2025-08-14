@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,260 +7,250 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Lora', serif;
-            background-color: #3D2B1F;
+            background-color: #1a1a1a;
+            color: #333;
         }
         .game-container {
-            background-color: #F5F5DC; /* Beige */
-            border: 4px solid #4A3728;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            background-color: #fdfdfd;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            max-height: 95vh;
         }
-        h1, h2 { font-family: 'Cinzel', serif; font-weight: 700; color: #4A3728; }
+        .content-area {
+            overflow-y: auto;
+        }
         .choice-button {
-            background-color: #8B4513; /* SaddleBrown */
-            border-bottom: 4px solid #5C3317;
-            transition: all 0.15s ease-out;
+            background-color: #333;
+            border: 1px solid #333;
+            color: #fff;
+            transition: background-color 0.2s ease-out, color 0.2s ease-out;
         }
-        .choice-button:hover { background-color: #A0522D; transform: translateY(-3px); border-bottom-width: 7px; }
-        .choice-button:active { transform: translateY(1px); border-bottom-width: 3px; }
-        .fade-in { animation: fadeIn 0.8s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .choice-button:hover {
+            background-color: #fff;
+            color: #333;
+        }
+        .fade-in {
+            animation: fadeIn 0.7s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Scrollbar styling for a cleaner look */
+        .content-area::-webkit-scrollbar { width: 8px; }
+        .content-area::-webkit-scrollbar-track { background: #f1f1f1; }
+        .content-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        .content-area::-webkit-scrollbar-thumb:hover { background: #aaa; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 bg-cover" style="background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');">
+<body class="h-full flex items-center justify-center p-4">
 
-    <div id="game-container" class="game-container w-full max-w-4xl mx-auto rounded-lg overflow-hidden">
-        <div id="content-wrapper">
-            <!-- El contenido del juego se renderizará aquí -->
-        </div>
+    <div id="game-container" class="game-container w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
+        <!-- This wrapper will contain the dynamic content -->
+        <div id="content-wrapper" class="flex-grow"></div>
     </div>
 
     <script>
-        const gameContainer = document.getElementById('game-container');
         const contentWrapper = document.getElementById('content-wrapper');
         let gameState = {};
 
-        // --- INICIO DEL JUEGO ---
-        function startGame() {
-            gameState = {
-                name: "Ganchero",
-                reputation: 0, // -5 (Vil) a +5 (Héroe)
-                wealth: 0, // -5 (Miseria) a +5 (Rico)
-                injury: false,
-                navarreConnection: false,
-                familyFirst: false,
-                choices: []
-            };
-            renderStage('start');
-        }
-
-        // --- MOTOR DE RENDERIZADO ---
-        function renderStage(stageKey) {
-            const stage = gameData[stageKey];
-            if (!stage) {
-                // Si no hay etapa, es un final
-                renderEnding();
-                return;
-            }
-
-            let choicesHTML = stage.choices.map((choice, index) => {
-                // Comprobar si la elección tiene un requisito de estado
-                if (choice.requires && !choice.requires(gameState)) {
-                    return ''; // No mostrar esta opción
-                }
-                return `<button class="choice-button w-full text-left text-white font-bold py-3 px-5 rounded-lg" data-choice-index="${index}">${choice.text}</button>`;
-            }).join('');
-
-            const html = `
-                <div class="relative fade-in">
-                    <img src="${stage.image}" alt="${stage.title}" class="w-full h-52 sm:h-72 object-cover">
-                    <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <h2 class="absolute bottom-4 left-6 text-2xl md:text-4xl font-bold text-white" style="text-shadow: 2px 2px 5px #000;">${stage.title}</h2>
-                </div>
-                <div class="p-6 md:p-8">
-                    <p class="text-gray-700 text-lg leading-relaxed mb-8">${stage.text(gameState)}</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${choicesHTML}</div>
-                </div>
-            `;
-            contentWrapper.innerHTML = html;
-
-            // Añadir event listeners a los nuevos botones
-            contentWrapper.querySelectorAll('.choice-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const choiceIndex = parseInt(e.currentTarget.dataset.choiceIndex);
-                    const choice = stage.choices[choiceIndex];
-                    handleChoice(choice);
-                });
-            });
-        }
-        
-        function renderIntro() {
-            const html = `
-            <div class="p-8 text-center fade-in">
-                <h1 class="text-5xl mb-4">El Viaje del Ganchero</h1>
-                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">Una vida marcada por el río, donde cada decisión es un tronco que puede llevarte a la gloria o hundirte para siempre. Forja tu leyenda desde los pinares de Albarracín hasta el mar de Valencia.</p>
-                <input type="text" id="character-name" placeholder="Tu nombre de ganchero..." class="w-full max-w-sm p-3 border-2 border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#804A1F]">
-                <button id="start-button" class="choice-button text-white font-bold py-3 px-8 rounded-lg w-full max-w-sm text-lg">Comenzar el Viaje</button>
-            </div>
-            `;
-            contentWrapper.innerHTML = html;
-            document.getElementById('start-button').addEventListener('click', () => {
-                const name = document.getElementById('character-name').value.trim();
-                startGame();
-                if (name) gameState.name = name;
-            });
+        // --- GAME ENGINE ---
+        function renderComponent(component) {
+            contentWrapper.innerHTML = ''; // Clear previous content
+            contentWrapper.appendChild(component);
         }
 
         function handleChoice(choice) {
             if (choice.action) {
                 choice.action(gameState);
             }
-            gameState.choices.push(choice.id);
-            renderStage(choice.nextStage);
+            gameState.path.push(choice.id);
+            const nextStageKey = choice.nextStage(gameState);
+            renderStage(nextStageKey);
         }
         
-        // --- LÓGICA DE FINALES ---
-        function renderEnding() {
-            const ending = getEnding(gameState);
-            const html = `
-                <div class="p-8 text-center fade-in">
-                    <h1 class="text-4xl mb-4">${ending.title}</h1>
-                    <p class="text-gray-700 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">${ending.text}</p>
-                    <button id="restart-button" class="choice-button text-white font-bold py-3 px-8 rounded-lg w-full max-w-sm text-lg">Vivir otra Vida</button>
-                </div>
+        // --- COMPONENTS (UI Views) ---
+        function createIntroComponent() {
+            const container = document.createElement('div');
+            container.className = 'p-8 text-center flex flex-col justify-center items-center h-full fade-in';
+            container.innerHTML = `
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">El Viaje del Ganchero</h1>
+                <p class="text-gray-600 mb-8 max-w-md">Una vida marcada por el río. Cada decisión teje tu destino. Forja tu leyenda desde Albarracín hasta el mar.</p>
+                <input type="text" id="character-name" placeholder="Tu nombre de ganchero..." class="w-full max-w-xs p-3 border border-gray-300 rounded-md mb-4 text-center focus:outline-none focus:ring-2 focus:ring-gray-800">
+                <button id="start-button" class="choice-button w-full max-w-xs font-bold py-3 px-6 rounded-md text-lg">Comenzar</button>
             `;
-            contentWrapper.innerHTML = html;
-            document.getElementById('restart-button').addEventListener('click', renderIntro);
+            container.querySelector('#start-button').addEventListener('click', () => {
+                const name = container.querySelector('#character-name').value.trim();
+                gameState = {
+                    name: name || "Ganchero",
+                    reputation: 0, // -5 (Vil) to +5 (Héroe)
+                    wealth: 0, // -5 (Miseria) to +5 (Rico)
+                    injury: false,
+                    navarreKnowledge: false,
+                    path: []
+                };
+                renderStage('start');
+            });
+            return container;
         }
 
-        // --- DATOS DEL JUEGO (ETAPAS Y DECISIONES) ---
+        function createStageComponent(stageKey) {
+            const stage = gameData[stageKey];
+            if (!stage) {
+                return createEndingComponent();
+            }
+
+            const container = document.createElement('div');
+            container.className = 'flex flex-col h-full';
+            
+            let choicesHTML = stage.choices.map((choice, index) => {
+                if (choice.requires && !choice.requires(gameState)) return '';
+                return `<button class="choice-button w-full text-left font-bold py-3 px-5 rounded-md" data-choice-index="${index}">${choice.text}</button>`;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="flex-shrink-0">
+                    <img src="${stage.image}" alt="${stage.title}" class="w-full h-48 md:h-64 object-cover">
+                </div>
+                <div class="content-area p-6 md:p-8 flex-grow fade-in">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">${stage.title}</h2>
+                    <p class="text-gray-700 text-base md:text-lg leading-relaxed mb-8">${stage.text(gameState)}</p>
+                    <div class="space-y-4">${choicesHTML}</div>
+                </div>
+            `;
+
+            container.querySelectorAll('.choice-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const choiceIndex = parseInt(e.currentTarget.dataset.choiceIndex);
+                    handleChoice(stage.choices[choiceIndex]);
+                });
+            });
+            return container;
+        }
+
+        function createEndingComponent() {
+            const ending = getEnding(gameState);
+            const container = document.createElement('div');
+            container.className = 'p-8 text-center flex flex-col justify-center items-center h-full fade-in';
+            container.innerHTML = `
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">${ending.title}</h1>
+                <p class="text-gray-600 text-base md:text-lg leading-relaxed mb-8 max-w-md">${ending.text}</p>
+                <button id="restart-button" class="choice-button w-full max-w-xs font-bold py-3 px-6 rounded-md text-lg">Vivir otra Vida</button>
+            `;
+            container.querySelector('#restart-button').addEventListener('click', () => renderComponent(createIntroComponent()));
+            return container;
+        }
+        
+        // --- GAME FLOW ---
+        function renderStage(stageKey) {
+            renderComponent(createStageComponent(stageKey));
+        }
+
+        // --- GAME DATA (STAGES & CHOICES) ---
         const gameData = {
             'start': {
                 title: "La Promesa",
                 image: "https://placehold.co/800x400/3A5F0B/ffffff?text=Sierra+de+Albarrac%C3%ADn",
-                text: (gs) => `Naciste en la Sierra de Albarracín. Tu padre te enseñó a usar el gancho. Tu madre, en su lecho final, te hizo una promesa: "Los troncos van al mar, ${gs.name}. Ve con ellos una vez. Ve el mar por mí". Con 15 años, te unes a tu primera maderada. El capataz, un hombre duro llamado "El Tuerto", te mira con desconfianza.`,
+                text: (gs) => `Naciste en la Sierra de Albarracín. Tu padre te enseñó el oficio. Tu madre, en su lecho final, te hizo una promesa: "Los troncos van al mar, ${gs.name}. Ve con ellos una vez. Ve el mar por mí". Con 15 años, te unes a tu primera maderada.`,
                 choices: [
-                    { id: 'a1', text: "Mantener la cabeza gacha y trabajar el doble.", nextStage: 'stage2' },
-                    { id: 'a2', text: "Mirarle a los ojos para ganarte su respeto.", nextStage: 'stage2', action: (gs) => gs.reputation++ }
+                    { id: 'a1', text: "Demostrar tu valía desde el primer día.", nextStage: () => 'atolladero', action: (gs) => gs.reputation++ },
+                    { id: 'a2', text: "Aprender observando, sin llamar la atención.", nextStage: () => 'atolladero' }
                 ]
             },
-            'stage2': {
+            'atolladero': {
                 title: "El Atolladero",
                 image: "https://placehold.co/800x400/4682b4/ffffff?text=El+Atolladero",
-                text: (gs) => `En los "estrechos" de Villalba Baja, un nudo de troncos bloquea el cauce. El agua ruge. "El Tuerto" grita, pero nadie se atreve. Es tu oportunidad de demostrar tu valía.`,
+                text: (gs) => `En los "estrechos" de Villalba Baja, un nudo de troncos bloquea el cauce. El agua ruge. Los veteranos gritan. Es tu oportunidad para destacar o para ser prudente.`,
                 choices: [
-                    { id: 'b1', text: "Saltar al tronco clave para liberarlo.", nextStage: 'stage3', action: (gs) => { gs.reputation++; gs.injury = Math.random() < 0.3; } },
-                    { id: 'b2', text: "Señalar un punto débil desde la orilla.", nextStage: 'stage3', action: (gs) => gs.wealth++ },
-                    { id: 'b3', text: "Organizar a los novatos para tirar con cuerdas.", nextStage: 'stage3', action: (gs) => gs.familyFirst = true }
+                    { id: 'b1', text: "Saltar al tronco clave para liberarlo.", nextStage: () => 'navarros', action: (gs) => { gs.reputation++; if(Math.random() < 0.3) gs.injury = true; } },
+                    { id: 'b2', text: "Señalar el punto débil desde la orilla.", nextStage: () => 'navarros', action: (gs) => gs.wealth++ },
                 ]
             },
-            'stage3': {
+            'navarros': {
                 title: "El Encuentro Navarro",
                 image: "https://placehold.co/800x400/964B00/ffffff?text=Almadieros+Navarros",
-                text: (gs) => `En un recodo tranquilo, os encontráis con una cuadrilla de almadieros navarros. Han bajado del Pirineo para estudiar el Turia. Su líder, un hombretón llamado Iker, os observa. "Vosotros bailáis con troncos sueltos", dice con sorna. "Nosotros domamos al río con balsas enteras, las almadías".`,
+                text: (gs) => `Os encontráis con almadieros navarros. Su líder, Iker, os mira con sorna. "Vosotros bailáis con troncos sueltos", dice. "Nosotros domamos al río con balsas enteras, las almadías".`,
                 choices: [
-                    { id: 'c1', text: "Compartir vuestro vino y escuchar sus historias.", nextStage: 'stage4', action: (gs) => gs.navarreConnection = true },
-                    { id: 'c2', text: "Ignorarlos. Son competencia.", nextStage: 'stage4' }
+                    { id: 'c1', text: "Compartir vuestro vino y escuchar sus técnicas.", nextStage: () => 'paga', action: (gs) => gs.navarreKnowledge = true },
+                    { id: 'c2', text: "Ignorarlos. Son competencia.", nextStage: () => 'paga' }
                 ]
             },
-            'stage4': {
+            'paga': {
                 title: "La Paga del Hambre",
                 image: "https://placehold.co/800x400/D2B48C/000000?text=La+Paga",
-                text: (gs) => `Llega el día de la paga. El representante del maderero cuenta las monedas con lentitud. Te das cuenta de que os está pagando menos de lo acordado, quedándose con una parte. "El Tuerto" aprieta la mandíbula pero calla.`,
+                text: (gs) => `Día de paga. El representante del maderero os paga menos de lo acordado. Los demás callan por miedo.`,
                 choices: [
-                    { id: 'd1', text: "Reclamar lo que es justo, delante de todos.", nextStage: 'stage5', action: (gs) => { gs.reputation++; gs.wealth--; } },
-                    { id: 'd2', text: "Callar. No buscas problemas.", nextStage: 'stage5' },
-                    { id: 'd3', text: "Hablar con el hombre en privado más tarde.", nextStage: 'stage5', action: (gs) => gs.wealth++ }
+                    { id: 'd1', text: "Reclamar lo que es justo, delante de todos.", nextStage: () => 'chelva', action: (gs) => { gs.reputation++; gs.wealth--; } },
+                    { id: 'd2', text: "Callar. No buscas problemas.", nextStage: () => 'chelva' },
                 ]
             },
-            'stage5': {
+            'chelva': {
                 title: "La Hoz de Chelva",
                 image: "https://placehold.co/800x400/8b4513/ffffff?text=La+Hoz+de+Chelva",
-                text: (gs) => `Años después, ya eres un ganchero veterano. Al llegar a Chelva, un capataz local, "El Chato", os desafía. "Una carrera por la Hoz. Mi cuadrilla contra la vuestra. El honor está en juego".`,
+                text: (gs) => `Años después, eres un veterano. En Chelva, un capataz local os desafía a una carrera por la Hoz. El honor de vuestro pueblo está en juego.`,
                 choices: [
-                    { id: 'e1', text: "Aceptar. El honor lo es todo.", nextStage: 'stage6', action: (gs) => gs.reputation++ },
-                    { id: 'e2', text: "Proponer una apuesta con dinero en vez de honor.", nextStage: 'stage6', action: (gs) => gs.wealth++ },
-                    { id: 'e3', text: "Rechazar. La seguridad de tu gente es lo primero.", nextStage: 'stage6', action: (gs) => gs.familyFirst = true }
+                    { id: 'e1', text: "Aceptar. El honor lo es todo.", nextStage: () => 'azud', action: (gs) => gs.reputation++ },
+                    { id: 'e2', text: "Proponer una apuesta con dinero.", nextStage: () => 'azud', action: (gs) => gs.wealth++ },
+                    { id: 'e3', text: "Rechazar. La seguridad es lo primero.", nextStage: () => 'azud' }
                 ]
             },
-            'stage6': {
+            'azud': {
                 title: "El Azud de la Muerte",
                 image: "https://placehold.co/800x400/708090/ffffff?text=El+Azud",
-                text: (gs) => `Cerca de Pedralba, un azud para regar la huerta amenaza la maderada. Es una trampa mortal. La única forma de pasar es que alguien se arriesgue a guiar los troncos clave por la compuerta.`,
+                text: (gs) => `Cerca de Pedralba, un azud amenaza la maderada. Alguien debe arriesgarse a guiar los troncos clave por la compuerta.`,
                 choices: [
-                    { id: 'f1', text: "Ofrecerte voluntario. Eres el más experimentado.", nextStage: 'stage7', action: (gs) => { gs.reputation++; gs.injury = Math.random() < 0.5; } },
-                    { id: 'f2', text: "Obligar al novato a hacerlo para que se curta.", nextStage: 'stage7', action: (gs) => gs.reputation-- },
-                    { id: 'f3', text: "Decidir que es muy peligroso y esperar a que suba el caudal.", nextStage: 'stage7', action: (gs) => gs.wealth-- }
+                    { id: 'f1', text: "Ofrecerte voluntario.", nextStage: (gs) => gs.navarreKnowledge ? 'carta' : 'final', action: (gs) => { gs.reputation++; if(Math.random() < 0.5) gs.injury = true; } },
+                    { id: 'f2', text: "Esperar a que suba el caudal. Es más seguro.", nextStage: (gs) => gs.navarreKnowledge ? 'carta' : 'final', action: (gs) => gs.wealth-- }
                 ]
             },
-            'stage7': {
+            'carta': {
                 title: "La Carta de Navarra",
                 image: "https://placehold.co/800x400/F5DEB3/000000?text=La+Carta",
-                text: (gs) => `Un muchacho te trae una carta. Es de Iker, el almadiero navarro. "Necesitamos gente dura en el río Irati. La paga es buena y el trabajo es noble. Vente al norte". Tu promesa a tu madre resuena en tu cabeza. El mar está cerca... pero esta es la oportunidad de tu vida.`,
+                text: (gs) => `Recibes una carta de Iker, el navarro. "Necesitamos gente dura en el río Irati. La paga es buena y el trabajo es noble. Vente al norte". El mar está cerca... pero esta es la oportunidad de tu vida.`,
                 choices: [
-                    { id: 'g1', text: "Ir a Navarra. Una nueva vida te espera.", nextStage: null, requires: (gs) => gs.navarreConnection }, // Final directo
-                    { id: 'g2', text: "Rechazar la oferta. Debes cumplir tu promesa.", nextStage: 'stage8' },
-                    { id: 'g3', text: "Guardar la carta para decidirlo en Valencia.", nextStage: 'stage8', action: (gs) => gs.navarreConnection = true }
-                ]
-            },
-            'stage8': {
-                title: "El Último Tramo",
-                image: "https://placehold.co/800x400/367588/ffffff?text=Valencia+a+la+vista",
-                text: (gs) => `Hueles la sal en el aire. Valencia está a la vista. La maderada ha sido un éxito. Pero en el campamento, encuentras a un compañero robando un pequeño fajo de monedas de la caja común. Es un hombre con hijos, desesperado.`,
-                choices: [
-                    { id: 'h1', text: "Denunciarlo. La ley es la ley.", nextStage: null, action: (gs) => gs.reputation++ },
-                    { id: 'h2', text: "Dejar que se vaya. Entiendes su desesperación.", nextStage: null, action: (gs) => gs.familyFirst = true },
-                    { id: 'h3', text: "Enfrentarte a él y hacerle devolverlo, pero sin delatarlo.", nextStage: null, action: (gs) => gs.wealth++ }
+                    { id: 'g1', text: "Ir a Navarra. Una nueva vida te espera.", nextStage: () => 'final' },
+                    { id: 'g2', text: "Rechazar. Debes cumplir tu promesa.", nextStage: () => 'final' },
                 ]
             }
         };
         
-        // --- BASE DE DATOS DE FINALES ---
+        // --- ENDINGS DATABASE ---
         const endings = [
-            // Finales Navarra
-            { condition: (gs) => gs.choices.includes('g1') && gs.reputation > 2, title: "Maestro Almadiero del Irati", text: "Dejaste el Turia atrás. En Navarra, tu habilidad te convirtió en leyenda. Enseñaste a los jóvenes a leer el río y moriste anciano, respetado, con el sonido de los ríos pirenaicos como última canción de cuna." },
-            { condition: (gs) => gs.choices.includes('g1') && gs.reputation < 0, title: "Extraño en Tierra Hostil", text: "En Navarra no encontraste tu sitio. Tu mala fama te persiguió. Acabaste trabajando en lo que podías, lejos del río, un hombre amargado que perdió su hogar por una promesa rota." },
-            { condition: (gs) => gs.choices.includes('g1'), title: "Una Vida en el Norte", text: "Cambiaste el Turia por el Irati. La vida fue dura, pero buena. Formaste una familia, y aunque nunca viste el mar de tu madre, tus hijos crecieron escuchando historias de dos ríos." },
+            // Navarra Endings
+            { condition: (gs) => gs.path.includes('g1') && gs.reputation > 2, title: "Maestro Almadiero del Irati", text: "Dejaste el Turia atrás. En Navarra, tu habilidad te convirtió en leyenda. Moriste anciano, respetado, con el sonido de los ríos pirenaicos como última canción de cuna." },
+            { condition: (gs) => gs.path.includes('g1'), title: "Una Vida en el Norte", text: "Cambiaste el Turia por el Irati. La vida fue dura, pero buena. Formaste una familia, y aunque nunca viste el mar de tu madre, tus hijos crecieron escuchando historias de dos ríos." },
             
-            // Finales de Lesión
-            { condition: (gs) => gs.injury && gs.wealth < 0, title: "El Tullido de la Ribera", text: "El río te cobró su peaje. La lesión nunca sanó bien. Viste el mar, sí, pero pasaste el resto de tus días con un dolor sordo, viviendo de la caridad y contando historias de cuando podías bailar sobre los troncos." },
-            { condition: (gs) => gs.injury && gs.wealth > 2, title: "El Capataz Cojo", text: "La lesión te apartó del agua, pero no del negocio. Con el dinero que ganaste, te convertiste en capataz. Viste el mar desde la comodidad de un carro, y aunque cojeabas, todos respetaban al hombre que había domado al río y a la vida." },
+            // Injury Endings
+            { condition: (gs) => gs.injury && gs.wealth < 0, title: "El Tullido de la Ribera", text: "El río te cobró su peaje. La lesión nunca sanó bien. Viste el mar, pero pasaste el resto de tus días con un dolor sordo, viviendo de la caridad y contando historias de cuando podías bailar sobre los troncos." },
+            { condition: (gs) => gs.injury, title: "El Capataz Cojo", text: "La lesión te apartó del agua, pero no del negocio. Con lo que ahorraste, te convertiste en capataz. Viste el mar desde la comodidad de un carro, y aunque cojeabas, todos respetaban al hombre que había domado al río." },
             
-            // Finales de Riqueza y Reputación
+            // Wealth & Reputation Endings
             { condition: (gs) => gs.wealth > 3 && gs.reputation > 3, title: "El Rey del Turia", text: "Llegaste a Valencia como un héroe y con los bolsillos llenos. Invertiste sabiamente, convirtiéndote en un poderoso maderero. Cumpliste tu promesa y compraste una casa desde donde se veía el mar cada mañana." },
-            { condition: (gs) => gs.wealth > 3 && gs.reputation < 0, title: "El Mercader Solitario", text: "Hiciste una fortuna, pero a costa de tu honor. En Valencia, nadie confiaba en ti. Tenías dinero, pero no amigos. Veías el mar desde un balcón dorado, pero sentías un vacío que ninguna riqueza podía llenar." },
-            { condition: (gs) => gs.wealth < -2, title: "Miseria en la Huerta", text: "Llegaste a Valencia sin una moneda. El viaje te lo quitó todo. Cumpliste tu promesa, pero el mar solo te pareció un recordatorio de todo lo que habías perdido. Acabaste trabajando en la huerta, la espalda rota, el espíritu también." },
-            { condition: (gs) => gs.reputation > 3, title: "La Leyenda del Ganchero Honrado", text: "No ganaste mucho dinero, pero te ganaste el respeto de todos. Tu nombre se convirtió en sinónimo de honor. Viste el mar, y ese fue tu tesoro. Volviste a la sierra, donde te recibieron como a un héroe, y viviste una vida sencilla y plena." },
-            { condition: (gs) => gs.reputation < -2, title: "El Desterrado", text: "Tu fama de tramposo y cruel te precedió. Al llegar a Valencia, ningún capataz quiso contratarte. Te expulsaron del gremio. Viste el mar una vez, y luego desapareciste, una sombra odiada en las riberas del río." },
+            { condition: (gs) => gs.wealth > 3, title: "El Mercader Solitario", text: "Hiciste una fortuna, pero a costa de tu honor. En Valencia, tenías dinero, pero no amigos. Veías el mar desde un balcón dorado, pero sentías un vacío que ninguna riqueza podía llenar." },
+            { condition: (gs) => gs.wealth < -2, title: "Miseria en la Huerta", text: "Llegaste a Valencia sin una moneda. El viaje te lo quitó todo. Cumpliste tu promesa, pero el mar solo te pareció un recordatorio de lo que habías perdido. Acabaste trabajando en la huerta, la espalda rota, el espíritu también." },
+            { condition: (gs) => gs.reputation > 3, title: "La Leyenda del Ganchero Honrado", text: "No ganaste mucho dinero, pero te ganaste el respeto de todos. Tu nombre se convirtió en sinónimo de honor. Viste el mar, y ese fue tu tesoro. Volviste a la sierra, donde te recibieron como a un héroe." },
+            { condition: (gs) => gs.reputation < -2, title: "El Desterrado", text: "Tu fama de problemático te precedió. Al llegar a Valencia, ningún capataz quiso contratarte. Viste el mar una vez, y luego desapareciste, una sombra odiada en las riberas del río." },
 
-            // Finales basados en Familia / Comunidad
-            { condition: (gs) => gs.familyFirst && gs.reputation > 2, title: "El Patriarca de la Sierra", text: "Siempre pusiste a tu gente primero. Al volver de ver el mar, te convertiste en el líder no oficial de tu aldea. Resolvías disputas, ayudabas a las viudas. No fuiste rico, pero tu familia fue todo un pueblo." },
+            // Default Ending
             { condition: 'default', title: "Un Ganchero Más", text: "Tu viaje terminó. Viste el mar, cumpliste tu promesa. Luego, volviste a la sierra y te uniste a la siguiente maderada. Y a la siguiente. Tu vida fue el río, un ciclo sin fin de madera y agua, una historia anónima grabada en la corriente del Turia." },
         ];
 
         function getEnding(gs) {
-            // Añadir más finales específicos basados en combinaciones de elecciones
-            if (gs.choices.includes('b1') && gs.injury && gs.familyFirst) {
-                return { title: "Héroe Roto", text: "Tu valiente acto en el atolladero te dejó marcado para siempre. Aunque tu gente te cuidó, nunca volviste a ser el mismo. Viste el mar con ellos, un final agridulce para una vida de sacrificio." };
-            }
-            if (gs.choices.includes('d1') && gs.choices.includes('h1')) {
-                return { title: "El Justiciero", text: "Tu vida fue una lucha por lo que era justo, sin importar el coste. Ganaste poco y te creaste enemigos, pero dormías con la conciencia tranquila. El mar, para ti, fue la prueba de que la rectitud, aunque dura, llega a su destino." };
-            }
-            // ... se pueden añadir muchas más combinaciones aquí ...
-
             for (const ending of endings) {
-                if (ending.condition && ending.condition(gs)) {
+                if (ending.condition !== 'default' && ending.condition(gs)) {
                     return ending;
                 }
             }
             return endings.find(e => e.condition === 'default');
         }
 
-        // --- INICIAR LA APLICACIÓN ---
-        renderIntro();
+        // --- INITIALIZE APP ---
+        renderComponent(createIntroComponent());
     </script>
 </body>
 </html>
