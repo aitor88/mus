@@ -9,21 +9,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <style>
+        /* Base styles for a clean, modern look */
         body {
             font-family: 'Lora', serif;
             background-color: #1a1a1a;
             color: #333;
+            /* Prevents the main page from scrolling */
+            overflow: hidden;
         }
+        /* Main game container styling */
         .game-container {
             background-color: #fdfdfd;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            /* This flex setup is key for the height adjustment */
             display: flex;
             flex-direction: column;
-            max-height: 95vh;
+            /* Ensures the container doesn't exceed the screen height */
+            max-height: 100%;
+            height: 100%;
         }
+        /* The area that will contain the story text and scroll if necessary */
         .content-area {
             overflow-y: auto;
         }
+        /* Consistent button style */
         .choice-button {
             background-color: #333;
             border: 1px solid #333;
@@ -34,6 +43,7 @@
             background-color: #fff;
             color: #333;
         }
+        /* Simple fade-in animation for transitions */
         .fade-in {
             animation: fadeIn 0.7s ease-in-out;
         }
@@ -41,18 +51,18 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Scrollbar styling for a cleaner look */
+        /* Custom scrollbar for a cleaner look */
         .content-area::-webkit-scrollbar { width: 8px; }
         .content-area::-webkit-scrollbar-track { background: #f1f1f1; }
         .content-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
         .content-area::-webkit-scrollbar-thumb:hover { background: #aaa; }
     </style>
 </head>
-<body class="h-full flex items-center justify-center p-4">
+<body class="h-full flex items-center justify-center p-2 md:p-4">
 
     <div id="game-container" class="game-container w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
-        <!-- This wrapper will contain the dynamic content -->
-        <div id="content-wrapper" class="flex-grow"></div>
+        <!-- The dynamic content (intro, stages, ending) will be rendered here -->
+        <div id="content-wrapper" class="flex-grow flex flex-col"></div>
     </div>
 
     <script>
@@ -74,7 +84,7 @@
             renderStage(nextStageKey);
         }
         
-        // --- COMPONENTS (UI Views) ---
+        // --- UI COMPONENTS ---
         function createIntroComponent() {
             const container = document.createElement('div');
             container.className = 'p-8 text-center flex flex-col justify-center items-center h-full fade-in';
@@ -88,8 +98,8 @@
                 const name = container.querySelector('#character-name').value.trim();
                 gameState = {
                     name: name || "Ganchero",
-                    reputation: 0, // -5 (Vil) to +5 (Héroe)
-                    wealth: 0, // -5 (Miseria) to +5 (Rico)
+                    reputation: 0,
+                    wealth: 0,
                     injury: false,
                     navarreKnowledge: false,
                     path: []
@@ -106,6 +116,7 @@
             }
 
             const container = document.createElement('div');
+            // This flex structure ensures the component fills the available height
             container.className = 'flex flex-col h-full';
             
             let choicesHTML = stage.choices.map((choice, index) => {
