@@ -1,290 +1,166 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Viaje del Ganchero</title>
+    <title>Currículum Vitae | Eneko Zabalo Miguel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Lora', serif;
-            background-color: #1a1a1a;
-            color: #333;
-            overflow: hidden;
+            font-family: 'Titillium Web', sans-serif;
+            background-color: #e5e7eb; /* bg-gray-200 */
         }
-        .game-container {
-            background-color: #fdfdfd;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            max-height: 100%;
-            height: 100%;
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
         }
-        .content-area {
-            overflow-y: auto;
+        .accent-blue {
+            color: #0369a1; /* text-sky-700 */
         }
-        .choice-button {
-            background-color: #333;
-            border: 1px solid #333;
-            color: #fff;
-            transition: background-color 0.2s ease-out, color 0.2s ease-out;
+        .border-blue {
+            border-color: #0369a1; /* border-sky-700 */
         }
-        .choice-button:hover {
-            background-color: #fff;
-            color: #333;
-        }
-        .iker-choice {
-            background-color: #6B4F3A;
-            border-color: #6B4F3A;
-        }
-        .iker-choice:hover {
-            background-color: #fff;
-            color: #6B4F3A;
-        }
-        .fade-in {
-            animation: fadeIn 0.7s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .content-area::-webkit-scrollbar { width: 8px; }
-        .content-area::-webkit-scrollbar-track { background: #f1f1f1; }
-        .content-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-        .content-area::-webkit-scrollbar-thumb:hover { background: #aaa; }
     </style>
 </head>
-<body class="h-full flex items-center justify-center p-2 md:p-4">
+<body class="text-gray-700">
 
-    <div id="game-container" class="game-container w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
-        <div id="content-wrapper" class="flex-grow flex flex-col"></div>
+    <div class="max-w-6xl mx-auto my-12 bg-white shadow-2xl rounded-lg overflow-hidden grid md:grid-cols-12">
+
+        <!-- ====== Left Column: Sidebar ====== -->
+        <aside class="md:col-span-4 bg-gray-50 p-8 border-r border-gray-200">
+            <div class="flex flex-col items-center text-center sticky top-8">
+                <img src="https://i.ibb.co/TBGkzpk6/c7ed0fbf-181b-47e8-b766-c64b8f6c06c6.jpg" 
+                     alt="Foto de perfil de Eneko Zabalo Miguel"
+                     class="rounded-full w-40 h-40 mb-6 object-cover border-4 border-sky-700 shadow-lg"
+                     style="object-position: 50% 25%;">
+                
+                <h1 class="text-3xl font-bold text-gray-900">Eneko Zabalo Miguel</h1>
+                <h2 class="text-lg font-medium accent-blue mt-1">Ingeniero Mecánico Senior</h2>
+                
+                <div class="w-full mt-10 text-left space-y-6">
+                    <!-- Contact Info -->
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Contacto</h3>
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <a href="mailto:enezabalo@gmail.com" class="flex items-center gap-3 hover:accent-blue transition-colors"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg><span>enezabalo@gmail.com</span></a>
+                            <a href="tel:626567726" class="flex items-center gap-3 hover:accent-blue transition-colors"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg><span>626 567 726</span></a>
+                            <p class="flex items-center gap-3"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg><span>Lakuntza, Navarra</span></p>
+                        </div>
+                    </section>
+                    
+                    <!-- Skills -->
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Competencias Clave</h3>
+                        <ul class="list-none space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center gap-2"><span class="accent-blue font-bold">■</span>Liderazgo de Proyectos Técnicos</li>
+                            <li class="flex items-center gap-2"><span class="accent-blue font-bold">■</span>Desarrollo Estratégico de Producto</li>
+                            <li class="flex items-center gap-2"><span class="accent-blue font-bold">■</span>Optimización y Reducción de Costes</li>
+                            <li class="flex items-center gap-2"><span class="accent-blue font-bold">■</span>Mejora Continua de Procesos</li>
+                            <li class="flex items-center gap-2"><span class="accent-blue font-bold">■</span>Coordinación Interdepartamental</li>
+                        </ul>
+                    </section>
+                    
+                    <!-- Software -->
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Software</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-sky-100 text-sky-800 text-xs font-mono px-3 py-1 rounded-full">CATIA V5</span>
+                            <span class="bg-sky-100 text-sky-800 text-xs font-mono px-3 py-1 rounded-full">3DEXPERIENCE</span>
+                            <span class="bg-sky-100 text-sky-800 text-xs font-mono px-3 py-1 rounded-full">Autodesk Inventor</span>
+                        </div>
+                    </section>
+
+                    <!-- Education -->
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Formación</h3>
+                        <p class="font-semibold text-gray-800 text-sm">Grado en Ingeniería Mecánica</p>
+                        <p class="text-xs text-gray-500">Universidad del País Vasco (UPV/EHU)</p>
+                    </section>
+
+                    <!-- Languages -->
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Idiomas</h3>
+                        <div class="text-sm space-y-1 text-gray-600">
+                            <p>Castellano y Euskera (Nativo)</p>
+                            <p>Inglés (Profesional)</p>
+                            <p>Francés (Básico)</p>
+                        </div>
+                    </section>
+
+                    <!-- Other Interests -->
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Otros Datos de Interés</h3>
+                        <div class="text-sm text-gray-600">
+                            <p>Deportista de élite en Pelota Mano hasta los 23 años, galardonado con múltiples campeonatos oficiales. Esta trayectoria ha forjado competencias clave como la disciplina, la gestión de la presión y una fuerte orientación al logro.</p>
+                        </div>
+                    </section>
+                </div>
+            </aside>
+
+            <!-- ====== Right Column: Main Content ====== -->
+            <main class="md:col-span-8 p-8">
+                <!-- Profile Summary -->
+                <section>
+                    <h3 class="text-2xl font-bold text-gray-900 tracking-wider border-b-2 border-gray-200 pb-2 mb-6">Perfil Profesional</h3>
+                    <p class="text-base leading-relaxed text-gray-600">
+                        Ingeniero Mecánico Senior con más de 15 años de experiencia liderando el desarrollo de productos y la optimización de procesos en el sector industrial. Especialista en la gestión de proyectos complejos, desde la conceptualización hasta la fabricación, con un enfoque estratégico en la reducción de costes, la estandarización y la mejora continua. Demostrada capacidad para coordinar equipos multidisciplinares y actuar como nexo entre ingeniería y producción para garantizar la excelencia operativa.
+                    </p>
+                </section>
+                
+                <section class="mt-10">
+                    <h3 class="text-2xl font-bold text-gray-900 tracking-wider border-b-2 border-gray-200 pb-2 mb-6">Experiencia y Logros Clave</h3>
+                    
+                    <!-- CAF Experience -->
+                    <div class="relative pl-8 border-l-2 border-gray-300">
+                        <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
+                        <div class="flex items-start gap-4 mb-2">
+                            <img src="https://download.logo.wine/logo/Construcciones_y_Auxiliar_de_Ferrocarriles/Construcciones_y_Auxiliar_de_Ferrocarriles-Logo.wine.png" alt="Logo de CAF" class="w-28">
+                            <div>
+                                <h4 class="text-xl font-semibold text-gray-900">Especialista en Ingeniería / Ingeniero de Producto Senior</h4>
+                                <h5 class="text-md font-medium accent-blue">CAF (Construcciones y Auxiliar de Ferrocarriles)</h5>
+                                <p class="text-sm text-gray-500 mt-1">nov. 2008 – Actualidad</p>
+                            </div>
+                        </div>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600 mt-4">
+                            <li><span class="font-semibold">Liderazgo en Estandarización:</span> Dirección del proyecto de estandarización de utillajes, logrando una reducción de costes directos del 12% y una mejora en la eficiencia de producción del 20%.</li>
+                            <li><span class="font-semibold">Optimización de Procesos:</span> Implementación de un nuevo flujo de resolución de incidencias que disminuyó los tiempos de parada en un 30% y mejoró la comunicación entre ingeniería y planta.</li>
+                            <li><span class="font-semibold">Gestión de Proyectos Internacionales:</span> Responsable técnico del desarrollo de componentes clave para proyectos ferroviarios en Europa y Asia, cumpliendo plazos y especificaciones en entornos de alta exigencia.</li>
+                            <li><span class="font-semibold">Innovación y Reducción de Costes:</span> Identificación y validación de nuevos materiales y procesos de fabricación que resultaron en un ahorro anual superior a los 200.000€ sin comprometer la calidad.</li>
+                        </ul>
+                    </div>
+                     <!-- BEREIKER Experience -->
+                    <div class="relative pl-8 border-l-2 border-gray-300 mt-8">
+                        <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
+                        <div class="flex items-start gap-4 mb-2">
+                            <img src="https://www.aer-automation.com/wp-content/uploads/2022/01/LOGO-PRINCIPAL-1536x588.png" alt="Logo de BEREIKER" class="w-28">
+                            <div>
+                                <h4 class="text-xl font-semibold text-gray-900">Ingeniero de Diseño</h4>
+                                <h5 class="text-md font-medium accent-blue">BEREIKER | Automatización Industrial</h5>
+                                <p class="text-sm text-gray-500 mt-1">jun. 2008 – nov. 2008</p>
+                            </div>
+                        </div>
+                         <p class="text-gray-600 mt-4">Responsable del diseño de maquinaria y soluciones de automatización industrial a medida, utilizando software CAD para la creación de modelos 3D y planos de fabricación.</p>
+                    </div>
+                    <!-- TMI Experience -->
+                     <div class="relative pl-8 border-l-2 border-gray-300 mt-8">
+                        <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
+                        <div class="flex items-start gap-4 mb-2">
+                            <img src="https://i.ibb.co/8DQCn9bC/IMG-7808.jpg" alt="Logo de TMI" class="w-28">
+                            <div>
+                                <h4 class="text-xl font-semibold text-gray-900">Ingeniero de Diseño (Prácticas)</h4>
+                                <h5 class="text-md font-medium accent-blue">TMI (Tecnología Maquinaria e Innovación)</h5>
+                                <p class="text-sm text-gray-500 mt-1">jun. 2006 – may. 2008</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mt-4">Colaboración en el departamento de ingeniería para el diseño y desarrollo de componentes mecánicos, participando en la elaboración de documentación técnica y planos.</p>
+                    </div>
+                </section>
+            </main>
+        </div>
     </div>
-
-    <script>
-        const contentWrapper = document.getElementById('content-wrapper');
-        let gameState = {};
-
-        // --- GAME ENGINE ---
-        function renderComponent(component) {
-            contentWrapper.innerHTML = '';
-            contentWrapper.appendChild(component);
-        }
-
-        function handleChoice(choice) {
-            if (choice.action) {
-                choice.action(gameState);
-            }
-            gameState.path.push(choice.id);
-            const nextStageKey = choice.nextStage(gameState);
-            renderStage(nextStageKey);
-        }
-        
-        // --- UI COMPONENTS ---
-        function createIntroComponent() {
-            const container = document.createElement('div');
-            container.className = 'p-8 text-center flex flex-col justify-center items-center h-full fade-in';
-            container.innerHTML = `
-                <img src="logo.png" alt="Logo del Juego" class="w-24 h-24 mb-4 mx-auto rounded-full shadow-md" onerror="this.style.display='none'">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">El Viaje del Ganchero</h1>
-                <p class="text-gray-600 mb-8 max-w-md">Una vida marcada por el río. Cada decisión teje tu destino. Forja tu leyenda desde Albarracín hasta el mar.</p>
-                <input type="text" id="character-name" placeholder="Tu nombre de ganchero..." class="w-full max-w-xs p-3 border border-gray-300 rounded-md mb-4 text-center focus:outline-none focus:ring-2 focus:ring-gray-800">
-                <button id="start-button" class="choice-button w-full max-w-xs font-bold py-3 px-6 rounded-md text-lg">Comenzar</button>
-            `;
-            container.querySelector('#start-button').addEventListener('click', () => {
-                const name = container.querySelector('#character-name').value.trim();
-                gameState = {
-                    name: name || "Ganchero",
-                    reputation: 0,
-                    wealth: 0,
-                    injury: false,
-                    navarreKnowledge: false,
-                    relianceOnIker: 0,
-                    path: []
-                };
-                renderStage('start');
-            });
-            return container;
-        }
-
-        function createStageComponent(stageKey) {
-            const stage = gameData[stageKey];
-            if (!stage) {
-                return createEndingComponent();
-            }
-
-            const container = document.createElement('div');
-            container.className = 'flex flex-col h-full';
-            
-            let choicesHTML = stage.choices.map((choice, index) => {
-                if (choice.requires && !choice.requires(gameState)) return '';
-                const buttonClass = choice.isIker ? 'iker-choice' : '';
-                return `<button class="choice-button ${buttonClass} w-full text-left font-bold py-3 px-5 rounded-md" data-choice-index="${index}">${choice.text}</button>`;
-            }).join('');
-
-            container.innerHTML = `
-                <div class="flex-shrink-0">
-                    <img src="${stage.image}" alt="${stage.title}" class="w-full h-48 md:h-64 object-cover">
-                </div>
-                <div class="content-area p-6 md:p-8 flex-grow fade-in">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">${stage.title}</h2>
-                    <p class="text-gray-700 text-base md:text-lg leading-relaxed mb-8">${stage.text(gameState)}</p>
-                    <div class="space-y-4">${choicesHTML}</div>
-                </div>
-            `;
-
-            container.querySelectorAll('.choice-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const choiceIndex = parseInt(e.currentTarget.dataset.choiceIndex);
-                    handleChoice(stage.choices[choiceIndex]);
-                });
-            });
-            return container;
-        }
-
-        function createEndingComponent() {
-            const ending = getEnding(gameState);
-            const container = document.createElement('div');
-            container.className = 'p-8 text-center flex flex-col justify-center items-center h-full fade-in';
-            container.innerHTML = `
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">${ending.title}</h1>
-                <p class="text-gray-600 text-base md:text-lg leading-relaxed mb-8 max-w-md">${ending.text}</p>
-                <button id="restart-button" class="choice-button w-full max-w-xs font-bold py-3 px-6 rounded-md text-lg">Vivir otra Vida</button>
-            `;
-            container.querySelector('#restart-button').addEventListener('click', () => renderComponent(createIntroComponent()));
-            return container;
-        }
-        
-        function renderStage(stageKey) {
-            renderComponent(createStageComponent(stageKey));
-        }
-
-        // --- GAME DATA ---
-        const gameData = {
-            'start': {
-                title: "La Promesa",
-                image: "https://placehold.co/800x400/3A5F0B/ffffff?text=Sierra+de+Albarrac%C3%ADn",
-                text: (gs) => `Naciste en la Sierra de Albarracín. Tu padre te enseñó el oficio. Tu madre, en su lecho final, te hizo una promesa: "Los troncos van al mar, ${gs.name}. Ve con ellos una vez. Ve el mar por mí". Con 15 años, te unes a tu primera maderada.`,
-                choices: [
-                    { id: 'a1', text: "Demostrar tu valía desde el primer día.", nextStage: () => 'atolladero', action: (gs) => gs.reputation++ },
-                    { id: 'a2', text: "Aprender observando, sin llamar la atención.", nextStage: () => 'atolladero' }
-                ]
-            },
-            'atolladero': {
-                title: "El Atolladero",
-                image: "https://placehold.co/800x400/4682b4/ffffff?text=El+Atolladero",
-                text: (gs) => `En los "estrechos" de Villalba Baja, un nudo de troncos bloquea el cauce. El agua ruge. Los veteranos gritan. Es tu oportunidad para destacar o para ser prudente.`,
-                choices: [
-                    { id: 'b1', text: "Saltar al tronco clave para liberarlo.", nextStage: () => 'navarros', action: (gs) => { gs.reputation++; if(Math.random() < 0.3) gs.injury = true; } },
-                    { id: 'b2', text: "Señalar el punto débil desde la orilla.", nextStage: () => 'navarros', action: (gs) => gs.wealth++ },
-                ]
-            },
-            'navarros': {
-                title: "El Encuentro Navarro",
-                image: "https://placehold.co/800x400/964B00/ffffff?text=Almadieros+Navarros",
-                text: (gs) => `Os encontráis con almadieros navarros. Su líder, Iker, os mira con sorna. "Vosotros bailáis con troncos sueltos", dice. "Nosotros domamos al río con balsas. Pero el río es el río". Decide viajar con vosotros un tramo para aprender del Turia.`,
-                choices: [
-                    { id: 'c1', text: "Compartir vuestro vino y escucharlo.", nextStage: () => 'paga', action: (gs) => gs.navarreKnowledge = true },
-                    { id: 'c2', text: "Mantener las distancias. Es un extraño.", nextStage: () => 'paga' }
-                ]
-            },
-            'paga': {
-                title: "La Paga del Hambre",
-                image: "https://placehold.co/800x400/D2B48C/000000?text=La+Paga",
-                text: (gs) => `Día de paga. El representante del maderero os paga menos de lo acordado. Los demás callan por miedo. Iker, el navarro, te observa, esperando tu reacción.`,
-                choices: [
-                    { id: 'd1', text: "Reclamar lo que es justo, delante de todos.", nextStage: () => 'chelva', action: (gs) => { gs.reputation++; gs.wealth--; } },
-                    { id: 'd2', text: "Callar. No buscas problemas.", nextStage: () => 'chelva' },
-                    { id: 'd3', text: "Consultar a Iker, el navarro.", isIker: true, nextStage: () => 'paga_iker', requires: (gs) => gs.navarreKnowledge, action: (gs) => gs.relianceOnIker++ }
-                ]
-            },
-            'paga_iker': {
-                title: "El Consejo de Iker",
-                image: "https://placehold.co/800x400/6B4F3A/ffffff?text=El+Consejo",
-                text: (gs) => `Apartas a Iker. "En mi tierra", dice en voz baja, "un hombre solo que grita es un loco. Una cuadrilla entera que calla es un problema. No reclaméis a voces. Haced un plante silencioso. Dejad las herramientas en el suelo. El silencio asusta más que los gritos".`,
-                choices: [
-                    { id: 'di1', text: "Seguir su consejo. Organizar un plante silencioso.", nextStage: () => 'chelva', action: (gs) => { gs.reputation += 2; } },
-                    { id: 'di2', text: "Agradecerle, pero reclamar a tu manera.", nextStage: () => 'chelva', action: (gs) => { gs.reputation++; gs.wealth--; } }
-                ]
-            },
-            'chelva': {
-                title: "La Hoz de Chelva",
-                image: "https://placehold.co/800x400/8b4513/ffffff?text=La+Hoz+de+Chelva",
-                text: (gs) => `Años después, eres un veterano. En Chelva, un capataz local os desafía a una carrera por la Hoz. El honor de vuestro pueblo está en juego.`,
-                choices: [
-                    { id: 'e1', text: "Aceptar. El honor lo es todo.", nextStage: () => 'azud', action: (gs) => gs.reputation++ },
-                    { id: 'e2', text: "Proponer una apuesta con dinero.", nextStage: () => 'azud', action: (gs) => gs.wealth++ },
-                    { id: 'e3', text: "Consultar a Iker, si aún viaja contigo.", isIker: true, nextStage: () => 'chelva_iker', requires: (gs) => gs.navarreKnowledge, action: (gs) => gs.relianceOnIker++ }
-                ]
-            },
-            'chelva_iker': {
-                title: "La Perspectiva Almadiera",
-                image: "https://placehold.co/800x400/6B4F3A/ffffff?text=La+Perspectiva",
-                text: (gs) => `Iker se ríe. "¿Honor? El honor es llevar toda la madera a su destino, no perder la mitad por ir rápido. Proponle un desafío de habilidad: la cuadrilla que llegue con menos troncos perdidos, gana. Eso es ser un hombre de río, no un corredor."`,
-                choices: [
-                    { id: 'ei1', text: "Proponer el desafío de habilidad.", nextStage: () => 'azud', action: (gs) => { gs.reputation++; gs.wealth++; } },
-                    { id: 'ei2', text: "Ignorar su consejo y aceptar la carrera.", nextStage: () => 'azud', action: (gs) => gs.reputation++ }
-                ]
-            },
-            'azud': {
-                title: "El Azud de la Muerte",
-                image: "https://placehold.co/800x400/708090/ffffff?text=El+Azud",
-                text: (gs) => `Cerca de Pedralba, un azud amenaza la maderada. Alguien debe arriesgarse a guiar los troncos clave por la compuerta. Es una tarea casi suicida.`,
-                choices: [
-                    { id: 'f1', text: "Ofrecerte voluntario.", nextStage: (gs) => gs.navarreKnowledge ? 'carta' : 'final', action: (gs) => { gs.reputation++; if(Math.random() < 0.5) gs.injury = true; } },
-                    { id: 'f2', text: "Esperar a que suba el caudal. Es más seguro.", nextStage: (gs) => gs.navarreKnowledge ? 'carta' : 'final', action: (gs) => gs.wealth-- }
-                ]
-            },
-            'carta': {
-                title: "La Carta de Navarra",
-                image: "https://placehold.co/800x400/F5DEB3/000000?text=La+Carta",
-                text: (gs) => `Recibes una carta de Iker. "Te he visto trabajar. Eres de los nuestros, aunque no lo sepas. Vente al Irati. Hay un futuro aquí para ti". El mar está cerca... pero esta es la oportunidad de tu vida.`,
-                choices: [
-                    { id: 'g1', text: "Ir a Navarra. Una nueva vida te espera.", nextStage: () => 'final' },
-                    { id: 'g2', text: "Rechazar. Debes cumplir tu promesa.", nextStage: () => 'final' },
-                ]
-            }
-        };
-        
-        // --- ENDINGS DATABASE ---
-        const endings = [
-            // Navarra Endings
-            { condition: (gs) => gs.path.includes('g1') && gs.reputation > 2, title: "Maestro Almadiero del Irati", text: "Dejaste el Turia atrás. En Navarra, tu habilidad te convirtió en leyenda. Moriste anciano, respetado, con el sonido de los ríos pirenaicos como última canción de cuna." },
-            { condition: (gs) => gs.path.includes('g1'), title: "Una Vida en el Norte", text: "Cambiaste el Turia por el Irati. La vida fue dura, pero buena. Formaste una familia, y aunque nunca viste el mar de tu madre, tus hijos crecieron escuchando historias de dos ríos." },
-            
-            // Iker Influence Endings
-            { condition: (gs) => gs.relianceOnIker >= 2 && gs.reputation > 2, title: "Puente entre Ríos", text: "Llegaste al mar, pero tu mayor logro fue aprender. Fusionaste la agilidad del ganchero con la estrategia del almadiero, creando nuevas técnicas. Te convertiste en un maestro respetado en todas las cuencas, un hombre sabio que supo escuchar." },
-            { condition: (gs) => gs.relianceOnIker >= 2, title: "La Sombra del Navarro", text: "Cumpliste tu promesa, pero siempre dudaste de tu instinto, apoyándote en Iker. Fuiste un buen ganchero, sí, pero en las tabernas se decía que tu leyenda le debía mucho a la sabiduría de un navarro." },
-            
-            // Injury Endings
-            { condition: (gs) => gs.injury && gs.wealth < 0, title: "El Tullido de la Ribera", text: "El río te cobró su peaje. La lesión nunca sanó bien. Viste el mar, pero pasaste el resto de tus días con un dolor sordo, viviendo de la caridad y contando historias de cuando podías bailar sobre los troncos." },
-            { condition: (gs) => gs.injury, title: "El Capataz Cojo", text: "La lesión te apartó del agua, pero no del negocio. Con lo que ahorraste, te convertiste en capataz. Viste el mar desde la comodidad de un carro, y aunque cojeabas, todos respetaban al hombre que había domado al río." },
-            
-            // Wealth & Reputation Endings
-            { condition: (gs) => gs.wealth > 3 && gs.reputation > 3, title: "El Rey del Turia", text: "Llegaste a Valencia como un héroe y con los bolsillos llenos. Invertiste sabiamente, convirtiéndote en un poderoso maderero. Cumpliste tu promesa y compraste una casa desde donde se veía el mar cada mañana." },
-            { condition: (gs) => gs.wealth > 3, title: "El Mercader Solitario", text: "Hiciste una fortuna, pero a costa de tu honor. En Valencia, tenías dinero, pero no amigos. Veías el mar desde un balcón dorado, pero sentías un vacío que ninguna riqueza podía llenar." },
-            { condition: (gs) => gs.wealth < -2, title: "Miseria en la Huerta", text: "Llegaste a Valencia sin una moneda. El viaje te lo quitó todo. Cumpliste tu promesa, pero el mar solo te pareció un recordatorio de lo que habías perdido. Acabaste trabajando en la huerta, la espalda rota, el espíritu también." },
-            { condition: (gs) => gs.reputation > 3, title: "La Leyenda del Ganchero Honrado", text: "No ganaste mucho dinero, pero te ganaste el respeto de todos. Tu nombre se convirtió en sinónimo de honor. Viste el mar, y ese fue tu tesoro. Volviste a la sierra, donde te recibieron como a un héroe." },
-            { condition: (gs) => gs.reputation < -2, title: "El Desterrado", text: "Tu fama de problemático te precedió. Al llegar a Valencia, ningún capataz quiso contratarte. Viste el mar una vez, y luego desapareciste, una sombra odiada en las riberas del río." },
-
-            // Default Ending
-            { condition: 'default', title: "Un Ganchero Más", text: "Tu viaje terminó. Viste el mar, cumpliste tu promesa. Luego, volviste a la sierra y te uniste a la siguiente maderada. Y a la siguiente. Tu vida fue el río, un ciclo sin fin de madera y agua, una historia anónima grabada en la corriente del Turia." },
-        ];
-
-        function getEnding(gs) {
-            for (const ending of endings) {
-                if (ending.condition !== 'default' && ending.condition(gs)) {
-                    return ending;
-                }
-            }
-            return endings.find(e => e.condition === 'default');
-        }
-
-        // --- INITIALIZE APP ---
-        renderComponent(createIntroComponent());
-    </script>
 </body>
 </html>
+
 
