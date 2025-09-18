@@ -22,15 +22,40 @@
         .border-blue {
             border-color: #0369a1; /* border-sky-700 */
         }
+
+        /* Estilos específicos para la impresión */
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                -webkit-print-color-adjust: exact; 
+                color-adjust: exact;
+            }
+            .print-container {
+                box-shadow: none !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                max-width: 100% !important;
+            }
+            .print-grid {
+                display: grid !important;
+                grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+            }
+            .print-aside {
+                grid-column: span 4 / span 4 !important;
+            }
+            .print-main {
+                grid-column: span 8 / span 8 !important;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-700">
 
-    <div class="max-w-6xl mx-auto my-12 bg-white shadow-2xl rounded-lg overflow-hidden grid md:grid-cols-12">
+    <div class="max-w-6xl mx-auto my-12 bg-white shadow-2xl rounded-lg overflow-hidden grid md:grid-cols-12 print-container print-grid">
 
         <!-- ====== Left Column: Sidebar ====== -->
-        <aside class="md:col-span-4 bg-gray-50 p-8 border-r border-gray-200">
-            <div class="flex flex-col items-center text-center sticky top-8">
+        <aside class="md:col-span-4 bg-gray-50 p-8 border-r border-gray-200 print-aside">
+            <div class="flex flex-col items-center text-center">
                 <img src="https://i.ibb.co/TBGkzpk6/c7ed0fbf-181b-47e8-b766-c64b8f6c06c6.jpg" 
                      alt="Foto de perfil de Eneko Zabalo Miguel"
                      class="rounded-full w-40 h-40 mb-6 object-cover border-4 border-sky-700 shadow-lg"
@@ -126,7 +151,7 @@
             </aside>
 
             <!-- ====== Right Column: Main Content ====== -->
-            <main class="md:col-span-8 p-8">
+            <main class="md:col-span-8 p-8 print-main">
                 <!-- Profile Summary -->
                 <section>
                     <h3 class="text-2xl font-bold text-gray-900 tracking-wider border-b-2 border-gray-200 pb-2 mb-6">Perfil Profesional</h3>
