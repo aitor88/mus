@@ -55,8 +55,11 @@
                  padding: 1.5rem !important;
             }
             /* Evitar saltos de página inoportunos */
-            section, .experience-item {
-                page-break-inside: avoid;
+            main section {
+                 page-break-inside: avoid;
+            }
+            .experience-section {
+                margin-top: 1.5rem !important; /* Reduce el espacio sobre la sección de experiencia */
             }
             /* Eliminar sombras y efectos */
             .shadow-lg {
@@ -183,7 +186,7 @@
                     </p>
                 </section>
                 
-                <section class="mt-10">
+                <section class="mt-10 experience-section">
                     <h3 class="text-2xl font-bold text-gray-900 tracking-wider border-b-2 border-gray-200 pb-2 mb-6">Experiencia y Logros Clave</h3>
                     
                     <div class="border-l-2 border-gray-300"> <!-- Main timeline container -->
