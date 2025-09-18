@@ -58,6 +58,10 @@
             .shadow-lg {
                  box-shadow: none !important;
             }
+            /* Ocultar el botón de imprimir en el PDF */
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -164,6 +168,12 @@
 
             <!-- ====== Right Column: Main Content ====== -->
             <main class="md:col-span-8 p-8 print-main">
+                
+                <button id="print-button" class="no-print mb-8 w-full flex items-center justify-center gap-2 rounded-lg bg-sky-700 px-4 py-2 text-white transition-colors hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0z" /></svg>
+                    Imprimir mi CV (PDF)
+                </button>
+
                 <!-- Profile Summary -->
                 <section>
                     <h3 class="text-2xl font-bold text-gray-900 tracking-wider border-b-2 border-gray-200 pb-2 mb-6">Perfil Profesional</h3>
@@ -177,54 +187,63 @@
                 <section class="mt-10">
                     <h3 class="text-2xl font-bold text-gray-900 tracking-wider border-b-2 border-gray-200 pb-2 mb-6">Experiencia y Logros Clave</h3>
                     
-                    <!-- CAF Experience -->
-                    <div class="relative pl-8 border-l-2 border-gray-300 experience-item">
-                        <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
-                        <div class="flex items-start gap-4 mb-2">
-                            <img src="https://download.logo.wine/logo/Construcciones_y_Auxiliar_de_Ferrocarriles/Construcciones_y_Auxiliar_de_Ferrocarriles-Logo.wine.png" alt="Logo de CAF" class="w-28">
-                            <div>
-                                <h4 class="text-xl font-semibold text-gray-900">Especialista en Ingeniería / Ingeniero de Producto Senior</h4>
-                                <h5 class="text-md font-medium accent-blue">CAF (Construcciones y Auxiliar de Ferrocarriles)</h5>
-                                <p class="text-sm text-gray-500 mt-1">nov. 2008 – Actualidad</p>
+                    <div class="border-l-2 border-gray-300"> <!-- Main timeline container -->
+                        <!-- CAF Experience -->
+                        <div class="relative pl-8 pb-8 experience-item">
+                            <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
+                            <div class="flex items-start gap-4 mb-2">
+                                <img src="https://download.logo.wine/logo/Construcciones_y_Auxiliar_de_Ferrocarriles/Construcciones_y_Auxiliar_de_Ferrocarriles-Logo.wine.png" alt="Logo de CAF" class="w-28">
+                                <div>
+                                    <h4 class="text-xl font-semibold text-gray-900">Especialista en Ingeniería / Ingeniero de Producto Senior</h4>
+                                    <h5 class="text-md font-medium accent-blue">CAF (Construcciones y Auxiliar de Ferrocarriles)</h5>
+                                    <p class="text-sm text-gray-500 mt-1">nov. 2008 – Actualidad</p>
+                                </div>
                             </div>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600 mt-4">
+                                <li><span class="font-semibold">Liderazgo en Estandarización:</span> Dirección del proyecto de estandarización de utillajes, logrando una significativa reducción de costes directos y una mejora sustancial en la eficiencia de producción.</li>
+                                <li><span class="font-semibold">Optimización de Procesos:</span> Implementación de un nuevo flujo de resolución de incidencias que disminuyó notablemente los tiempos de parada y mejoró la comunicación entre ingeniería y planta.</li>
+                                <li><span class="font-semibold">Gestión de Proyectos Internacionales:</span> Responsable técnico del desarrollo de componentes clave para proyectos ferroviarios en Europa, Oceanía y América, cumpliendo plazos y especificaciones en entornos de alta exigencia.</li>
+                                <li><span class="font-semibold">Innovación y Reducción de Costes:</span> Identificación y validación de nuevos materiales y procesos de fabricación que resultaron en importantes ahorros anuales sin comprometer la calidad.</li>
+                            </ul>
                         </div>
-                        <ul class="list-disc list-inside space-y-2 text-gray-600 mt-4">
-                            <li><span class="font-semibold">Liderazgo en Estandarización:</span> Dirección del proyecto de estandarización de utillajes, logrando una significativa reducción de costes directos y una mejora sustancial en la eficiencia de producción.</li>
-                            <li><span class="font-semibold">Optimización de Procesos:</span> Implementación de un nuevo flujo de resolución de incidencias que disminuyó notablemente los tiempos de parada y mejoró la comunicación entre ingeniería y planta.</li>
-                            <li><span class="font-semibold">Gestión de Proyectos Internacionales:</span> Responsable técnico del desarrollo de componentes clave para proyectos ferroviarios en Europa, Oceanía y América, cumpliendo plazos y especificaciones en entornos de alta exigencia.</li>
-                            <li><span class="font-semibold">Innovación y Reducción de Costes:</span> Identificación y validación de nuevos materiales y procesos de fabricación que resultaron en importantes ahorros anuales sin comprometer la calidad.</li>
-                        </ul>
-                    </div>
-                     <!-- BEREIKER Experience -->
-                    <div class="relative pl-8 border-l-2 border-gray-300 mt-8 experience-item">
-                        <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
-                        <div class="flex items-start gap-4 mb-2">
-                            <img src="https://www.aer-automation.com/wp-content/uploads/2022/01/LOGO-PRINCIPAL-1536x588.png" alt="Logo de BEREIKER" class="w-28">
-                            <div>
-                                <h4 class="text-xl font-semibold text-gray-900">Ingeniero de Diseño</h4>
-                                <h5 class="text-md font-medium accent-blue">BEREIKER | Automatización Industrial</h5>
-                                <p class="text-sm text-gray-500 mt-1">jun. 2008 – nov. 2008</p>
+                         <!-- BEREIKER Experience -->
+                        <div class="relative pl-8 pb-8 experience-item">
+                            <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
+                            <div class="flex items-start gap-4 mb-2">
+                                <img src="https://www.aer-automation.com/wp-content/uploads/2022/01/LOGO-PRINCIPAL-1536x588.png" alt="Logo de BEREIKER" class="w-28">
+                                <div>
+                                    <h4 class="text-xl font-semibold text-gray-900">Ingeniero de Diseño</h4>
+                                    <h5 class="text-md font-medium accent-blue">BEREIKER | Automatización Industrial</h5>
+                                    <p class="text-sm text-gray-500 mt-1">jun. 2008 – nov. 2008</p>
+                                </div>
                             </div>
+                             <p class="text-gray-600 mt-4">Responsable del diseño de maquinaria y soluciones de automatización industrial a medida, utilizando software CAD para la creación de modelos 3D y planos de fabricación.</p>
                         </div>
-                         <p class="text-gray-600 mt-4">Responsable del diseño de maquinaria y soluciones de automatización industrial a medida, utilizando software CAD para la creación de modelos 3D y planos de fabricación.</p>
-                    </div>
-                    <!-- TMI Experience -->
-                     <div class="relative pl-8 border-l-2 border-gray-300 mt-8 experience-item">
-                        <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
-                        <div class="flex items-start gap-4 mb-2">
-                            <img src="https://i.ibb.co/8DQCn9bC/IMG-7808.jpg" alt="Logo de TMI" class="w-28">
-                            <div>
-                                <h4 class="text-xl font-semibold text-gray-900">Ingeniero de Diseño (Prácticas)</h4>
-                                <h5 class="text-md font-medium accent-blue">TMI (Tecnología Maquinaria e Innovación)</h5>
-                                <p class="text-sm text-gray-500 mt-1">jun. 2006 – may. 2008</p>
+                        <!-- TMI Experience -->
+                         <div class="relative pl-8 experience-item">
+                            <div class="absolute w-4 h-4 bg-sky-700 rounded-full -left-[9px] top-1 border-4 border-white"></div>
+                            <div class="flex items-start gap-4 mb-2">
+                                <img src="https://i.ibb.co/8DQCn9bC/IMG-7808.jpg" alt="Logo de TMI" class="w-28">
+                                <div>
+                                    <h4 class="text-xl font-semibold text-gray-900">Ingeniero de Diseño (Prácticas)</h4>
+                                    <h5 class="text-md font-medium accent-blue">TMI (Tecnología Maquinaria e Innovación)</h5>
+                                    <p class="text-sm text-gray-500 mt-1">jun. 2006 – may. 2008</p>
+                                </div>
                             </div>
+                            <p class="text-gray-600 mt-4">Colaboración en el departamento de ingeniería para el diseño y desarrollo de componentes mecánicos, participando en la elaboración de documentación técnica y planos.</p>
                         </div>
-                        <p class="text-gray-600 mt-4">Colaboración en el departamento de ingeniería para el diseño y desarrollo de componentes mecánicos, participando en la elaboración de documentación técnica y planos.</p>
                     </div>
                 </section>
             </main>
         </div>
     </div>
+
+    <script>
+        document.getElementById('print-button').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+
 </body>
 </html>
 
