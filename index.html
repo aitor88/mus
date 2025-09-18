@@ -31,18 +31,20 @@
             }
             html, body {
                 width: 210mm;
+                height: 297mm;
                 margin: 0;
                 padding: 0;
                 background-color: #ffffff !important;
                 -webkit-print-color-adjust: exact; 
                 color-adjust: exact;
-                font-size: 10.5pt;
+                font-size: 10pt; /* Tamaño de fuente base ajustado */
+                line-height: 1.4; /* Altura de línea compactada */
             }
             .print-container {
                 display: flex !important;
                 flex-direction: row;
                 width: 100% !important;
-                height: 297mm !important; /* Mantener altura para la primera página */
+                height: 100% !important;
                 box-shadow: none !important;
                 margin: 0 !important;
                 border-radius: 0 !important;
@@ -50,19 +52,19 @@
                 border: none !important;
             }
             .print-aside {
-                flex: 0 0 33.333333%; /* Equivalente a col-span-4 */
-                padding: 1.5rem !important;
+                flex: 0 0 33.333333%;
+                padding: 1.25rem !important;
                 background-color: #f9fafb; /* bg-gray-50 */
             }
             .print-main {
-                flex: 0 0 66.666667%; /* Equivalente a col-span-8 */
-                padding: 1.5rem 1.5rem 1.5rem 2rem !important;
+                flex: 0 0 66.666667%;
+                padding: 1.25rem 1.25rem 1.25rem 1.75rem !important;
             }
             main section {
                  page-break-inside: avoid;
             }
             .experience-section {
-                margin-top: 2rem !important;
+                margin-top: 1.5rem !important; /* Espacio reducido */
             }
             .shadow-lg {
                  box-shadow: none !important;
@@ -71,19 +73,14 @@
                 display: none !important;
             }
             /* Ajustes finos de espacio para la impresión */
-            .print-profile-img { width: 9rem; height: 9rem; margin-bottom: 1rem; }
-            .print-h1 { font-size: 1.8rem; }
-            .print-h2 { font-size: 1.15rem; }
-            .print-h3 { font-size: 1.3rem; margin-bottom: 1rem; }
-            .print-h4 { font-size: 1.05rem; }
-            .print-sidebar-spacing { margin-top: 2rem; }
-            .print-sidebar-spacing section + section { margin-top: 1.25rem; }
-            .print-timeline-spacing { padding-bottom: 1.25rem !important; }
-
-            /* Clase para forzar salto de página */
-            .print-page-break {
-                page-break-before: always;
-            }
+            .print-profile-img { width: 8.5rem; height: 8.5rem; margin-bottom: 1rem; }
+            .print-h1 { font-size: 1.7rem; }
+            .print-h2 { font-size: 1.1rem; }
+            .print-h3 { font-size: 1.2rem; margin-bottom: 0.75rem; }
+            .print-h4 { font-size: 1rem; }
+            .print-sidebar-spacing { margin-top: 1.5rem; }
+            .print-sidebar-spacing section + section { margin-top: 1rem; }
+            .print-timeline-spacing { padding-bottom: 1rem !important; }
         }
     </style>
 </head>
@@ -144,7 +141,7 @@
                     </section>
 
                     <!-- Languages -->
-                    <section class="print-page-break">
+                    <section>
                         <h3 class="text-sm font-semibold uppercase text-gray-800 tracking-widest border-b-2 border-sky-700 pb-2 mb-4">Idiomas</h3>
                         <div class="space-y-4 text-sm">
                             <div>
